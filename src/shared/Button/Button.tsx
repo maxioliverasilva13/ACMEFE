@@ -18,6 +18,7 @@ export interface ButtonProps {
   targetBlank?: boolean;
   onClick?: () => void;
   children?: React.ReactNode;
+  icon?: any;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -31,10 +32,11 @@ const Button: FC<ButtonProps> = ({
   targetBlank,
   type,
   loading,
+  icon,
   onClick = () => {},
 }) => {
   const CLASSES =
-    `nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors ${fontSize} ${sizeClass} ${translate} ${className} ` +
+    `nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors flex flex-row items-center justify-center gap-2 ${fontSize} ${sizeClass} ${translate} ${className} ` +
     twFocusClass(true);
 
   const _renderLoading = () => {
@@ -77,6 +79,7 @@ const Button: FC<ButtonProps> = ({
       onClick={onClick}
       type={type}
     >
+      {icon && icon}
       {loading && _renderLoading()}
       {children || `This is Button`}
     </button>

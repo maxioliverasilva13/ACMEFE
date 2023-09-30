@@ -47,7 +47,7 @@ export const EmpresaDashboardItems = [
     {
         title: "Usuarios",
         href: appRoutes.empresaUsuarios(),
-        validPath: [appRoutes.empresaUsuarios()],
+        validPath: [appRoutes.empresaUsuarios(), appRoutes.empresaAddUsuarios()],
         icon: <UserGroupIcon color="white" strokeWidth={2} width={25} />,
     },
       {

@@ -17,3 +17,7 @@
     color: white;
     animation: rotateConfig 5s ease-in-out infinite;
 }
+
+* {
+    transition: all .3s ease;
+}

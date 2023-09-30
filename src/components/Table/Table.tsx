@@ -1,6 +1,7 @@
 "use client";
 
 import NotFoundImage from "@/images/NotFoundImage.svg";
+import Checkbox from "@/shared/Checkbox/Checkbox";
 import { ColumnItem } from "@/types/table";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
@@ -96,10 +97,17 @@ const Table = ({
                       : "w-[0px] opacity-0"
                   )}
                 >
-                  {/* <Checkbox
-                      value={selectedItems?.find((itm: any) => itm?.id === item?.id) !== undefined}
-                      setValue={(val: any) => handleAddItem(val, item)}
-                    /> */}
+                  {
+                    <Checkbox
+                      name="selection"
+                      defaultChecked={
+                        selectedItems?.find(
+                          (itm: any) => itm?.id === item?.id
+                        ) !== undefined
+                      }
+                      onChange={(val: any) => handleAddItem(val, item)}
+                    />
+                  }
                 </div>
 
                 {cols?.map((col, indexCol) => {
