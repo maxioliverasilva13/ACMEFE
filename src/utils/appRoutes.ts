@@ -9,7 +9,7 @@ export const appRoutes = {
     // Empresas Routes
     empresaInico: () => "/empresa/inicio",
     empresaUsuarios: () => "/empresa/usuarios",
-    empresaAddUsuarios: () => "/empresa/add-usuarios",
+    empresaAddUsuarios: () => "/empresa/agregar-usuarios",
     empresaPickups: () => "/empresa/pickups",
     empresaProductos: () => "/empresa/productos",
     empresaCategorias: () => "/empresa/categiras",

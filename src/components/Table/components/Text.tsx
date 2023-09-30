@@ -1,7 +1,7 @@
 "use client";
 
 interface Props {
-  message: string;
+  message: any;
 }
 
 const Text = ({ message }: Props) => {

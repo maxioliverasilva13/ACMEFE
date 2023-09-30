@@ -29,6 +29,7 @@ const EmpresaUsuarios = () => {
       name: "Maximiliano",
       tel: "Tel 1",
       dir: "Direccion 1",
+      email: "angelotunado02@gmail.com",
       califications: 5,
     },
     {
@@ -37,14 +38,16 @@ const EmpresaUsuarios = () => {
       name: "Gustavo",
       tel: "Tel 2",
       dir: "Direccion 2",
+      email: "alitalima@gmail.com",
       califications: 1,
     },
     {
       id: 3,
       image: "https://i.pravatar.cc/150?img=13",
-      name: "Maximiliano",
+      name: "Pepe",
       tel: "Tel 1",
       dir: "Direccion 2",
+      email: "pepegonza@gmail.com",
       califications: 3,
     },
   ];

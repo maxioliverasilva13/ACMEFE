@@ -1,29 +1,42 @@
 import Text from "@/components/Table/components/Text";
 import { ColumnItem } from "@/types/table";
 import { Usuario } from "@/types/usuario";
-import { InformationCircleIcon, MapPinIcon, PhoneIcon, StarIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  AtSymbolIcon,
+  InformationCircleIcon,
+  MapPinIcon,
+  PhoneIcon,
+  StarIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
+import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import Image from "next/image";
 
 export const columnsUser: ColumnItem[] = [
   {
     title: "Nombre",
     key: "name",
-    icon: <UserCircleIcon width={20} color="#A3AED0" />
+    icon: <UserCircleIcon width={20} color="#A3AED0" />,
+  },
+  {
+    title: "Email",
+    key: "email",
+    icon: <AtSymbolIcon width={20} color="#A3AED0" />,
   },
   {
     title: "Telefono",
     key: "tel",
-    icon: <PhoneIcon width={20} color="#A3AED0" />
+    icon: <PhoneIcon width={20} color="#A3AED0" />,
   },
   {
     title: "Direccion",
     key: "dir",
-    icon: <MapPinIcon width={20} color="#A3AED0" />
+    icon: <MapPinIcon width={20} color="#A3AED0" />,
   },
   {
     title: "Calificaciones",
     key: "califications",
-    icon: <StarIcon width={20} color="#A3AED0" />
+    icon: <StarIcon width={20} color="#A3AED0" />,
   },
 ];
 
@@ -45,9 +58,17 @@ export const formatUsuariosToTable = (usuarios: Usuario[]) => {
           <Text message={user?.name} />
         </div>
       ),
+      email: (
+        <Text message={<a href={`mailTo:${user?.email}`}>{user?.email}</a>} />
+      ),
       tel: <Text message={user?.tel} />,
       dir: <Text message={user?.dir} />,
-      califications: "1",
+      califications: (
+        <div className="w-auto h-auto flex flex-row items-center gap-2 justify-start">
+          <StarIconSolid width={20} color="#bd8a00" />
+          <Text message={user?.califications} />
+        </div>
+      ),
     };
   });
 };
