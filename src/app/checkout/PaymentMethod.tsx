@@ -22,6 +22,8 @@ const PaymentMethod: FC<Props> = ({
     "Credit-Card" | "Internet-banking" | "Wallet"
   >("Credit-Card");
 
+  console.log("checkout page")
+
   const renderDebitCredit = () => {
     const active = mothodActive === "Credit-Card";
     return (

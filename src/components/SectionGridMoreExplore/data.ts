@@ -1,23 +1,23 @@
 import { StaticImageData } from "next/image";
-import explore1Svg from "@/images/collections/explore1.svg";
-import explore2Svg from "@/images/collections/explore2.svg";
-import explore3Svg from "@/images/collections/explore3.svg";
-import explore4Svg from "@/images/collections/explore4.svg";
-import explore5Svg from "@/images/collections/explore5.svg";
-import explore6Svg from "@/images/collections/explore6.svg";
-import explore7Svg from "@/images/collections/explore7.svg";
-import explore8Svg from "@/images/collections/explore8.svg";
-import explore9Svg from "@/images/collections/explore9.svg";
+import explore1Svg from "@/images/logo.svg";
+import explore2Svg from "@/images/logo.svg";
+import explore3Svg from "@/images/logo.svg";
+import explore4Svg from "@/images/logo.svg";
+import explore5Svg from "@/images/logo.svg";
+import explore6Svg from "@/images/logo.svg";
+import explore7Svg from "@/images/logo.svg";
+import explore8Svg from "@/images/logo.svg";
+import explore9Svg from "@/images/logo.svg";
 //
-import explore1Png from "@/images/collections/explore1.png";
-import explore2Png from "@/images/collections/explore2.png";
-import explore3Png from "@/images/collections/explore3.png";
-import explore4Png from "@/images/collections/explore4.png";
-import explore5Png from "@/images/collections/explore5.png";
-import explore6Png from "@/images/collections/explore6.png";
-import explore7Png from "@/images/collections/explore7.png";
-import explore8Png from "@/images/collections/explore8.png";
-import explore9Png from "@/images/collections/explore9.png";
+import explore1Png from "@/images/aboutUs.png";
+import explore2Png from "@/images/aboutUs.png";
+import explore3Png from "@/images/aboutUs.png";
+import explore4Png from "@/images/aboutUs.png";
+import explore5Png from "@/images/aboutUs.png";
+import explore6Png from "@/images/aboutUs.png";
+import explore7Png from "@/images/aboutUs.png";
+import explore8Png from "@/images/aboutUs.png";
+import explore9Png from "@/images/aboutUs.png";
 
 export interface ExploreType {
   id: number;

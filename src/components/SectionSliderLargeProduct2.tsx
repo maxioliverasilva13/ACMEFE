@@ -10,20 +10,20 @@ import Nav from "@/shared/Nav/Nav";
 import NavItem2 from "./NavItem2";
 import Next from "@/shared/NextPrev/Next";
 import Prev from "@/shared/NextPrev/Prev";
-import full1Img from "@/images/products/full1.png";
-import full11Img from "@/images/products/full1-1.png";
-import full12Img from "@/images/products/full1-2.png";
-import full13Img from "@/images/products/full1-3.png";
+import full1Img from "@/images/aboutUs.png";
+import full11Img from "@/images/aboutUs.png";
+import full12Img from "@/images/aboutUs.png";
+import full13Img from "@/images/aboutUs.png";
 //
-import full2Img from "@/images/products/full2.png";
-import full21Img from "@/images/products/full2-1.png";
-import full22Img from "@/images/products/full2-2.png";
-import full23Img from "@/images/products/full2-3.png";
+import full2Img from "@/images/aboutUs.png";
+import full21Img from "@/images/aboutUs.png";
+import full22Img from "@/images/aboutUs.png";
+import full23Img from "@/images/aboutUs.png";
 //
-import full3Img from "@/images/products/full3.png";
-import full31Img from "@/images/products/full3-1.png";
-import full32Img from "@/images/products/full3-2.png";
-import full33Img from "@/images/products/full3-3.png";
+import full3Img from "@/images/aboutUs.png";
+import full31Img from "@/images/aboutUs.png";
+import full32Img from "@/images/aboutUs.png";
+import full33Img from "@/images/aboutUs.png";
 import Link from "next/link";
 
 export interface SectionSliderLargeProduct2Props {

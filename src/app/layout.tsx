@@ -3,7 +3,7 @@ import "./globals.css";
 import "@/fonts/line-awesome-1.3.0/css/line-awesome.css";
 import "@/styles/index.scss";
 import "rc-slider/assets/index.css";
-import DashboardWrapper from "@/components/DashboardWrapper/DashboardWrapper";
+// import DashboardWrapper from "@/components/DashboardWrapper/DashboardWrapper";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -18,12 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
   params: any;
 }) {
-  console.log("aca 1")
-
   return (
     <html lang="en" dir="" className={poppins.className}>
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-          {children}
+        {children}
       </body>
     </html>
   );

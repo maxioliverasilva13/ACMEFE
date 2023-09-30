@@ -1,7 +1,7 @@
-import img1 from "@/images/collections/1.png";
-import img2 from "@/images/collections/5.png";
-import img3 from "@/images/collections/4.png";
-import img4 from "@/images/collections/3.png";
+import img1 from "@/images/aboutUs.png";
+import img2 from "@/images/aboutUs.png";
+import img3 from "@/images/aboutUs.png";
+import img4 from "@/images/aboutUs.png";
 import { CardCategory3Props } from "./CardCategory3";
 
 export const CATS_DISCOVER: CardCategory3Props[] = [
