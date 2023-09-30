@@ -10,8 +10,7 @@ const DashboardWrapper = ({ children }: Props) => {
   const pathname = usePathname();
   // todo: change this to a real validation
   const isAdminOrEmpresa =
-    pathname?.includes("/admin") || pathname?.includes("/admin");
-  console.log("isAdminOrEmpresa", isAdminOrEmpresa);
+    pathname?.includes("/admin") || pathname?.includes("/empresa");
 
   if (isAdminOrEmpresa) {
     return (

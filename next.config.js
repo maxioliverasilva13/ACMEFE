@@ -4,6 +4,7 @@ const nextConfig = {
     appDir: true,
     typedRoutes: true,
   },
+  
   images: {
     remotePatterns: [
       {
@@ -15,6 +16,12 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
         port: "",
         pathname: "/**",
       },

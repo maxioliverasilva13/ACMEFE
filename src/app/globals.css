@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@keyframes rotateConfig {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinConfgIcon {
+    transition: all 5s ease-in-out;
+    color: white;
+    animation: rotateConfig 5s ease-in-out infinite;
+}

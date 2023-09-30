@@ -28,6 +28,8 @@ module.exports = {
 
     extend: {
       colors: {
+        textogris: "#A3AED0",
+        texto: "#2B3674",
         primary: {
           50: customColors("--c-primary-50"),
           100: customColors("--c-primary-100"),
