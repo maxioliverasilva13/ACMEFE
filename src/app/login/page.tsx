@@ -1,4 +1,6 @@
-import React, { FC } from "react";
+"use client";
+
+import React, { FC, useState } from "react";
 import facebookSvg from "@/images/Facebook.svg";
 import twitterSvg from "@/images/Twitter.svg";
 import googleSvg from "@/images/Google.svg";
@@ -26,11 +28,15 @@ const loginSocials = [
 ];
 
 const PageLogin = () => {
+  console.log("login aca")
+  const [title, setTitle] = useState("Logi1n");
+  
+
   return (
     <div className={`nc-PageLogin`} data-nc-id="PageLogin">
       <div className="container mb-24 lg:mb-32">
         <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
-          Login
+          {title}
         </h2>
         <div className="max-w-md mx-auto space-y-6">
           <div className="grid gap-3">
@@ -80,7 +86,7 @@ const PageLogin = () => {
               </span>
               <Input type="password" className="mt-1" />
             </label>
-            <ButtonPrimary type="submit">Continue</ButtonPrimary>
+            <ButtonPrimary onClick={() => setTitle("asdadasd")} type="button" >Continue</ButtonPrimary>
           </form>
 
           {/* ==== */}
