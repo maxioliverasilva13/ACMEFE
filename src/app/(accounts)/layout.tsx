@@ -49,7 +49,7 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
               <span className="text-slate-900 dark:text-slate-200 font-semibold">
                 Enrico Cole,
               </span>{" "}
-              ciseco@gmail.com · Los Angeles, CA
+              ciesco@gmail.com · San Jose - Uruguay
             </span>
           </div>
           <hr className="mt-10 border-slate-200 dark:border-slate-700"></hr>

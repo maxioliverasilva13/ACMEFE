@@ -17,6 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
   params: any;
 }) {
+  console.log("aca 123")
   return (
     <html lang="en" dir="" className={poppins.className}>
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
