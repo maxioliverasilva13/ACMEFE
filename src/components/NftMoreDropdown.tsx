@@ -2,7 +2,7 @@
 
 import React, { FC, useState } from "react";
 import NcDropDown, { NcDropDownItem } from "@/shared/NcDropDown/NcDropDown";
-import ModalDelete from "./ModalDelete";
+import Modal from "./Modal";
 import ModalEdit from "./ModalEdit";
 import ModalReportItem from "./ModalReportItem";
 import ModalTransferToken from "./ModalTransferToken";
@@ -89,7 +89,7 @@ const NftMoreDropdown: FC<NftMoreDropdownProps> = ({
       />
       <ModalEdit show={isEditting} onCloseModalEdit={closeModalEdit} />
 
-      <ModalDelete show={isDeleting} onCloseModalDelete={closeModalDelete} />
+      <Modal show={isDeleting} onCloseModalDelete={closeModalDelete} />
       <ModalTransferToken
         show={isTransfering}
         onCloseModalTransferToken={closeModalTransferToken}

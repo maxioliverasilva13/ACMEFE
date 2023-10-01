@@ -1,11 +1,15 @@
 import React, { FC } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import Button, { ButtonProps } from "@/shared/Button/Button";
+import clsx from "clsx";
 
-export interface ButtonDropdownProps extends ButtonProps {}
+export interface ButtonDropdownProps extends ButtonProps {
+  isOpen?: any,
+}
 
 const ButtonDropdown: FC<ButtonDropdownProps> = ({
   translate,
+  isOpen = false,
   children,
   ...args
 }) => {
@@ -19,7 +23,7 @@ const ButtonDropdown: FC<ButtonDropdownProps> = ({
     >
       {children}
       <ChevronDownIcon
-        className="w-4 h-4 ml-2 -mr-1 opacity-70"
+        className={clsx("w-4 h-4 ml-2 -mr-1 opacity-70 transform transition-all", isOpen ? "rotate-180" : "rotate-0")}
         aria-hidden="true"
       />
     </Button>

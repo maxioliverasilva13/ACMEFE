@@ -45,7 +45,7 @@ const NcModal: FC<NcModalProps> = ({
   }, [isOpenProp]);
 
   return (
-    <div className="nc-NcModal">
+    <div className="nc-NcModal appears">
       {renderTrigger ? (
         renderTrigger(openModal)
       ) : (

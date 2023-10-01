@@ -12,7 +12,7 @@ export const appRoutes = {
     empresaAddUsuarios: () => "/empresa/agregar-usuarios",
     empresaPickups: () => "/empresa/pickups",
     empresaProductos: () => "/empresa/productos",
-    empresaCategorias: () => "/empresa/categiras",
+    empresaCategorias: () => "/empresa/categorias",
     empresaReclamos: () => "/empresa/reclamos",
 
 }

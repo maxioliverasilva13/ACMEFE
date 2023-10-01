@@ -11,6 +11,7 @@ export interface ModalDeleteProps {
   textOk?: string;
   textCancel?: string;
   onConfirm?: any;
+  content?: any;
 }
 
 const ModalDelete: FC<ModalDeleteProps> = ({
@@ -20,6 +21,7 @@ const ModalDelete: FC<ModalDeleteProps> = ({
   description,
   textCancel,
   textOk,
+  content,
   onConfirm,
 }) => {
   const handleClickSubmitForm = () => {
@@ -33,6 +35,7 @@ const ModalDelete: FC<ModalDeleteProps> = ({
           {title}
         </h3>
         <span className="text-sm">{description}</span>
+        {content}
         <div className="mt-4 space-x-3">
           <ButtonPrimary onClick={() => onConfirm && onConfirm()} type="submit">
             {textOk}

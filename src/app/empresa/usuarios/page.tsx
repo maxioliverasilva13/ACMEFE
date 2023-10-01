@@ -1,6 +1,6 @@
 "use client";
 
-import ModalDelete from "@/components/ModalDelete";
+import Modal from "@/components/Modal";
 import Table from "@/components/Table/Table";
 import ButtonDelete from "@/shared/Button/ButtonDelete";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
@@ -62,7 +62,7 @@ const EmpresaUsuarios = () => {
 
   return (
     <div className="w-full h-auto flex flex-grow p-5 flex-col items-start justify-start gap-5">
-      <ModalDelete
+      <Modal
         textOk="Si, borrar"
         textCancel="Cancelar"
         title="Estas seguro que deseas borrar los usuarios eleccionados"

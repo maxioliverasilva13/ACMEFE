@@ -12,6 +12,17 @@
     }
 }
 
+
+@keyframes appears {
+    from {
+       opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
 .spinConfgIcon {
     transition: all 5s ease-in-out;
     color: white;
@@ -20,4 +31,8 @@
 
 * {
     transition: all .3s ease;
+}
+
+.appears {
+    animation: appears .3s ease;
 }

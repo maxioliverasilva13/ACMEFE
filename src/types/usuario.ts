@@ -7,3 +7,11 @@ export type Usuario = {
   califications: number;
   email?: string;
 };
+
+
+export type SortUser = {
+  email: string,
+  nombre: string,
+  imagen: string,
+  tel: string,
+}
