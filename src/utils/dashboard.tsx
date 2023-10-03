@@ -25,8 +25,8 @@ export const AdminDashboardItems = [
     },
     {
         title: "Tipo Iva",
-        href: appRoutes.adminTipoIva(),
-        validPath: [appRoutes.adminTipoIva()],
+        href: appRoutes.adminTiposIva(),
+        validPath: [appRoutes.adminTiposIva()],
         icon: <ReceiptPercentIcon color="white" strokeWidth={2} width={25} />,
     },
     {

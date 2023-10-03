@@ -2,7 +2,9 @@ export const appRoutes = {
     // Admin routes
     adminInicio: () => "/admin",
     adminEmpresas: () => "/admin/empresas",
-    adminTipoIva: () => "/admin/tipoiva",
+    adminAddEmpresas: () => "/admin/empresas/agregar-empresa",
+    adminAddTipoIva: () => "/admin/tipos-iva/agregar-tipo-iva",
+    adminTiposIva: () => "/admin/tipos-iva",
     adminDepartamentos: () => "/admin/departamentos",
     adminProfile: () => "/admin/profile",
     empresaProfile: () => "/empresa/profile",
