@@ -84,7 +84,7 @@ const Table = ({
                     : null
                 }
                 className={clsx(
-                  "w-full select-none py-4 transition-all px-1 rounded-md flex flex-row max-w-full items-center py-4",
+                  "w-full select-none transition-all px-1 rounded-md flex flex-row max-w-full items-center py-4",
                   (item?.href || item?.action) && "itemRowTable !cursor-pointer"
                 )}
                 key={`row-${index}`}

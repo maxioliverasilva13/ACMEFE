@@ -24,6 +24,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" dir="" className={poppins.className}>
+      <head>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet"/>
+      </head>
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
         <Provider store={store}>
           <DashboardWrapper>{children}</DashboardWrapper>

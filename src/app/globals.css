@@ -2,37 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @keyframes rotateConfig {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
-
 
 @keyframes appears {
-    from {
-       opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-
 .spinConfgIcon {
-    transition: all 5s ease-in-out;
-    color: white;
-    animation: rotateConfig 5s ease-in-out infinite;
+  transition: all 5s ease-in-out;
+  color: white;
+  animation: rotateConfig 5s ease-in-out infinite;
 }
 
 * {
-    transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
 .appears {
-    animation: appears .3s ease;
+  animation: appears 0.3s ease;
+}
+
+.itemRowTable {
+  background-color: transparent;
+  border-radius: 14px!important;
+}
+
+.itemRowTable:hover {
+  background-color: rgba(221, 221, 221, 0.473);
 }

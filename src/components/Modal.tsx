@@ -56,7 +56,7 @@ const ModalDelete: FC<ModalDeleteProps> = ({
     <NcModal
       isOpenProp={show}
       onCloseModal={onCloseModalDelete}
-      contentExtraClass="max-w-screen-sm"
+      contentExtraClass="max-w-screen-sm overflow-visible"
       renderContent={renderContent}
       renderTrigger={renderTrigger}
       modalTitle=""
