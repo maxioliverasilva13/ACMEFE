@@ -59,7 +59,7 @@ export const EmpresaDashboardItems = [
     {
         title: "Productos",
         href: appRoutes.empresaProductos(),
-        validPath: [appRoutes.empresaProductos()],
+        validPath: [appRoutes.empresaProductos(), appRoutes.empresaPorductDetails(), appRoutes.empresaAgregarProductos()],
         icon: <ShoppingBagIcon color="white" strokeWidth={2} width={25} />,
     },
 

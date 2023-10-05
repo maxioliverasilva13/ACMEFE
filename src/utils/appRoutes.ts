@@ -14,7 +14,11 @@ export const appRoutes = {
     empresaAddUsuarios: () => "/empresa/agregar-usuarios",
     empresaPickups: () => "/empresa/pickups",
     empresaProductos: () => "/empresa/productos",
+    empresaAgregarProductos: () => "/empresa/agregar-producto",
     empresaCategorias: () => "/empresa/categorias",
     empresaReclamos: () => "/empresa/reclamos",
+    empresaPorductDetails: () => "/empresa/product-detail",
 
+    // Persona comun routes
+    productDetail: () => "/product-detail",
 }

@@ -39,7 +39,7 @@ const Dropdown = ({ items, onChange, placeholder }: Props) => {
               <button
                 key={item?.value}
                 onClick={() => setSelectedValue(item)}
-                className="text-gray-800 px-4  text-left cursor-pointer font-semibold w-full h-auto py-2 rounded-lg bg-transparent hover:bg-gray-200"
+                className="text-gray-800 px-4  text-left cursor-pointer font-medium w-full h-auto py-2 rounded-lg bg-transparent hover:bg-gray-200"
               >
                 {item?.label}
               </button>

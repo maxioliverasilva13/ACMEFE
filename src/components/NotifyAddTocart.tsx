@@ -8,7 +8,6 @@ interface Props {
   show: boolean;
   productImage: string | StaticImageData;
   variantActive: number;
-  sizeSelected: string;
   qualitySelected: number;
 }
 
@@ -17,7 +16,6 @@ const NotifyAddTocart: FC<Props> = ({
   productImage,
   variantActive,
   qualitySelected,
-  sizeSelected,
 }) => {
   const { name, price, variants } = PRODUCTS[0];
 
@@ -44,7 +42,6 @@ const NotifyAddTocart: FC<Props> = ({
                     {variants ? variants[variantActive].name : `Natural`}
                   </span>
                   <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
-                  <span>{sizeSelected || "XL"}</span>
                 </p>
               </div>
               <Prices price={price} className="mt-0.5" />

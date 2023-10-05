@@ -38,8 +38,6 @@ const AddPickupModal = ({ open, setOpen }: Props) => {
     },
   });
 
-  console.log(errors);
-
   const handleNext = (data: CrearPickupForm) => {
     console.log("data is", data);
   };

@@ -42,3 +42,11 @@
 .itemRowTable:hover {
   background-color: rgba(221, 221, 221, 0.473);
 }
+
+
+input, textarea {
+  padding-left: 14px!important;
+  padding-right: 14px!important;
+  padding-top: 14px!important;
+  padding-bottom: 14px!important;
+}
