@@ -1,10 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { prepareHeaders } from "../../utils/prepareHeaders";
-
-const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:8000",
-  prepareHeaders,
-});
+import { baseQuery } from "../baseQuery";
 
 export const UserService = createApi({
   reducerPath: "UserService",
