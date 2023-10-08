@@ -1,4 +1,8 @@
 export const appRoutes = {
+    login: () => "/login",
+    resetPassword: () => "/forgot-pass",
+    register: () => "/signup",
+
     // Admin routes
     adminInicio: () => "/admin",
     adminEmpresas: () => "/admin/empresas",
@@ -21,4 +25,7 @@ export const appRoutes = {
 
     // Persona comun routes
     productDetail: () => "/product-detail",
+    
+    //user routes
+    userInicio: () => "/inicio"
 }

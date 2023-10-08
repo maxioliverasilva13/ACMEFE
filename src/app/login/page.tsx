@@ -1,12 +1,8 @@
 "use client";
 
-import React, { FC, useState } from "react";
-import facebookSvg from "@/images/Facebook.svg";
-import twitterSvg from "@/images/Twitter.svg";
-import googleSvg from "@/images/Google.svg";
+import React from "react";
 import Input from "@/shared/Input/Input";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
-import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import {
@@ -15,24 +11,10 @@ import {
   LoginFormValidationSchema,
 } from "@/forms/LoginForm";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-const loginSocials = [
-  {
-    name: "Continuar con Facebook",
-    href: "#",
-    icon: facebookSvg,
-  },
-  {
-    name: "Continuar con Twitter",
-    href: "#",
-    icon: twitterSvg,
-  },
-  {
-    name: "Continuar con Google",
-    href: "#",
-    icon: googleSvg,
-  },
-];
+import useGlobal from "@/hooks/useGlobal";
+import { useLoginMutation } from "@/store/service/UserService";
+import {toast} from "react-toastify";
+import SocialMediasLogin from "@/components/SocialMediasLogin/SocialMediasLogin";
 
 const PageLogin = () => {
   const {
@@ -42,9 +24,29 @@ const PageLogin = () => {
   } = useForm<LoginForm>({
     resolver: yupResolver(LoginFormValidationSchema()),
   });
+  const [handleLogin] = useLoginMutation();
+  const { handleSetLoading, handleSetToken } = useGlobal();
 
-  const handleNext = (data: LoginForm) => {
-    console.log("Data", data);
+  const handleNext = async (data: LoginForm) => {
+    try {
+      handleSetLoading(true);
+      const dataToSend = {
+        Email: data?.email,
+        Password: data?.password,
+      };
+      const resp = (await handleLogin(dataToSend)) as any;
+      if (!resp?.data?.token) {
+        toast.error("Credenciales invalidas");
+      } else {
+        const token = resp?.data?.token;
+        handleSetToken(token);
+      }
+
+      handleSetLoading(false);
+    } catch (error) {
+      toast.error("Credenciales invalidas");
+      handleSetLoading(false);
+    }
   };
 
   return (
@@ -54,25 +56,7 @@ const PageLogin = () => {
           Login
         </h2>
         <div className="max-w-md mx-auto space-y-6">
-          <div className="grid gap-3">
-            {loginSocials.map((item, index) => (
-              <a
-                key={index}
-                href={item.href}
-                className="flex w-full rounded-lg bg-primary-50 dark:bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
-              >
-                <Image
-                  className="flex-shrink-0"
-                  src={item.icon}
-                  alt={item.name}
-                  sizes="40px"
-                />
-                <h3 className="flex-grow text-center text-sm font-medium text-neutral-700 dark:text-neutral-300 sm:text-sm">
-                  {item.name}
-                </h3>
-              </a>
-            ))}
-          </div>
+          <SocialMediasLogin />
           <div className="relative text-center">
             <span className="relative z-10 inline-block px-4 font-medium text-sm bg-white dark:text-neutral-400 dark:bg-neutral-900">
               o

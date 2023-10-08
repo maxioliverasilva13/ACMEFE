@@ -1,16 +1,17 @@
+'use client'
+
+import { handleGetToken, handleStorageToken } from "@/utils/token";
 import { createSlice } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 // import { handleGetToken, handleStorageToken } from "utils/userUtils";
 
 const initialState: {
   userInfo: any;
-  isLoading: boolean,
   token: string | undefined,
   loading: boolean,
 } = {
   userInfo: null,
-  isLoading: false,
-  token: "",
+  token: handleGetToken() ?? "",
   loading: false,
 };
 
@@ -39,7 +40,7 @@ export const useGlobalActions = () => {
   };
 
   const handleSetToken = (token: string) => {
-    // handleStorageToken(token);
+    handleStorageToken(token);
     dispatch(GlobalSlice.actions.setToken(token));
   };
 

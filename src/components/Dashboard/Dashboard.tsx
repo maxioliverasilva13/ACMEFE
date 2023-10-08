@@ -12,9 +12,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import AvatarDropdown from "../Header/AvatarDropdown";
 
 const Dashboard = () => {
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [expandedUserAccount, setExpandedUserAccount] = useState(false);
   const pathname = usePathname();
   const isAdmin = pathname?.includes("/admin");
 
@@ -42,7 +44,7 @@ const Dashboard = () => {
       </button>
       <div
         className={clsx(
-          "h-full transition-all z-[5] relative max-h-full overflow-auto bg-gray-900 flex flex-col items-center justify-start md:px-4 md:py-10",
+          "h-full transition-all z-[5] overflow-visible relative max-h-full overflow-auto bg-gray-900 flex flex-col items-center justify-start md:px-4 md:py-10",
           expanded
             ? "md:w-[320px] md:min-w-[320px]"
             : "md:w-[100px] md:min-w-[100px]"
@@ -85,12 +87,7 @@ const Dashboard = () => {
         </div>
 
         {/* User Badge */}
-        <Link
-          href={{
-            pathname: isAdmin
-              ? appRoutes.adminProfile()
-              : appRoutes.empresaProfile(),
-          }}
+        <div
           className={clsx(
             "w-full cursor-pointer flex flex-row items-center gap-2 absolute bottom-0 left-0 h-auto px-4 py-4 bg-black/80",
             expanded ? "justify-start" : "justify-center"
@@ -111,7 +108,12 @@ const Dashboard = () => {
             />
           </div>
           {expanded && (
-            <div
+            <Link
+              href={{
+                pathname: isAdmin
+                  ? appRoutes.adminProfile()
+                  : appRoutes.empresaProfile(),
+              }}
               className={clsx(
                 "flex-grow flex w-full flex-col justify-center items-center gap-0"
               )}
@@ -122,12 +124,12 @@ const Dashboard = () => {
               <span className="max-w-full w-full truncate overflow-hidden text-gray-200 font-semibold text-sm">
                 Administrador
               </span>
-            </div>
+            </Link>
           )}
-          {expanded && (
-            <Cog6ToothIcon width={50} color="white" className="spinConfgIcon" />
-          )}
-        </Link>
+          <div className="relative overflow-visible">
+              {expanded && <AvatarDropdown className="absolute bottom-full -right-full w-[260px] px-4 mt-3.5" />}
+          </div>
+        </div>
       </div>
     </div>
   );

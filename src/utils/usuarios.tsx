@@ -12,6 +12,9 @@ import {
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import Image from "next/image";
 
+export const DEFAULT_USER_IMAGE =
+  "https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_1280.png";
+
 export const columnsUser: ColumnItem[] = [
   {
     title: "Nombre",
@@ -71,4 +74,15 @@ export const formatUsuariosToTable = (usuarios: Usuario[]) => {
       ),
     };
   });
+};
+
+export const getUserRoleText = (user: any) => {
+  const roles = user?.roles;
+  if (user && roles?.includes("Admin")) {
+    return "Administrador";
+  } else if (user && roles?.includes("Vendedor")) {
+    return "Vendedor";
+  } else {
+    return "Usuario";
+  }
 };
