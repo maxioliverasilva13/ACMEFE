@@ -47,6 +47,20 @@ export const UserService = createApi({
         return response as any;
       },
     }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: apiRoutes.resetPassword(),
+        method: "POST",
+        body: data,
+      }),
+    }),
+    forgotPassword: builder.mutation({
+      query: (data) => ({
+        url: apiRoutes.forgotPassword(),
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -55,4 +69,6 @@ export const {
   useLoginMutation,
   useLazyCurrentUserQuery,
   useLoginWithExternalServiceMutation,
+  useResetPasswordMutation,
+  useForgotPasswordMutation
 } = UserService;

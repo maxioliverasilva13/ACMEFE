@@ -15,9 +15,10 @@ import { Route } from "next";
 
 interface Props {
   className?: string,
+  isBlack?: boolean;
 }
 
-export default function AvatarDropdown({ className }: Props) {
+export default function AvatarDropdown({ className, isBlack = false }: Props) {
   const { handleSetToken, userInfo } = useGlobal();
   const { push } = useRouter();
 
@@ -32,7 +33,9 @@ export default function AvatarDropdown({ className }: Props) {
         {({ open, close }) => (
           <>
             <Popover.Button
-              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full text-white dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none flex items-center justify-center`}
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none flex items-center justify-center
+              ${isBlack ? "text-gray-800" : "text-white "}
+              `}
             >
               <svg
                 className=" w-6 h-6"

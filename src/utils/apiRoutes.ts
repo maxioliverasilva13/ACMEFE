@@ -4,4 +4,6 @@ export const apiRoutes = {
     register: () => "/Auth/register",
     currentUser: () => "/Auth/currentUser",
     loginUserWithExternalService: () => "/Auth/loginWithExternalService",
+    resetPassword: () => "/Auth/resetPassword",
+    forgotPassword: () => "/Auth/forgotPassword",
 }

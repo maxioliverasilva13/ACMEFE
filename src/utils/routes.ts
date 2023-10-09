@@ -4,6 +4,7 @@ export const public_routes = [
   appRoutes.login(),
   appRoutes.resetPassword(),
   appRoutes.register(),
+  appRoutes.forgotPassword(),
 ];
 
 export const empresaRoutes = [

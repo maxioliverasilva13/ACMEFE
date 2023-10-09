@@ -96,7 +96,7 @@ const AddPickupModal = ({ open, setOpen }: Props) => {
               <Input
                 {...register(CrearPickupFormFields.nroPuerta)}
                 error={errors[CrearPickupFormFields.nroPuerta]?.message}
-                type="text"
+                type="number"
                 placeholder="Ingrese un numbero de puerta"
                 className="mt-1.5"
               />

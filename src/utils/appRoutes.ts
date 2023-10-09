@@ -1,7 +1,8 @@
 export const appRoutes = {
     login: () => "/login",
-    resetPassword: () => "/forgot-pass",
+    forgotPassword: () => "/forgot-pass",
     register: () => "/signup",
+    resetPassword: () => "/reset-password",
 
     // Admin routes
     adminInicio: () => "/admin",

@@ -36,7 +36,7 @@ const PageLogin = () => {
       };
       const resp = (await handleLogin(dataToSend)) as any;
       if (!resp?.data?.token) {
-        toast.error("Credenciales invalidas");
+        toast.error("Credenciales invalidas o cuenta inactiva");
       } else {
         const token = resp?.data?.token;
         handleSetToken(token);
@@ -44,7 +44,7 @@ const PageLogin = () => {
 
       handleSetLoading(false);
     } catch (error) {
-      toast.error("Credenciales invalidas");
+      toast.error("Credenciales invalidas o cuenta inactiva");
       handleSetLoading(false);
     }
   };

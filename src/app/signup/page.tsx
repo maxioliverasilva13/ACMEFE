@@ -45,7 +45,7 @@ const PageLogin = () => {
       }
       const dataToSend = {
         Email: data?.email,
-        Password: data?.password,
+        Password: "DEFAULT_PASS",
         Nombre: data?.nombre,
         Celular: data?.celular,
         Imagen: imageToUse,
@@ -119,17 +119,6 @@ const PageLogin = () => {
                   error={errors[RegisterFormFields.email]?.message}
                   type="email"
                   placeholder="example@example.com"
-                  className="mt-1"
-                />
-              </label>
-              <label className="block">
-                <span className="flex justify-between items-center text-neutral-800 dark:text-neutral-200">
-                  Contraseña
-                </span>
-                <Input
-                  {...register(RegisterFormFields.password)}
-                  error={errors[RegisterFormFields.password]?.message}
-                  type="password"
                   className="mt-1"
                 />
               </label>

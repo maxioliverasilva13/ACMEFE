@@ -20,6 +20,12 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "cdn.pixabay.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "encrypted-tbn0.gstatic.com",
         port: "",
         pathname: "/**",

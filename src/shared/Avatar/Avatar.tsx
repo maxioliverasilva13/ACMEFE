@@ -38,12 +38,9 @@ const Avatar: FC<AvatarProps> = ({
       style={{ backgroundColor: url ? undefined : _setBgColor(name) }}
     >
       {url && (
-        <Image
-          fill
-          sizes="100px"
+        <img
           className={`absolute inset-0 w-full h-full object-cover ${radius}`}
-          src={url}
-          alt={name}
+          src={url as string}
         />
       )}
       <span className="wil-avatar__name">{name[0]}</span>

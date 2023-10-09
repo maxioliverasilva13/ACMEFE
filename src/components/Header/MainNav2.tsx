@@ -109,7 +109,7 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
                 {renderMagnifyingGlassIcon()}
               </button>
             )}
-            <AvatarDropdown />
+            <AvatarDropdown isBlack />
             <CartDropdown />
           </div>
         </div>
