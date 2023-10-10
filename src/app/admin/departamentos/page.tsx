@@ -7,80 +7,80 @@ import ButtonDelete from "@/shared/Button/ButtonDelete";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
-import { TipoIva } from "@/types/tipoIva";
-import { appRoutes } from "@/utils/appRoutes";
-import { columnsTiposIva, formatTiposIvaToTable } from "@/utils/tiposIva";
-import {
-  CrearTipoIvaForm,
-  CrearTipoIvaFormFields,
-  CrearTipoIvaValidationSchema,
-  tipoIvaDefaultValues,
-} from "@/forms/CrearTipoIvaForm";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
 
-const AdminTiposIva = () => {
+import {
+  CrearDepartamentoForm,
+  CrearDepartamentoFormFields,
+  CrearDepartamentoValidationSchema,
+  departamentoDefaultValues,
+} from "@/forms/CrearDepartamentoForm";
+import { Departamento } from "@/types/departamento";
+import {
+  columnsDepartamentos,
+  formatDepartamentosToTable,
+} from "@/utils/departamento";
+
+const AdminDepartamentos = () => {
   const { push } = useRouter();
   const [disabledActivate, setDisabledActivate] = useState<boolean>(false);
-  const [selectedTipoIva, setSelectedTipoIva] = useState<TipoIva[]>([]);
+  const [selectedDepartamentos, setSelectedDepartamentos] = useState<
+    Departamento[]
+  >([]);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<CrearTipoIvaForm>({
-    defaultValues: tipoIvaDefaultValues,
-    resolver: yupResolver(CrearTipoIvaValidationSchema()),
+    reset,
+  } = useForm<CrearDepartamentoForm>({
+    defaultValues: departamentoDefaultValues,
+    resolver: yupResolver(CrearDepartamentoValidationSchema()),
   });
 
-  const tiposIVA: TipoIva[] = [
+  const departamentos: Departamento[] = [
     {
       id: 1,
-      nombre: "IVA Tasa Básica",
-      porcentaje: 22,
+      nombre: "San José",
+      ciudades: [{ nombre: "San José de Mayo" }, { nombre: "Libertad" }],
     },
     {
       id: 2,
-      nombre: "IVA Tasa Mínima",
-      porcentaje: 10,
+      nombre: "Montevideo",
+      ciudades: [{ nombre: "Montevideo" }],
+    },
+    {
+      id: 3,
+      nombre: "Flores",
+      ciudades: [],
     },
   ];
 
-  const rowTiposIva = formatTiposIvaToTable(tiposIVA);
+  const rowsDepartamento = formatDepartamentosToTable(departamentos);
 
-  const handleDeleteTiposIVA = () => {
+  const handleDeleteDepartamentos = () => {
     setOpenDeleteModal(false);
-    setSelectedTipoIva([]);
+    setSelectedDepartamentos([]);
   };
 
   const handleNext = (data: any) => {
     console.log("data: ", data);
   };
 
-  const addTipoIvaContent = () => {
+  const addDepartamentoContent = () => {
     return (
       <div className="w-full my-4 h-auto flex flex-col items-center justify-start gap-2">
         <div className="flex-grow w-full flex flex-col items-start justify-start">
           <Label>Nombre</Label>
           <Input
-            {...register(CrearTipoIvaFormFields.nombre)}
-            error={errors[CrearTipoIvaFormFields.nombre]?.message}
+            {...register(CrearDepartamentoFormFields.nombre)}
+            error={errors[CrearDepartamentoFormFields.nombre]?.message}
             type="text"
-            className="mt-1.5"
-          />
-        </div>
-        <div className="flex-grow w-full flex flex-col items-start justify-start">
-          <Label>Porcentaje</Label>
-          <Input
-            {...register(CrearTipoIvaFormFields.porcentaje)}
-            error={errors[CrearTipoIvaFormFields.porcentaje]?.message}
-            type="number"
-            step=".01"
             className="mt-1.5"
           />
         </div>
@@ -93,24 +93,24 @@ const AdminTiposIva = () => {
       <Modal
         textOk="Sí, borrar"
         textCancel="Cancelar"
-        title="¿Estás seguro que deseas borrar los tipos de IVA seleccionados?"
-        description="Esta opción no tiene retorno, ya que los tipos de IVA selecciondos se borrarán del sistema."
+        title="¿Estás seguro que deseas borrar los departamentos seleccionados?"
+        description="Esta opción no tiene retorno, ya que los departamentos selecciondos se borrarán del sistema."
         onCloseModalDelete={() => setOpenDeleteModal(false)}
         show={openDeleteModal}
-        onConfirm={() => handleDeleteTiposIVA()}
+        onConfirm={() => handleDeleteDepartamentos()}
       />
       <Modal
         textOk="Agregar"
         textCancel="Cancelar"
-        title="Agregar nuevo tipo de IVA"
-        description="Este tipo IVA podrá ser aplicado en el checkout de cualquier producto."
-        onCloseModalDelete={() => setOpenAddModal(false)}
+        title="Agregar nuevo departamento"
+        description="Este departamento podrá ser utilizado a futuro en registros de direcciones para usuarios."
+        onCloseModalDelete={() => {setOpenAddModal(false); reset()}}
         show={openAddModal}
-        content={addTipoIvaContent()}
+        content={addDepartamentoContent()}
         onConfirm={handleSubmit(handleNext)}
       />
       <div className="w-full h-auto gap-4 flex flex-row items-center justify-end">
-        {selectedTipoIva?.length > 0 && (
+        {selectedDepartamentos?.length > 0 && (
           <ButtonDelete
             icon={<TrashIcon width={20} color="white" />}
             onClick={() => setOpenDeleteModal(!openDeleteModal)}
@@ -122,21 +122,21 @@ const AdminTiposIva = () => {
           {disabledActivate ? "Deshabilitar seleccion" : "Habilitar seleccion"}
         </ButtonSecondary>
         <ButtonPrimary onClick={() => setOpenAddModal(true)}>
-          Agregar Tipo IVA
+          Agregar Departamento
         </ButtonPrimary>
       </div>
       <div className="mt-4 w-full">
         <Table
           multiDisabled={disabledActivate}
-          title="Tipos de IVA"
-          data={rowTiposIva}
-          cols={columnsTiposIva}
-          setSelectedItems={setSelectedTipoIva}
-          selectedItems={selectedTipoIva}
+          title="Departamentos"
+          data={rowsDepartamento}
+          cols={columnsDepartamentos}
+          setSelectedItems={setSelectedDepartamentos}
+          selectedItems={selectedDepartamentos}
         />
       </div>
     </div>
   );
 };
 
-export default AdminTiposIva;
+export default AdminDepartamentos;

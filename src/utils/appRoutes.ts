@@ -11,6 +11,7 @@ export const appRoutes = {
     adminAddTipoIva: () => "/admin/tipos-iva/agregar-tipo-iva",
     adminTiposIva: () => "/admin/tipos-iva",
     adminDepartamentos: () => "/admin/departamentos",
+    adminCiudades: () => "/admin/ciudades",
     adminProfile: () => "/admin/profile",
     empresaProfile: () => "/empresa/profile",
     // Empresas Routes

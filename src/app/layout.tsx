@@ -34,9 +34,9 @@ export default function RootLayout({
       </head>
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
         <Provider store={store}>
-          <SessionWrapper>
+          {/* <SessionWrapper> */}
           <DashboardWrapper>{children}</DashboardWrapper>
-          </SessionWrapper>
+          {/* </SessionWrapper> */}
         </Provider>
       </body>
     </html>

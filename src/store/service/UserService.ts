@@ -5,7 +5,7 @@ import { apiRoutes } from "@/utils/apiRoutes";
 export const UserService = createApi({
   reducerPath: "UserService",
   baseQuery: baseQuery,
-  tagTypes: ["UserInfo"],
+  tagTypes: ["UserInfo", "ListUsers"],
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (data) => ({
@@ -61,6 +61,38 @@ export const UserService = createApi({
         body: data,
       }),
     }),
+    createUser: builder.mutation({
+      query: (data) => ({
+        url: apiRoutes.listOrCreateUsers(),
+        method: "POST",
+        body: data,
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+      invalidatesTags: ["ListUsers"],
+    }),
+    deleteUser: builder.mutation({
+      query: (data) => ({
+        url: apiRoutes.userById(data?.userId),
+        method: "DELETE",
+        body: data,
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+      invalidatesTags: ["ListUsers"],
+    }),
+    listUsers: builder.query({
+      query: () => apiRoutes.listOrCreateUsers(),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+      providesTags: ["ListUsers"],
+    }),
   }),
 });
 
@@ -70,5 +102,8 @@ export const {
   useLazyCurrentUserQuery,
   useLoginWithExternalServiceMutation,
   useResetPasswordMutation,
-  useForgotPasswordMutation
+  useForgotPasswordMutation,
+  useCreateUserMutation,
+  useDeleteUserMutation,
+  useLazyListUsersQuery,
 } = UserService;
