@@ -90,7 +90,7 @@ const AgregarUsuario = () => {
       };
 
       const resp = (await createUser(dataToSend)) as any;
-      if (resp?.data?.user) {
+      if (resp?.data?.id) {
         toast.success("Usuario creado correctamente.");
         push(appRoutes.empresaUsuarios() as any);
       } else {
