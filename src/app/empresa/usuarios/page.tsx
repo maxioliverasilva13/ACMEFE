@@ -10,55 +10,49 @@ import { appRoutes } from "@/utils/appRoutes";
 import { columnsUser, formatUsuariosToTable } from "@/utils/usuarios";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  useLazyListUsersQuery,
+  useDeleteUserMutation,
+} from "@/store/service/UserService";
+import useGlobal from "@/hooks/useGlobal";
 
 const EmpresaUsuarios = () => {
   const { push } = useRouter();
   const [disabledActivate, setDisabledActivate] = useState<boolean>(false);
   const [selectedUsers, setSelectedUsers] = useState<Usuario[]>([]);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [getUserInfo, { data, isLoading }] = useLazyListUsersQuery();
+  const { handleSetLoading } = useGlobal();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const handleLoadUserInfo = async () => {
+    handleSetLoading(true);
+    const resp = await getUserInfo({});
+    handleSetLoading(false);
+    // console.log(resp?.data);
+  };
+
+  useEffect(() => {
+    handleLoadUserInfo();
+  }, []);
+
+  const users = data ?? [];
 
   const handleAddUser = () => {
     push(appRoutes.empresaAddUsuarios() as any);
   };
 
-  const mockLostOfUsers: Usuario[] = [
-    {
-      id: 1,
-      image: "https://i.pravatar.cc/150?img=61",
-      name: "Maximiliano",
-      tel: "Tel 1",
-      dir: "Direccion 1",
-      email: "angelotunado02@gmail.com",
-      califications: 5,
-    },
-    {
-      id: 2,
-      image: "https://i.pravatar.cc/150?img=55",
-      name: "Gustavo",
-      tel: "Tel 2",
-      dir: "Direccion 2",
-      email: "alitalima@gmail.com",
-      califications: 1,
-    },
-    {
-      id: 3,
-      image: "https://i.pravatar.cc/150?img=13",
-      name: "Pepe",
-      tel: "Tel 1",
-      dir: "Direccion 2",
-      email: "pepegonza@gmail.com",
-      califications: 3,
-    },
-  ];
-
-  const userRows = formatUsuariosToTable(mockLostOfUsers);
+  const userRows = formatUsuariosToTable(users);
 
   const handleDeleteUsers = () => {
+    selectedUsers?.forEach((usr) => {
+      deleteUser(usr.id);
+    });
+
     setOpenDeleteModal(false);
     setSelectedUsers([]);
-    // delete users on backend
-  }
+  };
 
   return (
     <div className="w-full h-auto flex flex-grow p-5 flex-col items-start justify-start gap-5">
@@ -90,7 +84,7 @@ const EmpresaUsuarios = () => {
       <div className="mt-4 w-full">
         <Table
           multiDisabled={disabledActivate}
-          title="Listado de usuarios"
+          title="Usuarios"
           data={userRows}
           cols={columnsUser}
           setSelectedItems={setSelectedUsers}

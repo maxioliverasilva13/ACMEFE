@@ -1,4 +1,4 @@
-import { ExclamationTriangleIcon, HomeModernIcon, MapPinIcon, ReceiptPercentIcon, ShoppingBagIcon, TagIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { BuildingOffice2Icon, ExclamationTriangleIcon, MapIcon, MapPinIcon, ReceiptPercentIcon, ShoppingBagIcon, TagIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { appRoutes } from "./appRoutes";
 import { HomeIcon } from "@heroicons/react/24/outline";
 
@@ -21,18 +21,24 @@ export const AdminDashboardItems = [
         title: "Empresas",
         href: appRoutes.adminEmpresas(),
         validPath: [appRoutes.adminEmpresas()],
-        icon: <HomeModernIcon color="white" strokeWidth={2} width={25} />,
+        icon: <BuildingOffice2Icon color="white" strokeWidth={2} width={25} />,
     },
     {
-        title: "Tipo Iva",
+        title: "Tipos Iva",
         href: appRoutes.adminTiposIva(),
         validPath: [appRoutes.adminTiposIva()],
         icon: <ReceiptPercentIcon color="white" strokeWidth={2} width={25} />,
     },
     {
-        title: "Departamento",
+        title: "Departamentos",
         href: appRoutes.adminDepartamentos(),
         validPath: [appRoutes.adminDepartamentos()],
+        icon: <MapIcon color="white" strokeWidth={2} width={25} />,
+    },
+    {
+        title: "Ciudades",
+        href: appRoutes.adminCiudades(),
+        validPath: [appRoutes.adminCiudades()],
         icon: <MapPinIcon color="white" strokeWidth={2} width={25} />,
     },
 ];

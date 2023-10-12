@@ -1,10 +1,12 @@
+import { Direccion } from "./direccion";
+
 export type Usuario = {
   id?: any;
-  image: string;
-  name: string;
-  tel: string;
-  dir: string;
-  califications: number;
+  imagen: string;
+  nombre: string;
+  celular: string;
+  calle: string;
+  calificaciones: number;
   email?: string;
 };
 
@@ -15,3 +17,13 @@ export type SortUser = {
   imagen: string,
   tel: string,
 }
+
+export type UsuarioCreate = {
+  id?: any;
+  nombre: string;
+  celular: string;
+  imagen: string;
+  email: string;
+  empresaId: number;
+  direccion: Direccion;
+};

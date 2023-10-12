@@ -18,7 +18,7 @@ export const DEFAULT_USER_IMAGE =
 export const columnsUser: ColumnItem[] = [
   {
     title: "Nombre",
-    key: "name",
+    key: "nombre",
     icon: <UserCircleIcon width={20} color="#A3AED0" />,
   },
   {
@@ -28,17 +28,12 @@ export const columnsUser: ColumnItem[] = [
   },
   {
     title: "Telefono",
-    key: "tel",
+    key: "celular",
     icon: <PhoneIcon width={20} color="#A3AED0" />,
   },
   {
-    title: "Direccion",
-    key: "dir",
-    icon: <MapPinIcon width={20} color="#A3AED0" />,
-  },
-  {
     title: "Calificaciones",
-    key: "califications",
+    key: "calificaciones",
     icon: <StarIcon width={20} color="#A3AED0" />,
   },
 ];
@@ -47,29 +42,28 @@ export const formatUsuariosToTable = (usuarios: Usuario[]) => {
   return usuarios?.map((user) => {
     return {
       id: user?.id,
-      name: (
+      nombre: (
         <div className="w-full h-auto flex flex-row items-center justify-start gap-2 ">
           <div className="w-[60px] relative h-[60px] min-w-[60px] rounded-full overflow-hidden">
             <Image
               alt="User Avatar"
-              src={user?.image}
+              src={user?.imagen}
               layout="fill"
               objectFit="cover"
               className="rounded-full "
             />
           </div>
-          <Text message={user?.name} />
+          <Text message={user?.nombre} />
         </div>
       ),
       email: (
         <Text message={<a href={`mailTo:${user?.email}`}>{user?.email}</a>} />
       ),
-      tel: <Text message={user?.tel} />,
-      dir: <Text message={user?.dir} />,
-      califications: (
+      celular: <Text message={<a href={`tel:${user?.celular}`}>{user?.celular}</a>} />,
+      calificaciones: (
         <div className="w-auto h-auto flex flex-row items-center gap-2 justify-start">
           <StarIconSolid width={20} color="#bd8a00" />
-          <Text message={user?.califications} />
+          <Text message={user?.calificaciones} />
         </div>
       ),
     };

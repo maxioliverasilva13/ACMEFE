@@ -56,13 +56,12 @@ export const formatEmpresasToTable = (empresas: Empresa[]) => {
           <Text message={empresa?.nombre} />
         </div>
       ),
-      email: (
+      correo: (
         <Text
           message={<a href={`mailTo:${empresa?.correo}`}>{empresa?.correo}</a>}
         />
       ),
-      telefono: <Text message={empresa?.telefono} />,
-      correo: <Text message={empresa?.correo} />,
+      telefono: <Text message={<a href={`tel:${empresa?.telefono}`}>{empresa?.telefono}</a>} />,
       direccion: <Text message={empresa?.direccion} />,
       costoEnvio: <Text message={empresa?.costoEnvio} />,
     };
