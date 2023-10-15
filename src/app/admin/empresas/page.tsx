@@ -12,7 +12,20 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useListEmpresasQuery } from "@/store/service/EmpresaService";
+import { useDeleteEmpresasMutation  } from "@/store/service/EmpresaService";
+import useGlobal from "@/hooks/useGlobal";
+import {toast} from "react-toastify";
+
 const AdminEmpresas = () => {
+
+  const { handleSetLoading} = useGlobal();
+
+  const { data, isLoading } = useListEmpresasQuery("EmpresaInfo");
+
+  const [deleteEmpresas] = useDeleteEmpresasMutation();
+
+
   const { push } = useRouter();
   const [disabledActivate, setDisabledActivate] = useState<boolean>(false);
   const [selectedEmpresas, setSelectedEmpresas] = useState<Empresa[]>([]);
@@ -22,43 +35,26 @@ const AdminEmpresas = () => {
     push(appRoutes.adminAddEmpresas() as any);
   };
 
-  const empresas: Empresa[] = [
-    {
-      id: 1,
-      nombre: "Genexus Corp",
-      direccion: "Liniers 3788",
-      correo: "administration@genexus.com",
-      telefono: "4332 5599",
-      imagen: "https://i.pravatar.cc/150?img=01",
-      costoEnvio: 250,
-      wallet: "0x2545151a551d155ad1515ada15da155da51da45614ad465a6d",
-    },
-    {
-      id: 2,
-      nombre: "Microsoft",
-      direccion: "Gral. Flores 7822",
-      correo: "administration@genexus.com",
-      telefono: "4228 5587",
-      imagen: "https://i.pravatar.cc/150?img=18",
-      costoEnvio: 300,
-      wallet: "0x0525454261321564115645ds5d41s55465456465465456456",
-    },
-    {
-      id: 3,
-      nombre: "Apple",
-      direccion: "Genexus Corp",
-      correo: "administration@genexus.com",
-      telefono: "4165 2396",
-      imagen: "https://i.pravatar.cc/150?img=20",
-      costoEnvio: 200,
-      wallet: "0x45d4d5s4d5s4654654654d6s5d4s65d4654654879879878798",
-    },
-  ];
+  const empresas: any = data || [];
 
   const rowEmpresas = formatEmpresasToTable(empresas);
 
-  const handleDeleteEmpresas = () => {
+  const handleDeleteEmpresas = async() => {
     setOpenDeleteModal(false);
+    handleSetLoading(true);
+    
+    const empresasIds =  selectedEmpresas.map(empresa => empresa.id);
+    try{
+      await deleteEmpresas({ EmpresasIds: empresasIds});
+      toast.success("Empresas eliminadas correctamente");
+      handleSetLoading(false);
+
+
+    }catch(e){
+      handleSetLoading(false);
+      toast.error("Ha ocurrido un error");
+
+    }
     setSelectedEmpresas([]);
   };
 

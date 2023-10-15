@@ -27,7 +27,8 @@ export const adminRoutes = [
   appRoutes.adminTiposIva(),
   appRoutes.adminDepartamentos(),
   appRoutes.adminProfile(),
-  appRoutes.empresaProfile(),
+  appRoutes.empresaProfile(), 
+  appRoutes.adminEditEmpresas()
 ];
 
 export const userRoutes = [

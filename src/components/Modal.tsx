@@ -30,7 +30,7 @@ const ModalDelete: FC<ModalDeleteProps> = ({
 
   const renderContent = () => {
     return (
-      <form action="#">
+      <form >
         <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-200">
           {title}
         </h3>
