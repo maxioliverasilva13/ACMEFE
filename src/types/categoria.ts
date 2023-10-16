@@ -6,3 +6,8 @@ export type Categoria = {
     imagen?: string;
     productos: number;
 }
+
+export type CategoriaList = {
+    categoriaNombre: string;
+    categoriaId: number;
+}

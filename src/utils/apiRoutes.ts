@@ -7,5 +7,8 @@ export const apiRoutes = {
     resetPassword: () => "/Auth/resetPassword",
     forgotPassword: () => "/Auth/forgotPassword",
     listOrCreateUsers: () => "/api/User",
+    listarCategorias: () => "/api/Categoria",
+    crearProducto: () => "/api/Producto",
+    listarTiposIva: () => "/api/TipoIva",
     userById: (userId: string) => `/api/User/${userId}`,
 }

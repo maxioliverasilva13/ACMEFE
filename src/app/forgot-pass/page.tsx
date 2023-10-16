@@ -65,7 +65,7 @@ const PageForgotPass = ({}) => {
                 {...register(ForgotPasswordFormFields.email)}
                 error={errors[ForgotPasswordFormFields.email]?.message}
                 type="email"
-                placeholder="Contraseña"
+                placeholder="Email"
                 className="mt-1"
               />
             </label>
