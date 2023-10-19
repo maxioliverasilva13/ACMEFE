@@ -9,6 +9,8 @@ export const apiRoutes = {
     listOrCreateUsers: () => "/api/User",
     listarCategorias: () => "/api/Categoria",
     crearProducto: () => "/api/Producto",
+    listarMisProductosEmpresa: () => "/api/Producto/mis-productos",
+    productoById: (prodId: any) => `/api/Producto/${prodId ? prodId: "[prodId]"}`,
     listarTiposIva: () => "/api/TipoIva",
     userById: (userId: string) => `/api/User/${userId}`,
 }

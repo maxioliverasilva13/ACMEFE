@@ -18,31 +18,35 @@ import Image from "next/image";
 import Link from "next/link";
 import NcImage from "@/shared/NcImage/NcImage";
 import { appRoutes } from "@/utils/appRoutes";
+import { ProductoList } from "@/types/productoList";
+import { DEFAULT_USER_IMAGE } from "@/utils/usuarios";
+import useGlobal from "@/hooks/useGlobal";
 
 export interface ProductCardProps {
   className?: string;
-  data?: Product;
+  data: ProductoList;
   isEmpresa?: boolean;
   isLiked?: boolean;
 }
 
 const ProductCard: FC<ProductCardProps> = ({
   className = "",
-  data = PRODUCTS[0],
+  data,
   isLiked,
   isEmpresa = false,
 }) => {
   const {
-    name,
-    price,
-    description,
-    variants,
-    status,
-    image,
-    rating,
     id,
-    numberOfReviews,
+    nombre,
+    descripcion,
+    documentoPdf,
+    precio,
+    tipoIva,
+    categorias,
+    imagenes,
   } = data;
+
+  const { } = useGlobal();
 
   const [variantActive, setVariantActive] = useState(0);
   const [showModalQuickView, setShowModalQuickView] = useState(false);
@@ -84,8 +88,8 @@ const ProductCard: FC<ProductCardProps> = ({
           <Image
             width={80}
             height={96}
-            src={image}
-            alt={name}
+            src={imagenes[0]?.url || DEFAULT_USER_IMAGE}
+            alt={"Producto Imagen"}
             className="absolute object-cover object-center"
           />
         </div>
@@ -94,16 +98,16 @@ const ProductCard: FC<ProductCardProps> = ({
           <div>
             <div className="flex justify-between ">
               <div>
-                <h3 className="text-base font-medium ">{name}</h3>
+                <h3 className="text-base font-medium ">{nombre}</h3>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   <span>
-                    {variants ? variants[variantActive].name : `Natural`}
+                    Natural
                   </span>
                   <span className="mx-2 border-s border-slate-200 dark:border-slate-700 h-4"></span>
                   <span>{size || "XL"}</span>
                 </p>
               </div>
-              <Prices price={price} className="mt-0.5" />
+              <Prices price={precio} className="mt-0.5" />
             </div>
           </div>
           <div className="flex flex-1 items-end justify-between text-sm">
@@ -118,7 +122,7 @@ const ProductCard: FC<ProductCardProps> = ({
                   router.push("/cart");
                 }}
               >
-                View cart
+                Ver carrito
               </button>
             </div>
           </div>
@@ -160,7 +164,7 @@ const ProductCard: FC<ProductCardProps> = ({
         <Link
           href={
             (isEmpresa
-              ? appRoutes.empresaPorductDetails()
+              ? appRoutes.empresaPorductDetailsWithId(data?.id ?? 0)
               : appRoutes.productDetail()) as any
           }
           className="absolute inset-0"
@@ -170,21 +174,21 @@ const ProductCard: FC<ProductCardProps> = ({
           <Link
             href={
               (isEmpresa
-                ? appRoutes.empresaPorductDetails()
+                ? appRoutes.empresaPorductDetailsWithId(data?.id ?? 0)
                 : appRoutes.productDetail()) as any
             }
             className="block"
           >
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
-              src={image}
+              src={imagenes[0]?.url || DEFAULT_USER_IMAGE}
               className="object-cover w-full h-full drop-shadow-xl"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
               alt="product"
             />
           </Link>
-          <ProductStatus status={status} />
+          <ProductStatus status={"New in"} />
           <LikeButton liked={isLiked} className="absolute top-3 end-3 z-10" />
           {/* {sizes ? renderSizeList() : renderGroupButtons()} */}
         </div>
@@ -193,19 +197,19 @@ const ProductCard: FC<ProductCardProps> = ({
           {/* {renderVariants()} */}
           <div>
             <h2 className="nc-ProductCard__title text-base font-semibold transition-colors">
-              {name}
+              {nombre}
             </h2>
             <p className={`text-sm text-slate-500 dark:text-slate-400 mt-1 `}>
-              {description}
+              {descripcion}
             </p>
           </div>
 
           <div className="flex justify-between items-end ">
-            <Prices price={price} />
+            <Prices price={precio} />
             <div className="flex items-center mb-0.5">
               <StarIcon className="w-5 h-5 pb-[1px] text-amber-400" />
               <span className="text-sm ms-1 text-slate-500 dark:text-slate-400">
-                {rating || ""} ({numberOfReviews || 0} reviews)
+                {5 || ""} ({3 || 0} Calificaciones)
               </span>
             </div>
           </div>

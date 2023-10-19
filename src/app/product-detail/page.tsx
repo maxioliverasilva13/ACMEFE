@@ -27,11 +27,18 @@ import ModalViewAllReviews from "./ModalViewAllReviews";
 import NotifyAddTocart from "@/components/NotifyAddTocart";
 import Image from "next/image";
 import AccordionInfo from "@/components/AccordionInfo";
+import { ProductoList } from "@/types/productoList";
+import { DEFAULT_USER_IMAGE } from "@/utils/usuarios";
 
 const LIST_IMAGES_DEMO = [detail1JPG, detail2JPG, detail3JPG];
 
-const ProductDetailPage = () => {
-  const { variants, status, image } = PRODUCTS[0];
+interface Props {
+  product: ProductoList,
+  isEmpresa: boolean;
+}
+
+const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
+  const { imagenes } = product;
   //
   const [variantActive, setVariantActive] = useState(0);
   const [qualitySelected, setQualitySelected] = useState(1);
@@ -43,7 +50,7 @@ const ProductDetailPage = () => {
     toast.custom(
       (t) => (
         <NotifyAddTocart
-          productImage={image}
+          productImage={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
           qualitySelected={qualitySelected}
           show={t.visible}
           variantActive={variantActive}
@@ -53,52 +60,52 @@ const ProductDetailPage = () => {
     );
   };
 
-  const renderVariants = () => {
-    if (!variants || !variants.length) {
-      return null;
-    }
+  // const renderVariants = () => {
+  //   if (!variants || !variants.length) {
+  //     return null;
+  //   }
 
-    return (
-      <div>
-        <label htmlFor="">
-          <span className="text-sm font-medium">
-            Color:
-            <span className="ml-1 font-semibold">
-              {variants[variantActive].name}
-            </span>
-          </span>
-        </label>
-        <div className="flex mt-3">
-          {variants.map((variant, index) => (
-            <div
-              key={index}
-              onClick={() => setVariantActive(index)}
-              className={`relative flex-1 max-w-[75px] h-10 sm:h-11 rounded-full border-2 cursor-pointer ${
-                variantActive === index
-                  ? "border-primary-6000 dark:border-primary-500"
-                  : "border-transparent"
-              }`}
-            >
-              <div
-                className="absolute inset-0.5 rounded-full overflow-hidden z-0 object-cover bg-cover"
-                style={{
-                  backgroundImage: `url(${
-                    // @ts-ignore
-                    typeof variant.thumbnail?.src === "string"
-                      ? // @ts-ignore
-                        variant.thumbnail?.src
-                      : typeof variant.thumbnail === "string"
-                      ? variant.thumbnail
-                      : ""
-                  })`,
-                }}
-              ></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  //   return (
+  //     <div>
+  //       <label htmlFor="">
+  //         <span className="text-sm font-medium">
+  //           Color:
+  //           <span className="ml-1 font-semibold">
+  //             {variants[variantActive].name}
+  //           </span>
+  //         </span>
+  //       </label>
+  //       <div className="flex mt-3">
+  //         {/* {variants.map((variant, index) => (
+  //           <div
+  //             key={index}
+  //             onClick={() => setVariantActive(index)}
+  //             className={`relative flex-1 max-w-[75px] h-10 sm:h-11 rounded-full border-2 cursor-pointer ${
+  //               variantActive === index
+  //                 ? "border-primary-6000 dark:border-primary-500"
+  //                 : "border-transparent"
+  //             }`}
+  //           >
+  //             <div
+  //               className="absolute inset-0.5 rounded-full overflow-hidden z-0 object-cover bg-cover"
+  //               style={{
+  //                 backgroundImage: `url(${
+  //                   // @ts-ignore
+  //                   typeof variant.thumbnail?.src === "string"
+  //                     ? // @ts-ignore
+  //                       variant.thumbnail?.src
+  //                     : typeof variant.thumbnail === "string"
+  //                     ? variant.thumbnail
+  //                     : ""
+  //                 })`,
+  //               }}
+  //             ></div>
+  //           </div>
+  //         ))} */}
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   const renderStatus = () => {
     if (!status) {
@@ -183,10 +190,10 @@ const ProductDetailPage = () => {
         </div>
 
         {/* ---------- 3 VARIANTS AND SIZE LIST ----------  */}
-        <div className="">{renderVariants()}</div>
+        {/* <div className="">{renderVariants()}</div> */}
 
         {/*  ---------- 4  QTY AND ADD TO CART BUTTON */}
-        <div className="flex space-x-3.5">
+        {!isEmpresa && <div className="flex space-x-3.5">
           <div className="flex items-center justify-center bg-slate-100/70 dark:bg-slate-800/70 px-2 py-3 sm:p-3.5 rounded-full">
             <NcInputNumber
               defaultValue={qualitySelected}
@@ -200,7 +207,7 @@ const ProductDetailPage = () => {
             <BagIcon className="hidden sm:inline-block w-5 h-5 mb-0.5" />
             <span className="ml-3">Add to cart</span>
           </ButtonPrimary>
-        </div>
+        </div>}
 
         {/*  */}
         <hr className=" 2xl:!my-10 border-slate-200 dark:border-slate-700"></hr>
@@ -313,7 +320,7 @@ const ProductDetailPage = () => {
                 <Image
                   fill
                   sizes="(max-width: 640px) 100vw, 33vw"
-                  src={LIST_IMAGES_DEMO[0]}
+                  src={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
                   className="w-full rounded-2xl object-cover"
                   alt="product detail 1"
                 />
@@ -323,7 +330,7 @@ const ProductDetailPage = () => {
               <LikeButton className="absolute right-3 top-3 " />
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3 sm:gap-6 sm:mt-6 xl:gap-8 xl:mt-8">
-              {[LIST_IMAGES_DEMO[1], LIST_IMAGES_DEMO[2]].map((item, index) => {
+              {imagenes.map((item, index) => {
                 return (
                   <div
                     key={index}
@@ -332,7 +339,7 @@ const ProductDetailPage = () => {
                     <Image
                       sizes="(max-width: 640px) 100vw, 33vw"
                       fill
-                      src={item}
+                      src={item?.url}
                       className="w-full rounded-2xl object-cover"
                       alt="product detail 1"
                     />
@@ -363,12 +370,12 @@ const ProductDetailPage = () => {
           <hr className="border-slate-200 dark:border-slate-700" />
 
           {/* OTHER SECTION */}
-          <SectionSliderProductCard
+          {/* <SectionSliderProductCard
             heading="Customers also purchased"
             subHeading=""
             headingFontClassName="text-2xl font-semibold"
             headingClassName="mb-10 text-neutral-900 dark:text-neutral-50"
-          />
+          /> */}
 
           {/* SECTION */}
           <div className="pb-20 xl:pb-28 lg:pt-14">
