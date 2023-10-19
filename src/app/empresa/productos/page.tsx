@@ -36,7 +36,9 @@ const Productos = () => {
       </div>
 
       <div className="flex-grow w-full mt-10 h-auto flex flex-row gap-4 items-start flex-wrap justify-start">
-        {productos.map((prod) => {
+        {
+        productos?.length === 0 ? <span className="w-full h-auto flex flex-row items-center justify-start font-semibold text-lg">No encontramos ningun producto...</span> : 
+        productos.map((prod) => {
           return (
             <ProductCard isEmpresa data={prod} isLiked={false} key={prod?.id} />
           );

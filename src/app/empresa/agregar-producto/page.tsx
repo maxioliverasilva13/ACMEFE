@@ -15,9 +15,13 @@ import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Input from "@/shared/Input/Input";
 import Textarea from "@/shared/Textarea/Textarea";
 import { useListarCategoriasQuery } from "@/store/service/CategoriaService";
-import { useCrearProductoMutation } from "@/store/service/ProductoService";
+import {
+  useCrearProductoMutation,
+  useListarMisProductosEmpresaQuery,
+} from "@/store/service/ProductoService";
 import { useListarTiposIvaQuery } from "@/store/service/TipoIvaService";
 import { CategoriaList } from "@/types/categoria";
+import { PRODUCT_NO_IMAGE } from "@/utils/usuarios";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
@@ -38,6 +42,8 @@ const AgregarProducto = () => {
     useListarCategoriasQuery({});
   const { data: tiposIva, isLoading: isLoadingTiposIva } =
     useListarTiposIvaQuery({});
+  const { data: productos = [], isFetching: isLoadingProductos } =
+    useListarMisProductosEmpresaQuery({});
 
   const [selectedCategorias, setSelectedCategorias] = useState<number[]>([]);
   const [selectedProductosRelacionados, setSelectedProductosRelacionados] =
@@ -48,8 +54,10 @@ const AgregarProducto = () => {
   const [handleCreateProduct] = useCrearProductoMutation();
 
   useEffect(() => {
-    handleSetLoading(isLoadingCategorias || isLoadingTiposIva);
-  }, [isLoadingCategorias, isLoadingTiposIva]);
+    handleSetLoading(
+      isLoadingCategorias || isLoadingTiposIva || isLoadingProductos
+    );
+  }, [isLoadingCategorias, isLoadingTiposIva, isLoadingProductos]);
 
   const handleNext = async (data: CrearProductoForm) => {
     if (selectedCategorias?.length === 0) {
@@ -74,7 +82,7 @@ const AgregarProducto = () => {
         Precio: data?.precio,
         TipoIva: data?.tipoIva,
         Categoria: selectedCategorias,
-        ProductosRelacionados: [],
+        ProductosRelacionados: selectedProductosRelacionados,
         Imagenes: productImages,
       };
       const resp = (await handleCreateProduct(dataToSend)) as any;
@@ -263,17 +271,28 @@ const AgregarProducto = () => {
           <Label>Productos relacionados</Label>
           <MultiSelect
             placeholder="Agrega productos relacionados"
-            items={[
-              {
-                label: "Sarten Essen - $165",
-                value: 1,
-              },
-              {
-                label: "Play 5 - $USD500",
-                value: 2,
-              },
-            ]}
-            onChange={(val: any) => setSelectedProductosRelacionados(val)}
+            items={productos?.map((prod) => {
+              return {
+                label: (
+                  <div className="w-full flex-grow h-auto gap-2 flex flex-row items-center justify-start">
+                    <img
+                      className="fit-cover w-10 h-10 rounded-full shadow-sm"
+                      src={prod?.imagenes[0]?.url || PRODUCT_NO_IMAGE}
+                    />
+                    <div className="flex flex-col items-start justify-center gap-0">
+                      <span className="font-semibold text-gray-800">
+                        {prod.nombre}
+                      </span>
+                      <span className="font-medium text-sm text-green-700">
+                        ${prod.precio || 0}
+                      </span>
+                    </div>
+                  </div>
+                ),
+                value: prod.id,
+              };
+            })}
+            onChange={(val: any) => setSelectedProductosRelacionados(val?.id)}
           />
         </div>
 
