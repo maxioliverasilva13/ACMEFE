@@ -11,11 +11,13 @@ interface Props {
   placeholder: string;
   error?: any;
   onlyOneSelectable?: boolean;
+  defaultValue?: any;
 }
 
-const Dropdown = ({ items, onChange, placeholder, error, onlyOneSelectable = false }: Props) => {
+const Dropdown = ({ items, onChange, placeholder, error, onlyOneSelectable = false, defaultValue }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [selectedValue, setSelectedValue] = useState<ItemDropdown>();
+  let isSetted = false;
 
   useEffect(() => {
     if (onChange) {
@@ -23,6 +25,20 @@ const Dropdown = ({ items, onChange, placeholder, error, onlyOneSelectable = fal
       setExpanded(false);
     }
   }, [selectedValue]);
+
+  useEffect(() => {
+    if (!selectedValue && defaultValue && items?.length > 0) {
+      isSetted = true;
+      setSelectedValue(items?.find((itm) => itm.value === defaultValue))
+    }
+
+  }, [defaultValue, items])
+
+  useEffect(() => {
+    return () => {
+      isSetted = false;
+    }
+  }, [])
 
   return (
     <div className="w-full h-auto relative">

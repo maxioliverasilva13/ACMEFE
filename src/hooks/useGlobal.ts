@@ -3,11 +3,11 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
 const useGlobal = () => {
-  const { userInfo, loading, token } = useSelector(
+  const { userInfo, loading, token, selectedProduct } = useSelector(
     (state: RootState) => state.GlobalSlice
   );
 
-  const { handleSetLoading, handleSetToken, handleSetUserInfo } =
+  const { handleSetLoading, handleSetToken, handleSetUserInfo, handleSetProductoToEdit } =
     useGlobalActions();
 
   return {
@@ -17,6 +17,8 @@ const useGlobal = () => {
     handleSetLoading,
     handleSetToken,
     handleSetUserInfo,
+    handleSetProductoToEdit,
+    selectedProduct
   };
 };
 

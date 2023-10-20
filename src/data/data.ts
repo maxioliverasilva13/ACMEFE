@@ -35,7 +35,7 @@ export interface Product {
   tags: string[];
   link: "/product-detail/";
   variants?: ProductVariant[];
-  status?: "New in" | "limited edition" | "Sold Out" | "50% Discount";
+  status?: "Nuevo" | "Edicion limitada" | "Poco Stock";
   rating?: string;
   numberOfReviews?: number;
 }
@@ -116,7 +116,7 @@ export const PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     link: "/product-detail/",
     variants: DEMO_VARIANTS,
-    status: "New in",
+    status: "Nuevo",
     rating: "4.4",
     numberOfReviews: 98,
   },
@@ -130,7 +130,7 @@ export const PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     link: "/product-detail/",
     variants: DEMO_VARIANT_COLORS,
-    status: "50% Discount",
+    status: "Poco Stock",
     rating: "4.9",
     numberOfReviews: 98,
   },
@@ -157,7 +157,7 @@ export const PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     variants: DEMO_VARIANT_COLORS,
     link: "/product-detail/",
-    status: "Sold Out",
+    status: "Poco Stock",
     rating: "4.9",
     numberOfReviews: 98,
   },
@@ -197,7 +197,7 @@ export const PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     variants: DEMO_VARIANTS,
     link: "/product-detail/",
-    status: "New in",
+    status: "Nuevo",
     rating: "4.9",
     numberOfReviews: 98,
   },
@@ -211,7 +211,7 @@ export const PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     variants: DEMO_VARIANTS,
     link: "/product-detail/",
-    status: "limited edition",
+    status: "Edicion limitada",
     rating: "4.9",
     numberOfReviews: 98,
   },
@@ -228,7 +228,7 @@ export const SPORT_PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     link: "/product-detail/",
     variants: DEMO_VARIANT_COLORS,
-    status: "New in",
+    status: "Nuevo",
     rating: "4.9",
     numberOfReviews: 98,
   },
@@ -242,7 +242,7 @@ export const SPORT_PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     link: "/product-detail/",
     variants: DEMO_VARIANT_COLORS,
-    status: "50% Discount",
+    status: "Poco Stock",
     rating: "4.9",
     numberOfReviews: 98,
   },
@@ -269,7 +269,7 @@ export const SPORT_PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     variants: DEMO_VARIANT_COLORS,
     link: "/product-detail/",
-    status: "Sold Out",
+    status: "Poco Stock",
     rating: "4.9",
     numberOfReviews: 98,
   },
@@ -309,7 +309,7 @@ export const SPORT_PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     variants: DEMO_VARIANTS,
     link: "/product-detail/",
-    status: "New in",
+    status: "Nuevo",
     rating: "4.9",
     numberOfReviews: 98,
   },
@@ -323,7 +323,7 @@ export const SPORT_PRODUCTS: Product[] = [
     tags: ["tag1", "tag2"],
     variants: DEMO_VARIANT_COLORS,
     link: "/product-detail/",
-    status: "limited edition",
+    status: "Edicion limitada",
     rating: "4.9",
     numberOfReviews: 98,
   },

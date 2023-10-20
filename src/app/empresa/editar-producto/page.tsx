@@ -1,5 +1,6 @@
 "use client";
 
+import Page404 from "@/app/not-found";
 import Dropdown from "@/components/Dropdown/Dropdown";
 import FileSelect from "@/components/FileSelect/FileSelect";
 import Label from "@/components/Label/Label";
@@ -17,6 +18,7 @@ import Textarea from "@/shared/Textarea/Textarea";
 import { useListarCategoriasQuery } from "@/store/service/CategoriaService";
 import {
   useCrearProductoMutation,
+  useEditProductoMutation,
   useListarMisProductosEmpresaQuery,
 } from "@/store/service/ProductoService";
 import { useListarTiposIvaQuery } from "@/store/service/TipoIvaService";
@@ -28,12 +30,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-const AgregarProducto = () => {
+const EditarProducto = () => {
   const {
     register,
     formState: { errors },
     handleSubmit,
     setValue,
+    getValues,
   } = useForm<CrearProductoForm>({
     resolver: yupResolver(CrearProductoValidationSchema()),
   });
@@ -45,13 +48,36 @@ const AgregarProducto = () => {
   const { data: productos = [], isFetching: isLoadingProductos } =
     useListarMisProductosEmpresaQuery({});
 
+  const { selectedProduct } = useGlobal();
+
   const [selectedCategorias, setSelectedCategorias] = useState<number[]>([]);
   const [selectedProductosRelacionados, setSelectedProductosRelacionados] =
     useState<number[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const [currentImagenes, setCurrentImagenes] = useState<any[]>([]);
+
   const [previews, setPreviews] = useState<any>({});
   const { handleUpload } = useUploadImage();
-  const [handleCreateProduct] = useCrearProductoMutation();
+  const [handleEditProduct] = useEditProductoMutation();
+
+  useEffect(() => {
+    if (selectedProduct?.id) {
+      setValue(CrearProductoFormFields.descripcion, selectedProduct.descripcion);
+      setValue(CrearProductoFormFields.documentoPdf, selectedProduct.documentoPdf);
+      setValue(CrearProductoFormFields.nombre, selectedProduct.nombre);
+      setValue(CrearProductoFormFields.titulo, selectedProduct.nombre);
+      setValue(CrearProductoFormFields.tipoIva, selectedProduct.tipoIva?.id);
+      setValue(CrearProductoFormFields.precio, selectedProduct.precio);
+      setValue(CrearProductoFormFields.linkAcata, selectedProduct.linkFicha);
+      setSelectedCategorias(selectedProduct?.categorias?.map((item) => item?.id))
+      if (selectedProduct?.productosRelacionados?.length > 0) {
+        setSelectedProductosRelacionados(selectedProduct?.productosRelacionados?.map((item) => item?.id))
+        console.log("aca", selectedProduct?.productosRelacionados?.map((item) => item?.id))
+      }
+      setCurrentImagenes(selectedProduct?.imagenes);
+    }
+  }, [selectedProduct])
 
   useEffect(() => {
     handleSetLoading(
@@ -76,16 +102,20 @@ const AgregarProducto = () => {
       );
 
       const dataToSend = {
+        Id: selectedProduct?.id,
         Nombre: data.nombre,
         Descripcion: data.descripcion,
         DocumentoPdf: data.documentoPdf,
         Precio: data?.precio,
         TipoIva: data?.tipoIva,
         Categoria: selectedCategorias,
-        ProductosRelacionados: selectedProductosRelacionados?.map((item: any) => item?.value),
+        ProductosRelacionados: selectedProductosRelacionados?.map(
+          (item: any) => item?.value
+        ),
         Imagenes: productImages,
+        // CurrentImagenes: currentImagenes,
       };
-      const resp = (await handleCreateProduct(dataToSend)) as any;
+      const resp = (await handleEditProduct(dataToSend)) as any;
       if (resp?.data?.ok) {
         toast.success("Producto creado correctamente");
       } else {
@@ -100,6 +130,8 @@ const AgregarProducto = () => {
 
     // send to backend
   };
+
+  
 
   const getPreview = (file: File, index: number) => {
     const reader = new FileReader();
@@ -121,19 +153,23 @@ const AgregarProducto = () => {
     });
   };
 
+  if (!selectedProduct) {
+    return <Page404 />
+  }
+
   return (
     <div className="w-full h=auto gap-[100px] flex flex-col items-start justify-start">
       <div className="w-full h-auto flex flex-row items-center justify-between"></div>
 
       <div className="md:w-[800px] max-w-full m-auto h-auto rounded-[20px] flex flex-col items-start justify-start shadow-lg gap-6 md:p-10 p-5 bg-white">
         <h1 className="text-texto mb-5 font-semibold text-[30px]">
-          Agregar nuevo producto
+          Editar producto
         </h1>
         <FileSelect
           selectedFiles={selectedFiles}
           setSelectedFiles={setSelectedFiles}
         />
-        {selectedFiles?.length > 0 && (
+        {(selectedFiles?.length > 0 || currentImagenes?.length > 0) && (
           <div className="w-full h-auto py-4 flex flex-row items-center justify-start gap-4 max-w-full flex-wrap overflow-auto">
             {selectedFiles?.map((file, index) => {
               if (!previews[index]) {
@@ -160,6 +196,28 @@ const AgregarProducto = () => {
                 </div>
               );
             })}
+            {currentImagenes?.map((file, index) => {
+              return (
+                <div
+                  className="min-w-[200px] w-[200px] relative h-[130px] rounded-2xl bg-white shadow-md"
+                  key={`image-${index}`}
+                >
+                  <XMarkIcon
+                    fontSize={20}
+                    color="black"
+                    className="absolute p-2 rounded-full bg-white shadow-md hover:bg-red-300 cursor-pointer transition-all hover:text-white w-[28px] h-[28px] -top-2 -right-2 z-20"
+                    onClick={() => setCurrentImagenes(currentImagenes?.filter((itm) => itm?.id !== file?.id))}
+                  />
+                  {file.url && (
+                    <img
+                      src={file?.url}
+                      alt={`Image-${index}`}
+                      className="w-full h-full object-cover rounded-2xl absolute"
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -170,16 +228,6 @@ const AgregarProducto = () => {
               {...register(CrearProductoFormFields.nombre)}
               error={errors[CrearProductoFormFields.nombre]?.message}
               placeholder="Nombre del producto"
-              type="text"
-              className="mt-1.5"
-            />
-          </div>
-          <div className="flex-grow w-full flex flex-col items-start justify-start">
-            <Label>Titulo</Label>
-            <Input
-              {...register(CrearProductoFormFields.titulo)}
-              error={errors[CrearProductoFormFields.titulo]?.message}
-              placeholder="Titulo del producto"
               type="text"
               className="mt-1.5"
             />
@@ -234,6 +282,7 @@ const AgregarProducto = () => {
         <div className="flex-grow w-full gap-2 flex flex-col items-start justify-start">
           <Label>Tipo Iva</Label>
           <Dropdown
+            defaultValue={getValues(CrearProductoFormFields.tipoIva)}
             placeholder="Seleccionar Tipo IVA"
             items={
               tiposIva?.map((item) => {
@@ -252,6 +301,7 @@ const AgregarProducto = () => {
         <div className="flex-grow w-full gap-2 flex flex-col items-start justify-start">
           <Label>Categorias</Label>
           <MultiSelect
+            defaultValue={selectedCategorias}
             placeholder="Seleccionar Categorias"
             items={
               categorias?.map((item) => {
@@ -270,6 +320,7 @@ const AgregarProducto = () => {
         <div className="flex-grow w-full gap-2 flex flex-col items-start justify-start">
           <Label>Productos relacionados</Label>
           <MultiSelect
+            defaultValue={selectedProductosRelacionados}
             placeholder="Agrega productos relacionados"
             items={productos?.map((prod) => {
               return {
@@ -297,11 +348,11 @@ const AgregarProducto = () => {
         </div>
 
         <ButtonPrimary className="w-full" onClick={handleSubmit(handleNext)}>
-          Registrar producto
+          Guardar producto
         </ButtonPrimary>
       </div>
     </div>
   );
 };
 
-export default AgregarProducto;
+export default EditarProducto;

@@ -15,6 +15,7 @@ import {
   userRoutes,
 } from "@/utils/routes";
 import Page404 from "@/app/not-found";
+import { handleClearToken } from "@/utils/token";
 
 interface Props {
   children: any;
@@ -22,7 +23,7 @@ interface Props {
 }
 
 const SessionWrapper = ({ children, params }: Props) => {
-  const { loading, token, userInfo, handleSetUserInfo, handleSetLoading } =
+  const { loading, token, userInfo, handleSetUserInfo, handleSetLoading, handleSetToken } =
     useGlobal();
   const { push } = useRouter();
   const pathname = usePathname();
@@ -31,8 +32,6 @@ const SessionWrapper = ({ children, params }: Props) => {
   const [invalidPath, setInvalidPath] = useState(false);
   const router = useRouter();
   const slugs = useParams();
-
-  console.log("slugs", slugs)
 
   const [handleGetUserInfo, { isLoading }] = useLazyCurrentUserQuery();
 
@@ -61,6 +60,8 @@ const SessionWrapper = ({ children, params }: Props) => {
     } else {
       setChecking(false);
       toast.error("Error validando usuario");
+      handleSetToken(undefined);
+      handleClearToken();
     }
     handleSetLoading(false);
   };

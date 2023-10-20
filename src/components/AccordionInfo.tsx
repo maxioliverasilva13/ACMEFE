@@ -6,44 +6,27 @@ import { FC } from "react";
 
 const DEMO_DATA = [
   {
-    name: "Description",
+    name: "Metodo de envio",
     content:
-      "Fashion is a form of self-expression and autonomy at a particular period and place and in a specific context, of clothing, footwear, lifestyle, accessories, makeup, hairstyle, and body posture.",
-  },
-  {
-    name: "Fabric + Care",
-    content: `<ul class="list-disc list-inside leading-7">
-    <li>Made from a sheer Belgian power micromesh.</li>
-    <li>
-    74% Polyamide (Nylon) 26% Elastane (Spandex)
-    </li>
-    <li>
-    Adjustable hook & eye closure and straps
-    </li>
-    <li>
-    Hand wash in cold water, dry flat
-    </li>
-  </ul>`,
-  },
-
-  {
-    name: "How it Fits",
-    content:
-      "Use this as a guide. Preference is a huge factor — if you're near the top of a size range and/or prefer more coverage, you may want to size up.",
+      "Puedes elejir metodo de envio a domicilio o retiro en el local",
   },
   {
     name: "FAQ",
     content: `
     <ul class="list-disc list-inside leading-7">
-    <li>All full-priced, unworn items, with tags attached and in their original packaging are eligible for return or exchange within 30 days of placing your order.</li>
+    <li>Cuanto demora en llegar el producto?</li>
+    Dependera de tu zona geografica, lo podras ver al momento de la compra
     <li>
-    Please note, packs must be returned in full. We do not accept partial returns of packs.
+    Que calidad tienen los productos?
     </li>
+    Calidad premium
     <li>
-    Want to know our full returns policies? Here you go.
+    Quiero una devolucion.
     </li>
+    Puedes solicitar la devolucion de tus productos, y la empresa se pondra en contacto contigo.
     <li>
-    Want more info about shipping, materials or care instructions? Here!
+    Quiero mas informacion sobre el producto.
+    Puedes ver la informacion en la seccion "Informacion"
     </li>
   </ul>
     `,

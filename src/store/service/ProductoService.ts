@@ -40,7 +40,39 @@ export const ProductoService = createApi({
         return response as ProductoList;
       },
     }),
+    disableProductoById: builder.mutation({
+      invalidatesTags: ["ProductoInfo"],
+      query: (prodId: number) => ({
+        url: apiRoutes.deleteProductoById(prodId),
+        method: "DELETE",
+        data: {},
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+    }),
+    editProducto: builder.mutation({
+      query: (data) => {
+        return {
+          body: data,
+          method: "POST",
+          url: apiRoutes.updateProducto(),
+        };
+      },
+      invalidatesTags: ["Productos", "ProductoInfo"],
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+    }),
   }),
 });
 
-export const { useCrearProductoMutation, useListarMisProductosEmpresaQuery, useObtenerProductoByIdQuery } = ProductoService;
+export const {
+  useCrearProductoMutation,
+  useListarMisProductosEmpresaQuery,
+  useObtenerProductoByIdQuery,
+  useDisableProductoByIdMutation,
+  useEditProductoMutation,
+} = ProductoService;

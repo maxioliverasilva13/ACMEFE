@@ -1,5 +1,6 @@
 'use client'
 
+import { ProductoList } from "@/types/productoList";
 import { handleGetToken, handleStorageToken } from "@/utils/token";
 import { createSlice } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
@@ -9,10 +10,12 @@ const initialState: {
   userInfo: any;
   token: string | undefined,
   loading: boolean,
+  selectedProduct?: ProductoList,
 } = {
   userInfo: null,
   token: handleGetToken() ?? "",
   loading: false,
+  selectedProduct: undefined,
 };
 
 export const GlobalSlice = createSlice({
@@ -28,6 +31,9 @@ export const GlobalSlice = createSlice({
     setLoading(state, {payload}) {
       state.loading = payload;
     },
+    setProductoToEdit(state, {payload}) {
+      state.selectedProduct = payload;
+    },
   },
   extraReducers: {},
 });
@@ -39,7 +45,7 @@ export const useGlobalActions = () => {
     dispatch(GlobalSlice.actions.setUserInfo(userInfo));
   };
 
-  const handleSetToken = (token: string) => {
+  const handleSetToken = (token: any) => {
     handleStorageToken(token);
     dispatch(GlobalSlice.actions.setToken(token));
   };
@@ -48,10 +54,15 @@ export const useGlobalActions = () => {
     dispatch(GlobalSlice.actions.setLoading(loading));
   };
 
+  const handleSetProductoToEdit = (prod: any) => {
+    dispatch(GlobalSlice.actions.setProductoToEdit(prod));
+  };
+
   return {
     handleSetUserInfo,
     handleSetToken,
     handleSetLoading,
+    handleSetProductoToEdit
   };
 };
 

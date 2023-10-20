@@ -1,9 +1,9 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import LikeButton from "@/components/LikeButton";
-import { StarIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, StarIcon, TrashIcon } from "@heroicons/react/24/solid";
 import BagIcon from "@/components/BagIcon";
 import NcInputNumber from "@/components/NcInputNumber";
 import { PRODUCTS } from "@/data/data";
@@ -29,17 +29,29 @@ import Image from "next/image";
 import AccordionInfo from "@/components/AccordionInfo";
 import { ProductoList } from "@/types/productoList";
 import { DEFAULT_USER_IMAGE } from "@/utils/usuarios";
+import useGlobal from "@/hooks/useGlobal";
+import ButtonDelete from "@/shared/Button/ButtonDelete";
+import DeleteProductoModal from "@/components/DeleteProductoModal/DeleteProductoModal";
+import { useRouter } from "next/navigation";
+import { appRoutes } from "@/utils/appRoutes";
+import { Route } from "next";
+import ProductCard from "@/components/ProductCard";
 
 const LIST_IMAGES_DEMO = [detail1JPG, detail2JPG, detail3JPG];
 
 interface Props {
-  product: ProductoList,
+  product: ProductoList;
   isEmpresa: boolean;
 }
 
 const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
   const { imagenes } = product;
-  //
+  const { userInfo, handleSetProductoToEdit } = useGlobal();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const isVendedor = userInfo?.roles?.includes("Vendedor") ?? false;
+  const { push } = useRouter();
+
   const [variantActive, setVariantActive] = useState(0);
   const [qualitySelected, setQualitySelected] = useState(1);
   const [isOpenModalViewAllReviews, setIsOpenModalViewAllReviews] =
@@ -154,14 +166,19 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
         {/* ---------- 1 HEADING ----------  */}
         <div>
           <h2 className="text-2xl sm:text-3xl font-semibold">
-            Heavy Weight Shoes
+            {product?.nombre}
           </h2>
+          {
+            !product?.activo && <p className="h-auto px-4 py-2 my-4 w-fit rounded-lg shadow-sm text-white bg-red-400">
+              Producto deshabilitado
+            </p>
+          }
 
           <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
             {/* <div className="flex text-xl font-semibold">$112.00</div> */}
             <Prices
               contentClass="py-1 px-2 md:py-1.5 md:px-3 text-lg font-semibold"
-              price={112}
+              price={product?.precio}
             />
 
             <div className="h-7 border-l border-slate-300 dark:border-slate-700"></div>
@@ -173,10 +190,10 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
               >
                 <StarIcon className="w-5 h-5 pb-[1px] text-yellow-400" />
                 <div className="ml-1.5 flex">
-                  <span>4.9</span>
+                  <span>{product.rate}</span>
                   <span className="block mx-2">·</span>
                   <span className="text-slate-600 dark:text-slate-400 underline">
-                    142 reviews
+                    {product.cantCalificaciones} reviews
                   </span>
                 </div>
               </a>
@@ -193,21 +210,23 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
         {/* <div className="">{renderVariants()}</div> */}
 
         {/*  ---------- 4  QTY AND ADD TO CART BUTTON */}
-        {!isEmpresa && <div className="flex space-x-3.5">
-          <div className="flex items-center justify-center bg-slate-100/70 dark:bg-slate-800/70 px-2 py-3 sm:p-3.5 rounded-full">
-            <NcInputNumber
-              defaultValue={qualitySelected}
-              onChange={setQualitySelected}
-            />
+        {!isEmpresa && (
+          <div className="flex space-x-3.5">
+            <div className="flex items-center justify-center bg-slate-100/70 dark:bg-slate-800/70 px-2 py-3 sm:p-3.5 rounded-full">
+              <NcInputNumber
+                defaultValue={qualitySelected}
+                onChange={setQualitySelected}
+              />
+            </div>
+            <ButtonPrimary
+              className="flex-1 flex-shrink-0"
+              onClick={notifyAddTocart}
+            >
+              <BagIcon className="hidden sm:inline-block w-5 h-5 mb-0.5" />
+              <span className="ml-3">Add to cart</span>
+            </ButtonPrimary>
           </div>
-          <ButtonPrimary
-            className="flex-1 flex-shrink-0"
-            onClick={notifyAddTocart}
-          >
-            <BagIcon className="hidden sm:inline-block w-5 h-5 mb-0.5" />
-            <span className="ml-3">Add to cart</span>
-          </ButtonPrimary>
-        </div>}
+        )}
 
         {/*  */}
         <hr className=" 2xl:!my-10 border-slate-200 dark:border-slate-700"></hr>
@@ -227,28 +246,28 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
   const renderDetailSection = () => {
     return (
       <div className="">
-        <h2 className="text-2xl font-semibold">Product Details</h2>
+        <h2 className="text-2xl font-semibold">Descripcion del producto</h2>
         <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl mt-7">
-          <p>
-            The patented eighteen-inch hardwood Arrowhead deck --- finely
-            mortised in, makes this the strongest and most rigid canoe ever
-            built. You cannot buy a canoe that will afford greater satisfaction.
-          </p>
-          <p>
-            The St. Louis Meramec Canoe Company was founded by Alfred Wickett in
-            1922. Wickett had previously worked for the Old Town Canoe Co from
-            1900 to 1914. Manufacturing of the classic wooden canoes in Valley
-            Park, Missouri ceased in 1978.
-          </p>
-          <ul>
-            <li>Regular fit, mid-weight t-shirt</li>
-            <li>Natural color, 100% premium combed organic cotton</li>
-            <li>
-              Quality cotton grown without the use of herbicides or pesticides -
-              GOTS certified
-            </li>
-            <li>Soft touch water based printed in the USA</li>
-          </ul>
+          <p>{product?.descripcion}</p>
+        </div>
+
+        <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl mt-7">
+          <span>Tipo de iva:</span>
+          <span className="font-bold ml-2 text-gray-900">{product?.tipoIva?.nombre} - %{product?.tipoIva?.porcentaje}</span>
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-7">Categorias</h2>
+        <div className="flex mt-4 flex-row items-center jsutify-start flex-wrap gap-4">
+          {product?.categorias?.map((cat) => {
+            return (
+              <div
+                className="px-4 py-2 rounded-2xl shadow-sm bg-gray-300"
+                key={cat?.id}
+              >
+                {cat?.nombre}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
@@ -260,48 +279,42 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
         {/* HEADING */}
         <h2 className="text-2xl font-semibold flex items-center">
           <StarIcon className="w-7 h-7 mb-0.5" />
-          <span className="ml-1.5"> 4,87 · 142 Reviews</span>
+          <span className="ml-1.5">
+            {" "}
+            {product.rate} · {product.cantCalificaciones} Reviews
+          </span>
         </h2>
 
         {/* comment */}
         <div className="mt-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-11 gap-x-28">
-            <ReviewItem />
-            <ReviewItem
-              data={{
-                comment: `I love the charcoal heavyweight hoodie. Still looks new after plenty of washes. 
-                  If you’re unsure which hoodie to pick.`,
-                date: "December 22, 2021",
-                name: "Stiven Hokinhs",
-                starPoint: 5,
-              }}
-            />
-            <ReviewItem
-              data={{
-                comment: `The quality and sizing mentioned were accurate and really happy with the purchase. Such a cozy and comfortable hoodie. 
-                Now that it’s colder, my husband wears his all the time. I wear hoodies all the time. `,
-                date: "August 15, 2022",
-                name: "Gropishta keo",
-                starPoint: 5,
-              }}
-            />
-            <ReviewItem
-              data={{
-                comment: `Before buying this, I didn't really know how I would tell a "high quality" sweatshirt, but after opening, I was very impressed. 
-                The material is super soft and comfortable and the sweatshirt also has a good weight to it.`,
-                date: "December 12, 2022",
-                name: "Dahon Stiven",
-                starPoint: 5,
-              }}
-            />
+          <div id="reviews" className="grid grid-cols-1 md:grid-cols-2 gap-y-11 gap-x-28">
+            {product?.calificaciones?.length === 0 && (
+              <span className="font-medium text-base text-gray-900">
+                Este producto aun no tiene ninguna calificacion
+              </span>
+            )}
+            {product.calificaciones?.map((item) => {
+              return (
+                <ReviewItem
+                  key={item?.calificacionId}
+                  data={{
+                    comment: item?.descripcion,
+                    date: "December 22, 2021",
+                    name: item?.usuarioNombre,
+                    starPoint: item?.rate ?? 0,
+                    avatar: item?.usuarioImagen,
+                  }}
+                />
+              );
+            })}
           </div>
 
-          <ButtonSecondary
+          {/* <ButtonSecondary
             onClick={() => setIsOpenModalViewAllReviews(true)}
             className="mt-10 border border-slate-300 dark:border-slate-700 "
           >
             Show me all 142 reviews
-          </ButtonSecondary>
+          </ButtonSecondary> */}
         </div>
       </div>
     );
@@ -369,20 +382,52 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
 
           <hr className="border-slate-200 dark:border-slate-700" />
 
-          {/* OTHER SECTION */}
-          {/* <SectionSliderProductCard
-            heading="Customers also purchased"
-            subHeading=""
-            headingFontClassName="text-2xl font-semibold"
-            headingClassName="mb-10 text-neutral-900 dark:text-neutral-50"
-          /> */}
-
+          
+          <h2 className="font-bold text-2xl text-gray-900">Productos relacionados</h2>
+          <div className="w-full h-auto flex flex-row items-center justify-start gap-4 flex-wrap">
+          {
+            product?.productosRelacionados?.map((prod) => {
+              return (
+                <ProductCard isEmpresa data={prod} isLiked={false} key={prod?.id} />
+              );
+            })
+          }
+          </div>
           {/* SECTION */}
           <div className="pb-20 xl:pb-28 lg:pt-14">
             <SectionPromo2 />
           </div>
+
+        </div>
+
+        <div className="w-full h-auto flex flex-row items-center justify-start gap-4 flex-wrap">
+        {isVendedor && product.activo && (
+          <ButtonPrimary
+            icon={<PencilIcon width={20} color="white" />}
+            onClick={() => {
+              handleSetProductoToEdit(product);
+              push(appRoutes.empresaEditarProducto() as Route)
+            }}
+          >
+            Editar Producto
+          </ButtonPrimary>
+        )}
+        {isVendedor && product.activo && (
+          <ButtonDelete
+            icon={<TrashIcon width={20} color="white" />}
+            onClick={() => setOpenDeleteModal(!openDeleteModal)}
+          >
+            Borrar Producto
+          </ButtonDelete>
+        )}
         </div>
       </main>
+
+      <DeleteProductoModal
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+        productId={product.id}
+      />
 
       {/* MODAL VIEW ALL REVIEW */}
       <ModalViewAllReviews

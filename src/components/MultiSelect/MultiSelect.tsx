@@ -9,11 +9,13 @@ interface Props {
   items: ItemDropdown[];
   onChange: any;
   placeholder: string;
+  defaultValue?: any;
 }
 
-const MultiSelect = ({ items, onChange, placeholder }: Props) => {
+const MultiSelect = ({ items, onChange, placeholder, defaultValue }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [selectedValue, setSelectedValue] = useState<any[]>([]);
+  let isSetted = false;
 
   useEffect(() => {
     if (onChange) {
@@ -21,6 +23,21 @@ const MultiSelect = ({ items, onChange, placeholder }: Props) => {
       setExpanded(false);
     }
   }, [selectedValue]);
+
+  useEffect(() => {
+    if (defaultValue?.length > 0 && selectedValue?.length === 0 && items?.length > 0) {
+      isSetted = true;
+      setSelectedValue(
+        items?.filter((itm) => defaultValue?.includes(itm?.value))
+      );
+    }
+  }, [defaultValue, items]);
+
+  useEffect(() => {
+    return () => {
+      isSetted = false;
+    }
+  }, []);
 
   const handleAddValue = (item: any) => {
     const exists = selectedValue?.find((itm) => itm?.value === item?.value);
@@ -72,7 +89,11 @@ const MultiSelect = ({ items, onChange, placeholder }: Props) => {
               key={`item-${index}`}
             >
               {itm?.label}
-              <XMarkIcon onClick={() => handleAddValue(itm)} width={20} color="rgb(31 41 55 / var(--tw-text-opacity))" />
+              <XMarkIcon
+                onClick={() => handleAddValue(itm)}
+                width={20}
+                color="rgb(31 41 55 / var(--tw-text-opacity))"
+              />
             </div>
           );
         })}
