@@ -9,7 +9,7 @@ import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -21,8 +21,21 @@ import {
 } from "@/forms/CrearCiudadForm";
 
 import { Ciudad } from "@/types/ciudad";
-import { columnsCiudades, formatCiudadesToTable } from "@/utils/ciudades";
+import {
+  columnsCiudades,
+  formatCiudadesToTable,
+  formatDepartamentosToDropdown,
+} from "@/utils/ciudades";
 import Dropdown from "@/components/Dropdown/Dropdown";
+
+import { useLazyListarDepartamentosQuery } from "@/store/service/DepartamentoService";
+import useGlobal from "@/hooks/useGlobal";
+import toast from "react-hot-toast";
+import {
+  useCreateCiudadMutation,
+  useDeleteCiudadMutation,
+  useLazyListarCiudadesQuery,
+} from "@/store/service/CiudadService";
 
 const AdminCiudades = () => {
   const { push } = useRouter();
@@ -41,18 +54,28 @@ const AdminCiudades = () => {
     resolver: yupResolver(CrearCiudadValidationSchema()),
   });
 
-  const ciudades: Ciudad[] = [
-    {
-      id: 1,
-      nombre: "San José de Mayo",
-      departamentoId: 1,
-    },
-    {
-      id: 2,
-      nombre: "Libertad",
-      departamentoId: 1,
-    },
-  ];
+  const [getCiudades, { data: dataCiudades }] = useLazyListarCiudadesQuery();
+  const [
+    getDepartamentos,
+    { data: dataDepartamentos },
+  ] = useLazyListarDepartamentosQuery();
+  const [createCiudad] = useCreateCiudadMutation();
+  const [deleteCiudad] = useDeleteCiudadMutation();
+  const { handleSetLoading } = useGlobal();
+
+  const handleLoadData = async () => {
+    handleSetLoading(true);
+    await getCiudades({});
+    await getDepartamentos({});
+    handleSetLoading(false);
+  };
+
+  const departamentos = dataDepartamentos ?? [];
+  const ciudades = dataCiudades ?? [];
+
+  useEffect(() => {
+    handleLoadData();
+  }, []);
 
   const rowsCiudad = formatCiudadesToTable(ciudades);
 
@@ -61,8 +84,27 @@ const AdminCiudades = () => {
     setSelectedCiudades([]);
   };
 
-  const handleNext = (data: any) => {
-    console.log("data: ", data);
+  const handleNext = async (data: CrearCiudadForm) => {
+    try {
+      handleSetLoading(true);
+      const dataToSend: Ciudad = {
+        nombre: data.nombre,
+        departamentoId: data.departamentoId,
+      };
+
+      const resp = (await createCiudad(dataToSend)) as any;
+      if (resp?.data?.id) {
+        toast.success("Ciudad creada correctamente.");
+        setOpenAddModal(false);
+        reset();
+      } else {
+        toast.error("Error al crear ciudad.", resp?.data);
+      }
+      handleSetLoading(false);
+    } catch (error: any) {
+      handleSetLoading(false);
+      toast.error("Error al crear ciudad.", error?.message);
+    }
   };
 
   const addCiudadContent = () => {
@@ -82,20 +124,7 @@ const AdminCiudades = () => {
           <Label>Departamento</Label>
           <Dropdown
             placeholder="Seleccionar departamento"
-            items={[
-              {
-                label: "Montevideo",
-                value: 1,
-              },
-              {
-                label: "San José",
-                value: 2,
-              },
-              {
-                label: "Punta del Este",
-                value: 3,
-              },
-            ]}
+            items={formatDepartamentosToDropdown(departamentos)}
             onChange={(val: any) =>
               setValue(CrearCiudadFormFields.departamentoId, val)
             }
@@ -122,7 +151,10 @@ const AdminCiudades = () => {
         textCancel="Cancelar"
         title="Agregar nueva ciudad"
         description="Esta ciudad estará relacionada a un departamento, y luego podrá ser utilizada para el registro de direcciones de usuarios."
-        onCloseModalDelete={() => {setOpenAddModal(false); reset()}}
+        onCloseModalDelete={() => {
+          setOpenAddModal(false);
+          reset();
+        }}
         show={openAddModal}
         content={addCiudadContent()}
         onConfirm={handleSubmit(handleNext)}
@@ -132,14 +164,18 @@ const AdminCiudades = () => {
           <ButtonDelete
             icon={<TrashIcon width={20} color="white" />}
             onClick={() => setOpenDeleteModal(!openDeleteModal)}
+            type="button"
           >
             Borrar Seleccionados
           </ButtonDelete>
         )}
-        <ButtonSecondary onClick={() => setDisabledActivate(!disabledActivate)}>
+        <ButtonSecondary
+          onClick={() => setDisabledActivate(!disabledActivate)}
+          type="button"
+        >
           {disabledActivate ? "Deshabilitar seleccion" : "Habilitar seleccion"}
         </ButtonSecondary>
-        <ButtonPrimary onClick={() => setOpenAddModal(true)}>
+        <ButtonPrimary onClick={() => setOpenAddModal(true)} type="button">
           Agregar Ciudad
         </ButtonPrimary>
       </div>

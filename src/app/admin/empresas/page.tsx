@@ -78,14 +78,15 @@ const AdminEmpresas = () => {
           <ButtonDelete
             icon={<TrashIcon width={20} color="white" />}
             onClick={() => setOpenDeleteModal(!openDeleteModal)}
+            type="button"
           >
             Borrar Seleccionados
           </ButtonDelete>
         )}
-        <ButtonSecondary onClick={() => setDisabledActivate(!disabledActivate)}>
+        <ButtonSecondary onClick={() => setDisabledActivate(!disabledActivate)} type="button">
           {disabledActivate ? "Deshabilitar seleccion" : "Habilitar seleccion"}
         </ButtonSecondary>
-        <ButtonPrimary onClick={() => handleAddEmpresa()}>
+        <ButtonPrimary onClick={() => handleAddEmpresa()} type="button">
           Agregar Empresa
         </ButtonPrimary>
       </div>

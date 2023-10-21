@@ -1,5 +1,6 @@
 import Text from "@/components/Table/components/Text";
 import { Ciudad } from "@/types/ciudad";
+import { Departamento } from "@/types/departamento";
 import { ColumnItem } from "@/types/table";
 import {
   InformationCircleIcon,
@@ -18,6 +19,15 @@ export const formatCiudadesToTable = (ciudades: Ciudad[]) => {
     return {
       id: ciudad?.id,
       nombre: <Text message={ciudad?.nombre} />,
+    };
+  });
+};
+
+export const formatDepartamentosToDropdown = (departamentos: Departamento[]) => {
+  return departamentos?.map((departamento) => {
+    return {
+      label: departamento.nombre,
+      value: departamento.id,
     };
   });
 };

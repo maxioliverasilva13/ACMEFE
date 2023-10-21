@@ -15,4 +15,9 @@ export const apiRoutes = {
     deleteProductoById: (prodId: any) => `/api/Producto/${prodId ? prodId: "[prodId]"}`,
     listarTiposIva: () => "/api/TipoIva",
     userById: (userId: string) => `/api/User/${userId}`,
+    tipoIVAById: (id: number) => `/api/TipoIva/${id}`,
+    listOrCreateDepartamento: () => "/api/Departamento",
+    departamentoById: (id: number) => `/api/Departamento/${id}`,
+    listOrCreateCiudad: () => "/api/Ciudad",
+    ciudadById: (id: number) => `/api/Ciudad/${id}`,
 }

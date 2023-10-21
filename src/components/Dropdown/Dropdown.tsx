@@ -42,7 +42,7 @@ const Dropdown = ({ items, onChange, placeholder, error, onlyOneSelectable = fal
 
   return (
     <div className="w-full h-auto relative">
-      <ButtonDropdown isOpen={expanded} onClick={() => setExpanded(!expanded)} error={error}>
+      <ButtonDropdown isOpen={expanded} onClick={() => setExpanded(!expanded)} error={error} type="button">
         {selectedValue ? selectedValue?.label : placeholder}
       </ButtonDropdown>
       {expanded && (

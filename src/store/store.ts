@@ -5,6 +5,8 @@ import { UserService } from "./service/UserService";
 import { CategoriaService } from "./service/CategoriaService";
 import { TipoIvaService } from "./service/TipoIvaService";
 import { ProductoService } from "./service/ProductoService";
+import { DepartamentoService } from "./service/DepartamentoService";
+import { CiudadService } from "./service/CiudadService";
 
 const store = configureStore({
   reducer: {
@@ -13,9 +15,11 @@ const store = configureStore({
     [CategoriaService.reducerPath]: CategoriaService.reducer,
     [TipoIvaService.reducerPath]: TipoIvaService.reducer,
     [ProductoService.reducerPath]: ProductoService.reducer,
+    [DepartamentoService.reducerPath]: DepartamentoService.reducer,
+    [CiudadService.reducerPath]: CiudadService.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(UserService.middleware, CategoriaService.middleware, ProductoService.middleware, TipoIvaService.middleware),
+    getDefaultMiddleware().concat(UserService.middleware, CategoriaService.middleware, ProductoService.middleware, TipoIvaService.middleware, DepartamentoService.middleware, CiudadService.middleware),
 });
 
 setupListeners(store.dispatch);

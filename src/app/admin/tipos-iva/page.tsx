@@ -18,10 +18,17 @@ import {
 } from "@/forms/CrearTipoIvaForm";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+import {
+  useLazyListarTiposIvaQuery,
+  useDeleteTipoIvaMutation,
+  useCreateTipoIvaMutation,
+} from "@/store/service/TipoIvaService";
+import useGlobal from "@/hooks/useGlobal";
+import { TipoIvaLIst } from "@/types/productoList";
+import toast from "react-hot-toast";
 
 const AdminTiposIva = () => {
   const { push } = useRouter();
@@ -33,33 +40,61 @@ const AdminTiposIva = () => {
     register,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm<CrearTipoIvaForm>({
     defaultValues: tipoIvaDefaultValues,
     resolver: yupResolver(CrearTipoIvaValidationSchema()),
   });
 
-  const tiposIVA: TipoIva[] = [
-    {
-      id: 1,
-      nombre: "IVA Tasa Básica",
-      porcentaje: 22,
-    },
-    {
-      id: 2,
-      nombre: "IVA Tasa Mínima",
-      porcentaje: 10,
-    },
-  ];
+  const [getTiposIva, { data, isLoading }] = useLazyListarTiposIvaQuery();
+  const [createTipoIva] = useCreateTipoIvaMutation();
+  const [deleteTipoIva] = useDeleteTipoIvaMutation();
+  const { handleSetLoading } = useGlobal();
 
-  const rowTiposIva = formatTiposIvaToTable(tiposIVA);
+  const handleLoadTiposIVA = async () => {
+    handleSetLoading(true);
+    await getTiposIva({});
+    handleSetLoading(false);
+  };
+
+  const tiposIva = data ?? [];
+
+  useEffect(() => {
+    handleLoadTiposIVA();
+  }, []);
+
+  const rowTiposIva = formatTiposIvaToTable(tiposIva);
 
   const handleDeleteTiposIVA = () => {
+    selectedTipoIva?.forEach((ti) => {
+      deleteTipoIva(ti.id);
+    });
+
     setOpenDeleteModal(false);
     setSelectedTipoIva([]);
   };
 
-  const handleNext = (data: any) => {
-    console.log("data: ", data);
+  const handleNext = async (data: CrearTipoIvaForm) => {
+    try {
+      handleSetLoading(true);
+      const dataToSend: TipoIva = {
+        nombre: data?.nombre,
+        porcentaje: data?.porcentaje,
+      };
+
+      const resp = (await createTipoIva(dataToSend)) as any;
+      if (resp?.data?.id) {
+        toast.success("Tipo de IVA creado correctamente.");
+        setOpenAddModal(false);
+        reset();
+      } else {
+        toast.error("Error al crear tipo de IVA.", resp?.data);
+      }
+      handleSetLoading(false);
+    } catch (error: any) {
+      handleSetLoading(false);
+      toast.error("Error al crear tipo de IVA. ", error?.message);
+    }
   };
 
   const addTipoIvaContent = () => {
@@ -114,14 +149,18 @@ const AdminTiposIva = () => {
           <ButtonDelete
             icon={<TrashIcon width={20} color="white" />}
             onClick={() => setOpenDeleteModal(!openDeleteModal)}
+            type="button"
           >
             Borrar Seleccionados
           </ButtonDelete>
         )}
-        <ButtonSecondary onClick={() => setDisabledActivate(!disabledActivate)}>
+        <ButtonSecondary
+          onClick={() => setDisabledActivate(!disabledActivate)}
+          type="button"
+        >
           {disabledActivate ? "Deshabilitar seleccion" : "Habilitar seleccion"}
         </ButtonSecondary>
-        <ButtonPrimary onClick={() => setOpenAddModal(true)}>
+        <ButtonPrimary onClick={() => setOpenAddModal(true)} type="button">
           Agregar Tipo IVA
         </ButtonPrimary>
       </div>

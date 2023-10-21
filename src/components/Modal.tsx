@@ -24,7 +24,7 @@ const ModalDelete: FC<ModalDeleteProps> = ({
   textOk,
   content,
   onConfirm,
-  primaryType = "submit",
+  primaryType = "button",
 }) => {
   const handleClickSubmitForm = () => {
     console.log({ 1: "1" });
