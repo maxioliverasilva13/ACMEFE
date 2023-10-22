@@ -45,7 +45,7 @@ const AdminEmpresas = () => {
     
     const empresasIds =  selectedEmpresas.map(empresa => empresa.id);
     try{
-      await deleteEmpresas({ EmpresasIds: empresasIds});
+      await deleteEmpresas({  empresasIds});
       toast.success("Empresas eliminadas correctamente");
       handleSetLoading(false);
 

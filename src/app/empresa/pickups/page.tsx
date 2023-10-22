@@ -23,6 +23,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import AddPickupModal from "./components/AddPickupModa";
+
+import { useListPickupsQuery } from "@/store/service/PickupService";
+
+
+
+
 import {
   CrearPickupForm,
   CrearPickupFormValidationSchema,
@@ -35,53 +41,14 @@ const PickUpPage = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [selectedPickupId, setSlectedPickupId] = useState<any>();
+  
 
-  const pickups: Pickup[] = [
-    {
-      id: 1,
-      nombre: "Pickup 1",
-      telefono: "123-456-7890",
-      foto: "https://i.pravatar.cc/150?img=1",
-      lat: 40.7128,
-      lng: -74.006,
-      plazoDiasPreparacion: "2 días",
-      calle: "Calle 1",
-      nroPuerta: "123",
-      calleEntre1: "Entre Calle A y Calle B",
-      calleEntre2: "",
-      ciudad: 1,
-      departamento: 1,
-    },
-    {
-      id: 2,
-      nombre: "Pickup 2",
-      telefono: "987-654-3210",
-      foto: "https://i.pravatar.cc/150?img=17",
-      lat: 34.0522,
-      lng: -118.2437,
-      plazoDiasPreparacion: "3 días",
-      calle: "Calle 2",
-      nroPuerta: "456",
-      calleEntre1: "Entre Calle X y Calle Y",
-      calleEntre2: "",
-      ciudad: 2,
-      departamento: 2,
-    },
-    {
-      id: 3,
-      nombre: "Pickup 3",
-      telefono: "555-555-5555",
-      lat: 51.5074,
-      lng: -0.1278,
-      plazoDiasPreparacion: "1 día",
-      calle: "Calle 3",
-      nroPuerta: "789",
-      calleEntre1: "Entre Calle P y Calle Q",
-      calleEntre2: "",
-      ciudad: 3,
-      departamento: 3,
-    },
-  ];
+  const { data, isLoading } = useListPickupsQuery("PickupInfo");
+
+
+  const pickups: Pickup[] =  data || [];
+
+  const rowEmpresas = formatPickupsToTable(pickups);
 
   const rows = formatPickupsToTable(pickups);
   const userRows = rows?.map((item) => {

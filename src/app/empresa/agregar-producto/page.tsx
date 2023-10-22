@@ -9,12 +9,20 @@ import {
   CrearProductoFormFields,
   CrearProductoValidationSchema,
 } from "@/forms/CrearProducto";
+import useGlobal from "@/hooks/useGlobal";
+import useUploadImage from "@/hooks/useUploadFile";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Input from "@/shared/Input/Input";
 import Textarea from "@/shared/Textarea/Textarea";
+import { useListarCategoriasQuery } from "@/store/service/CategoriaService";
+import { useCrearProductoMutation } from "@/store/service/ProductoService";
+import { useListarTiposIvaQuery } from "@/store/service/TipoIvaService";
+import { CategoriaList } from "@/types/categoria";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const AgregarProducto = () => {
   const {
@@ -25,18 +33,85 @@ const AgregarProducto = () => {
   } = useForm<CrearProductoForm>({
     resolver: yupResolver(CrearProductoValidationSchema()),
   });
+  const { handleSetLoading } = useGlobal();
+  const { data: categorias, isLoading: isLoadingCategorias } =
+    useListarCategoriasQuery({});
+  const { data: tiposIva, isLoading: isLoadingTiposIva } =
+    useListarTiposIvaQuery({});
+
   const [selectedCategorias, setSelectedCategorias] = useState<number[]>([]);
-  const [selectedProductosRelacionados, setSelectedProductosRelacionados] = useState<number[]>([]);
+  const [selectedProductosRelacionados, setSelectedProductosRelacionados] =
+    useState<number[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<any>({});
+  const { handleUpload } = useUploadImage();
+  const [handleCreateProduct] = useCrearProductoMutation();
 
+  useEffect(() => {
+    handleSetLoading(isLoadingCategorias || isLoadingTiposIva);
+  }, [isLoadingCategorias, isLoadingTiposIva]);
 
-  const handleNext = (data: CrearProductoForm) => {
-    console.log("data", data)
-  }
+  const handleNext = async (data: CrearProductoForm) => {
+    if (selectedCategorias?.length === 0) {
+      toast.error("Selecciona al menos una cateogira");
+    }
+    try {
+      handleSetLoading(true);
+      const productImages: string[] = [];
+      await Promise.all(
+        selectedFiles?.map(async (item) => {
+          const fileUrl = await handleUpload(item);
+          if (fileUrl) {
+            productImages?.push(fileUrl);
+          }
+        })
+      );
 
-  const files = () => {
+      const dataToSend = {
+        Nombre: data.nombre,
+        Descripcion: data.descripcion,
+        DocumentoPdf: data.documentoPdf,
+        Precio: data?.precio,
+        TipoIva: data?.tipoIva,
+        Categoria: selectedCategorias,
+        ProductosRelacionados: [],
+        Imagenes: productImages,
+      };
+      const resp = (await handleCreateProduct(dataToSend)) as any;
+      if (resp?.data?.ok) {
+        toast.success("Producto creado correctamente");
+      } else {
+        toast.error("Error al crear producto", resp?.data?.message);
+      }
 
-  }
+      handleSetLoading(false);
+    } catch (error) {
+      handleSetLoading(false);
+      console.error("Error al crear producto");
+    }
+
+    // send to backend
+  };
+
+  const getPreview = (file: File, index: number) => {
+    const reader = new FileReader();
+    reader.onload = function (e: any) {
+      setPreviews({
+        ...previews,
+        [index]: e.target.result,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const removeItem = (file: File, index: number) => {
+    setSelectedFiles(selectedFiles?.filter((fil) => fil !== file));
+    setPreviews({
+      ...previews,
+      [index]: null,
+    });
+  };
 
   return (
     <div className="w-full h=auto gap-[100px] flex flex-col items-start justify-start">
@@ -46,18 +121,41 @@ const AgregarProducto = () => {
         <h1 className="text-texto mb-5 font-semibold text-[30px]">
           Agregar nuevo producto
         </h1>
-        <FileSelect selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
-        {
-            selectedFiles?.length > 0 && <div className="w-full h-auto py-4 flex flex-row items-center justify-start gap-4 max-w-full overflow-auto">
-                {selectedFiles?.map((file, index) => {
-                    return <div className="min-w-[200px] w-[200px] h-[130px] rounded-2xl bg-white shadow-md" key={`image-${index}`}>
-                    </div>
-                })}
-            </div>
-        }
+        <FileSelect
+          selectedFiles={selectedFiles}
+          setSelectedFiles={setSelectedFiles}
+        />
+        {selectedFiles?.length > 0 && (
+          <div className="w-full h-auto py-4 flex flex-row items-center justify-start gap-4 max-w-full flex-wrap overflow-auto">
+            {selectedFiles?.map((file, index) => {
+              if (!previews[index]) {
+                getPreview(file, index);
+              }
+              return (
+                <div
+                  className="min-w-[200px] w-[200px] relative h-[130px] rounded-2xl bg-white shadow-md"
+                  key={`image-${index}`}
+                >
+                  <XMarkIcon
+                    fontSize={20}
+                    color="black"
+                    className="absolute p-2 rounded-full bg-white shadow-md hover:bg-red-300 cursor-pointer transition-all hover:text-white w-[28px] h-[28px] -top-2 -right-2 z-20"
+                    onClick={() => removeItem(file, index)}
+                  />
+                  {previews[index] && (
+                    <img
+                      src={previews[index]}
+                      alt={`Image-${index}`}
+                      className="w-full h-full object-cover rounded-2xl absolute"
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <div className="flex w-full flex-row items-center justify-center gap-4">
-         
           <div className="flex-grow w-full flex flex-col items-start justify-start">
             <Label>Nombre</Label>
             <Input
@@ -120,7 +218,7 @@ const AgregarProducto = () => {
               {...register(CrearProductoFormFields.linkAcata)}
               error={errors[CrearProductoFormFields.linkAcata]?.message}
               placeholder="Link de la ficha del producto"
-              type="number"
+              type="text"
               className="mt-1.5"
             />
           </div>
@@ -129,16 +227,14 @@ const AgregarProducto = () => {
           <Label>Tipo Iva</Label>
           <Dropdown
             placeholder="Seleccionar Tipo IVA"
-            items={[
-              {
-                label: "Iva 1",
-                value: 1,
-              },
-              {
-                label: "Iva 2",
-                value: 2,
-              },
-            ]}
+            items={
+              tiposIva?.map((item) => {
+                return {
+                  label: `${item.nombre} - %${item.porcentaje}`,
+                  value: item?.id,
+                };
+              }) ?? []
+            }
             onChange={(val: any) =>
               setValue(CrearProductoFormFields.tipoIva, val)
             }
@@ -149,17 +245,17 @@ const AgregarProducto = () => {
           <Label>Categorias</Label>
           <MultiSelect
             placeholder="Seleccionar Categorias"
-            items={[
-              {
-                label: "Iva 1",
-                value: 1,
-              },
-              {
-                label: "Iva 2",
-                value: 2,
-              },
-            ]}
-            onChange={(val: any) => setSelectedCategorias(val)}
+            items={
+              categorias?.map((item) => {
+                return {
+                  label: item?.categoriaNombre,
+                  value: item?.categoriaId,
+                };
+              }) ?? []
+            }
+            onChange={(val: any) =>
+              setSelectedCategorias(val?.map((itm: any) => itm?.value))
+            }
           />
         </div>
 
@@ -181,10 +277,8 @@ const AgregarProducto = () => {
           />
         </div>
 
-        <ButtonPrimary className="w-full"
-            onClick={() => handleSubmit(handleNext)}
-        >
-            Registrar producto
+        <ButtonPrimary className="w-full" onClick={handleSubmit(handleNext)}>
+          Registrar producto
         </ButtonPrimary>
       </div>
     </div>

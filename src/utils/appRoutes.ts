@@ -12,13 +12,14 @@ export const appRoutes = {
     adminAddTipoIva: () => "/admin/tipos-iva/agregar-tipo-iva",
     adminTiposIva: () => "/admin/tipos-iva",
     adminDepartamentos: () => "/admin/departamentos",
+    adminCiudades: () => "/admin/ciudades",
     adminProfile: () => "/admin/profile",
     empresaProfile: () => "/empresa/profile",
 
     // Empresas Routes
     empresaInico: () => "/empresa/inicio",
     empresaUsuarios: () => "/empresa/usuarios",
-    empresaAddUsuarios: () => "/empresa/agregar-usuarios",
+    empresaAddUsuarios: () => "/empresa/agregar-usuario",
     empresaPickups: () => "/empresa/pickups",
     empresaProductos: () => "/empresa/productos",
     empresaAgregarProductos: () => "/empresa/agregar-producto",

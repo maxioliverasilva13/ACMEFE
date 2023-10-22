@@ -38,8 +38,15 @@ const AddPickupModal = ({ open, setOpen }: Props) => {
     },
   });
 
+
+  const handleSelectLocation = (lat:number,lng:number)=>{
+      setValue("lat", lat);
+      setValue("lng", lng);
+      setSelectedLatLng({lat,lng})
+      setOpenSelectLatLng(false)
+  }
   const handleNext = (data: CrearPickupForm) => {
-    console.log("data is", data);
+    console.log(data);
   };
 
   const renderContent = () => {
@@ -159,16 +166,17 @@ const AddPickupModal = ({ open, setOpen }: Props) => {
               setValue(CrearPickupFormFields.departamento, Number(val ?? 0))
             }
           />
-          {!getValues(CrearPickupFormFields.departamento) && submitCount > 0 && (
-            <OneLineError message="Debes seleccionar un departamento" />
-          )}
+          {!getValues(CrearPickupFormFields.departamento) &&
+            submitCount > 0 && (
+              <OneLineError message="Debes seleccionar un departamento" />
+            )}
           <ButtonPrimary
             className="w-full flex-grow"
             onClick={() => setOpenSelectLatLng(!openSelectLatLng)}
           >
             Seleccionar localizacion
           </ButtonPrimary>
-          {selectedLatLng?.Lng === undefined && submitCount >= 1 && (
+          {selectedLatLng?.lng === undefined && submitCount >= 1 && (
             <OneLineError message="Debes seleccionar una ubicacion" />
           )}
 
@@ -177,6 +185,7 @@ const AddPickupModal = ({ open, setOpen }: Props) => {
               setLatLng={setSelectedLatLng}
               open={openSelectLatLng}
               setOpen={setOpenSelectLatLng}
+              onSelectLocation={handleSelectLocation}
             />
           )}
         </div>
