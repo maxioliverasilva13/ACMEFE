@@ -117,9 +117,9 @@ const EditarProducto = () => {
       };
       const resp = (await handleEditProduct(dataToSend)) as any;
       if (resp?.data?.ok) {
-        toast.success("Producto creado correctamente");
+        toast.success("Producto editado correctamente");
       } else {
-        toast.error("Error al crear producto", resp?.data?.message);
+        toast.error("Error al editar producto", resp?.data?.message);
       }
 
       handleSetLoading(false);
