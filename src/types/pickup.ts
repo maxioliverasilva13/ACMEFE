@@ -14,4 +14,6 @@ export type Pickup = {
     calleEntre2: string,
     ciudad: number,
     departamento: number,
+    ciudadNombre: string;
+    departamentoNombre: string;
 }

@@ -16,7 +16,7 @@ const DashboardWrapper = ({ children }: Props) => {
     return (
       <div className="w-screen h-screen flex flex-row items-start justify-start">
         <Dashboard />
-        <div className="w-full p-4 flex-grow h-full max-h-full overflow-auto bg-gray-900/10">
+        <div id="scrollItem" className="w-full p-4 flex-grow h-full max-h-full overflow-auto bg-gray-900/10">
           {children}
         </div>
       </div>

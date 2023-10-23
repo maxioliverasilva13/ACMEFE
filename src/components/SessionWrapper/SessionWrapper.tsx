@@ -5,7 +5,7 @@ import Spinner from "../Spinner/Spinner";
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useLazyCurrentUserQuery } from "@/store/service/UserService";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { appRoutes } from "@/utils/appRoutes";
 import { Route } from "next";
 import {
@@ -15,19 +15,23 @@ import {
   userRoutes,
 } from "@/utils/routes";
 import Page404 from "@/app/not-found";
+import { handleClearToken } from "@/utils/token";
 
 interface Props {
   children: any;
+  params: any;
 }
 
-const SessionWrapper = ({ children }: Props) => {
-  const { loading, token, userInfo, handleSetUserInfo, handleSetLoading } =
+const SessionWrapper = ({ children, params }: Props) => {
+  const { loading, token, userInfo, handleSetUserInfo, handleSetLoading, handleSetToken } =
     useGlobal();
   const { push } = useRouter();
   const pathname = usePathname();
   const isInPublicRoute = public_routes.includes(pathname);
   const [checking, setChecking] = useState(true);
   const [invalidPath, setInvalidPath] = useState(false);
+  const router = useRouter();
+  const slugs = useParams();
 
   const [handleGetUserInfo, { isLoading }] = useLazyCurrentUserQuery();
 
@@ -56,6 +60,8 @@ const SessionWrapper = ({ children }: Props) => {
     } else {
       setChecking(false);
       toast.error("Error validando usuario");
+      handleSetToken(undefined);
+      handleClearToken();
     }
     handleSetLoading(false);
   };
@@ -84,11 +90,20 @@ const SessionWrapper = ({ children }: Props) => {
   const handleCheckRoutes = () => {
     if (!isInPublicRoute) {
       if (userInfo?.roles?.includes("Admin")) {
-        setInvalidPath(!adminRoutes.includes(pathname));
+        const isValidPath = adminRoutes?.find((itm) => {
+          return pathname?.includes(itm);
+        })
+        setInvalidPath(!isValidPath);
       } else if (userInfo?.roles?.includes("Vendedor")) {
-        setInvalidPath(!empresaRoutes.includes(pathname));
+        const isValidPath = empresaRoutes?.find((itm) => {
+          return pathname?.includes(itm);
+        })
+        setInvalidPath(!isValidPath);
       } else {
-        setInvalidPath(!userRoutes.includes(pathname));
+        const isValidPath = userRoutes?.find((itm) => {
+          return pathname?.includes(itm);
+        })
+        setInvalidPath(!isValidPath);
       }
       setChecking(false);
     }

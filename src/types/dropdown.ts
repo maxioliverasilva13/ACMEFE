@@ -1,4 +1,4 @@
 export type ItemDropdown = {
-  label: string;
+  label: any;
   value: any;
 };

@@ -11,6 +11,10 @@ import {
 } from "@heroicons/react/24/outline";
 import DireccionBadge from "@/components/DireccionBadge/DireccionBadge";
 
+export const DEFAULT_PICKUP_IMAGE =
+  "https://as2.ftcdn.net/v2/jpg/06/55/78/51/1000_F_655785153_kFGLoxjzNNwfEl1pRiD35xrYnoDKW6AU.jpg";
+  
+
 export const columnsPickups: ColumnItem[] = [
   {
     title: "Id",
@@ -58,8 +62,8 @@ export const formatPickupsToTable = (pickup: Pickup[]) => {
           nroPuerta={pickup?.nroPuerta}
           calleEntre1={pickup?.calleEntre1}
           calleEntre2={pickup?.calleEntre2}
-          ciudad={"San Jose de mayo"}
-          departamento={"San jose"}
+          ciudad={pickup?.ciudadNombre}
+          departamento={pickup.departamentoNombre}
         />
       ),
       productos: <Text message={pickup?.plazoDiasPreparacion} />,

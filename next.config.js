@@ -32,6 +32,12 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "static.vecteezy.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "firebasestorage.googleapis.com",
         port: "",
         pathname: "/**",
@@ -49,6 +55,16 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+
+
+      {
+        protocol: "https",
+        hostname: "as2.ftcdn.net",
+        port: "",
+        pathname: "/**",
+      },
+
+      
 
 
     ],

@@ -14,6 +14,8 @@ export const DEFAULT_EMPRESA_IMAGE =
   "https://i.pinimg.com/564x/f2/5f/1b/f25f1b3ac9a6dd5ac7dbfc6e7c61c60f.jpg";
 
 
+
+
 export const columnsEmpresa: ColumnItem[] = [
   {
     title: "Nombre",

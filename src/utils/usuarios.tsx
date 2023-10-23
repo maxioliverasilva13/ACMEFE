@@ -15,6 +15,10 @@ import Image from "next/image";
 export const DEFAULT_USER_IMAGE =
   "https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_1280.png";
 
+export const PRODUCT_NO_IMAGE =
+  "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg";
+
+
 export const columnsUser: ColumnItem[] = [
   {
     title: "Nombre",

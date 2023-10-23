@@ -12,6 +12,7 @@ export interface ModalDeleteProps {
   textCancel?: string;
   onConfirm?: any;
   content?: any;
+  primaryType?: any;
 }
 
 const ModalDelete: FC<ModalDeleteProps> = ({
@@ -23,6 +24,7 @@ const ModalDelete: FC<ModalDeleteProps> = ({
   textOk,
   content,
   onConfirm,
+  primaryType = "button",
 }) => {
   const handleClickSubmitForm = () => {
     console.log({ 1: "1" });
@@ -37,7 +39,7 @@ const ModalDelete: FC<ModalDeleteProps> = ({
         <span className="text-sm">{description}</span>
         {content}
         <div className="mt-4 space-x-3">
-          <ButtonPrimary onClick={() => onConfirm && onConfirm()} type="submit">
+          <ButtonPrimary onClick={() => onConfirm && onConfirm()} type={primaryType}>
             {textOk}
           </ButtonPrimary>
           <ButtonSecondary type="button" onClick={onCloseModalDelete}>

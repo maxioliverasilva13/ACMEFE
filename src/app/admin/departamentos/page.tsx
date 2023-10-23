@@ -9,10 +9,9 @@ import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import {
   CrearDepartamentoForm,
   CrearDepartamentoFormFields,
@@ -24,6 +23,13 @@ import {
   columnsDepartamentos,
   formatDepartamentosToTable,
 } from "@/utils/departamento";
+import {
+  useLazyListarDepartamentosQuery,
+  useDeleteDepartamentoMutation,
+  useCreateDepartamentoMutation,
+} from "@/store/service/DepartamentoService";
+import useGlobal from "@/hooks/useGlobal";
+import toast from "react-hot-toast";
 
 const AdminDepartamentos = () => {
   const { push } = useRouter();
@@ -43,33 +49,57 @@ const AdminDepartamentos = () => {
     resolver: yupResolver(CrearDepartamentoValidationSchema()),
   });
 
-  const departamentos: Departamento[] = [
-    {
-      id: 1,
-      nombre: "San José",
-      ciudades: [{ nombre: "San José de Mayo" }, { nombre: "Libertad" }],
-    },
-    {
-      id: 2,
-      nombre: "Montevideo",
-      ciudades: [{ nombre: "Montevideo" }],
-    },
-    {
-      id: 3,
-      nombre: "Flores",
-      ciudades: [],
-    },
-  ];
+  const [
+    getDepartamentos,
+    { data, isLoading },
+  ] = useLazyListarDepartamentosQuery();
+  const [createDepartamento] = useCreateDepartamentoMutation();
+  const [deleteDepartamento] = useDeleteDepartamentoMutation();
+  const { handleSetLoading } = useGlobal();
+
+  const handleLoadDepartamentos = async () => {
+    handleSetLoading(true);
+    await getDepartamentos({});
+    handleSetLoading(false);
+  };
+
+  const departamentos = data ?? [];
+
+  useEffect(() => {
+    handleLoadDepartamentos();
+  }, []);
 
   const rowsDepartamento = formatDepartamentosToTable(departamentos);
 
   const handleDeleteDepartamentos = () => {
+    selectedDepartamentos?.forEach((depto) => {
+      deleteDepartamento(depto.id as number);
+    });
+
     setOpenDeleteModal(false);
     setSelectedDepartamentos([]);
   };
 
-  const handleNext = (data: any) => {
-    console.log("data: ", data);
+  const handleNext = async (data: CrearDepartamentoForm) => {
+    try {
+      handleSetLoading(true);
+      const dataToSend: Departamento = {
+        nombre: data?.nombre,
+      };
+
+      const resp = (await createDepartamento(dataToSend)) as any;
+      if (resp?.data?.id) {
+        toast.success("Departamento creado correctamente.");
+        setOpenAddModal(false);
+        reset();
+      } else {
+        toast.error("Error al crear departamento.", resp?.data);
+      }
+      handleSetLoading(false);
+    } catch (error: any) {
+      handleSetLoading(false);
+      toast.error("Error al crear departamento.", error?.message);
+    }
   };
 
   const addDepartamentoContent = () => {
@@ -104,7 +134,10 @@ const AdminDepartamentos = () => {
         textCancel="Cancelar"
         title="Agregar nuevo departamento"
         description="Este departamento podrá ser utilizado a futuro en registros de direcciones para usuarios."
-        onCloseModalDelete={() => {setOpenAddModal(false); reset()}}
+        onCloseModalDelete={() => {
+          setOpenAddModal(false);
+          reset();
+        }}
         show={openAddModal}
         content={addDepartamentoContent()}
         onConfirm={handleSubmit(handleNext)}
@@ -114,14 +147,18 @@ const AdminDepartamentos = () => {
           <ButtonDelete
             icon={<TrashIcon width={20} color="white" />}
             onClick={() => setOpenDeleteModal(!openDeleteModal)}
+            type="button"
           >
             Borrar Seleccionados
           </ButtonDelete>
         )}
-        <ButtonSecondary onClick={() => setDisabledActivate(!disabledActivate)}>
+        <ButtonSecondary
+          onClick={() => setDisabledActivate(!disabledActivate)}
+          type="button"
+        >
           {disabledActivate ? "Deshabilitar seleccion" : "Habilitar seleccion"}
         </ButtonSecondary>
-        <ButtonPrimary onClick={() => setOpenAddModal(true)}>
+        <ButtonPrimary onClick={() => setOpenAddModal(true)} type="button">
           Agregar Departamento
         </ButtonPrimary>
       </div>

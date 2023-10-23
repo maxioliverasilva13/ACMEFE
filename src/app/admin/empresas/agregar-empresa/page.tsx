@@ -205,9 +205,8 @@ const AgregarEmpresa = () => {
         </div>
         
       </div>
-      
-      <div className="w-full h-auto flex flex-row items-center justify-end">
-        <ButtonPrimary onClick={handleSubmit(handleNext)} className="">
+      <div className="w-full h-auto flex flex-row items-center justify-between">
+        <ButtonPrimary onClick={handleSubmit(handleNext)} type="button">
           Agregar Empresa
         </ButtonPrimary>
       </div>

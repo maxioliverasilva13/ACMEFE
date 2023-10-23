@@ -10,7 +10,7 @@ import { appRoutes } from "@/utils/appRoutes";
 import { columnsEmpresa, formatEmpresasToTable } from "@/utils/empresas";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 
 import { useListEmpresasQuery } from "@/store/service/EmpresaService";
 import { useDeleteEmpresasMutation  } from "@/store/service/EmpresaService";
@@ -38,6 +38,15 @@ const AdminEmpresas = () => {
   const empresas: any = data || [];
 
   const rowEmpresas = formatEmpresasToTable(empresas);
+
+    useEffect(()=>{
+      if(!isLoading){
+        handleSetLoading(false)
+        return;
+      }
+      handleSetLoading(true);
+  }, [isLoading])
+
 
   const handleDeleteEmpresas = async() => {
     setOpenDeleteModal(false);
@@ -74,14 +83,15 @@ const AdminEmpresas = () => {
           <ButtonDelete
             icon={<TrashIcon width={20} color="white" />}
             onClick={() => setOpenDeleteModal(!openDeleteModal)}
+            type="button"
           >
             Borrar Seleccionados
           </ButtonDelete>
         )}
-        <ButtonSecondary onClick={() => setDisabledActivate(!disabledActivate)}>
+        <ButtonSecondary onClick={() => setDisabledActivate(!disabledActivate)} type="button">
           {disabledActivate ? "Deshabilitar seleccion" : "Habilitar seleccion"}
         </ButtonSecondary>
-        <ButtonPrimary onClick={() => handleAddEmpresa()}>
+        <ButtonPrimary onClick={() => handleAddEmpresa()} type="button">
           Agregar Empresa
         </ButtonPrimary>
       </div>

@@ -21,7 +21,7 @@ const ProductStatus: FC<Props> = ({
       return null;
     }
     const CLASSES = `nc-shadow-lg rounded-full flex items-center justify-center ${className}`;
-    if (status === "New in") {
+    if (status === "Nuevo") {
       return (
         <div className={CLASSES}>
           <SparklesIcon className="w-3.5 h-3.5" />
@@ -29,15 +29,7 @@ const ProductStatus: FC<Props> = ({
         </div>
       );
     }
-    if (status === "50% Discount") {
-      return (
-        <div className={CLASSES}>
-          <IconDiscount className="w-3.5 h-3.5" />
-          <span className="ms-1 leading-none">{status}</span>
-        </div>
-      );
-    }
-    if (status === "Sold Out") {
+    if (status === "Poco Stock") {
       return (
         <div className={CLASSES}>
           <NoSymbolIcon className="w-3.5 h-3.5" />
@@ -45,7 +37,7 @@ const ProductStatus: FC<Props> = ({
         </div>
       );
     }
-    if (status === "limited edition") {
+    if (status === "Edicion limitada") {
       return (
         <div className={CLASSES}>
           <ClockIcon className="w-3.5 h-3.5" />

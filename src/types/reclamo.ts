@@ -1,15 +1,19 @@
+import { SortCompra } from "./compra"
 import { SortProduct } from "./producto"
 import { SortUser } from "./usuario"
 
 export enum EstadReclamo {
-    activo = "Activo",
-    cerrado = "Cerrado",
+    activo = "ACTIVO",
+    cerrado = "CERRADO",
 }
 
 export type Reclamo = {
-    fecha: string,
-    producto: SortProduct,
+    id: number;
+    description: string;
+    fecha: string;
     usuario: SortUser,
-    description: string,
-    estado: EstadReclamo,
+    compra: SortCompra
 }
+
+
+

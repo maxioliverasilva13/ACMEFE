@@ -7,6 +7,13 @@ export const handleStorageToken = (token: string) => {
   sessionStorage.setItem(DEFAULT_TOKEN_KEY, token);
 };
 
+export const handleClearToken = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+  sessionStorage.removeItem(DEFAULT_TOKEN_KEY);
+};
+
 export const handleGetToken = () => {
   if (typeof window === "undefined") {
     return "";
