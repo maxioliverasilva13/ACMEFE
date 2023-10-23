@@ -26,7 +26,7 @@ const store = configureStore({
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(UserService.middleware, CategoriaService.middleware, ProductoService.middleware, TipoIvaService.middleware, DepartamentoService.middleware, CiudadService.middleware,PikcupService.middleware,ReclamoService.middleware),
+    getDefaultMiddleware().concat(UserService.middleware, CategoriaService.middleware, ProductoService.middleware, TipoIvaService.middleware, DepartamentoService.middleware, CiudadService.middleware,PikcupService.middleware,ReclamoService.middleware,EmpresaService.middleware),
 });
 
 setupListeners(store.dispatch);

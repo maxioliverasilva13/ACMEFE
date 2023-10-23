@@ -49,12 +49,10 @@ export const formatUsuariosToTable = (usuarios: Usuario[]) => {
       nombre: (
         <div className="w-full h-auto flex flex-row items-center justify-start gap-2 ">
           <div className="w-[60px] relative h-[60px] min-w-[60px] rounded-full overflow-hidden">
-            <Image
+            <img
               alt="User Avatar"
               src={user?.imagen}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-full "
+              className="rounded-full  fit-contain"
             />
           </div>
           <Text message={user?.nombre} />
