@@ -10,6 +10,8 @@ export type CrearPickupForm = {
   calleEntre2: string;
   ciudad: number;
   departamento: number;
+  lat: number;
+  lng: number;
 };
 
 export enum CrearPickupFormFields {
@@ -22,6 +24,8 @@ export enum CrearPickupFormFields {
   calleEntre2 = "calleEntre2",
   ciudad = "ciudad",
   departamento = "departamento",
+  lat =  "lat",
+  lng =  "lng"
 }
 
 export const CrearPickupFormValidationSchema = () =>
@@ -35,4 +39,6 @@ export const CrearPickupFormValidationSchema = () =>
     calleEntre2: Yup.string().trim().required("Este campo es requerido"),
     ciudad: Yup.number().required("Este campo es requerido"),
     departamento: Yup.number().required("Este campo es requerido"),
+    lat: Yup.number().required("lat es requerido"),
+    lng : Yup.number().required("lng es requerido")
   });

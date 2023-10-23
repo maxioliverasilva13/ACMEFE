@@ -20,16 +20,40 @@ import phone from "@/images/phone.svg";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Dropdown from "@/components/Dropdown/Dropdown";
+import { Reclamo } from "@/types/reclamo";
+import useGlobal from "@/hooks/useGlobal";
+
+import { useListarReclamosQuery } from "@/store/service/ReclamoService";
 
 const Reclamo = () => {
   const [selectedFilterActivo, setSelectedFilterActivo] = useState(null);
   const [reclamosToMap, setReclamosToMap] = useState<any>();
   const [fechas, setFechas] = useState<string[]>([]);
 
-  const reclamos = generateRandomReclamos();
+  const { data , isLoading} = useListarReclamosQuery("ReclamoInfo");
 
+  const [reclamos, setReclamos] = useState<Reclamo[]>(data ? [...data] : []);
+
+  const { handleSetLoading } = useGlobal();
+
+  useEffect(()=>{
+    if(data){
+      setReclamos(data)
+    }
+  },[data])
+
+  useEffect(()=>{
+      if(!isLoading){
+         handleSetLoading(false)
+         return;
+      }
+      handleSetLoading(true);
+  }, [isLoading])
+
+  
   useEffect(() => {
     if (reclamos) {
+      console.log(reclamos);
       const reclamosToUse = selectedFilterActivo
         ? reclamos?.filter((itm) => itm?.estado === selectedFilterActivo)
         : reclamos;
@@ -37,7 +61,7 @@ const Reclamo = () => {
       setReclamosToMap(divididosPorFecha ?? []);
       setFechas(Object.keys(divididosPorFecha));
     }
-  }, [selectedFilterActivo]);
+  }, [selectedFilterActivo,reclamos]);
 
   return (
     <div className="w-full flex-grow p-5 h-auto flex flex-col gap-10 items-start justify-start">
@@ -89,7 +113,7 @@ const Reclamo = () => {
                     <span
                       className={clsx(
                         "w-auto absolute right-4 top-4 h-auto px-4 py-2 text-white font-medium rounded-lg",
-                        item?.estado !== EstadReclamo.activo
+                        item?.estado !== EstadReclamo.cerrado
                           ? "bg-green-600"
                           : "bg-yellow-600"
                       )}
@@ -97,14 +121,7 @@ const Reclamo = () => {
                       {item?.estado}
                     </span>
                     <div className="w-auto h-auto flex flex-row items-center justify-center gap-2">
-                      <div className="w-[80px] min-w-[80px] h-[80px] rounded-full relative overflow-hidden">
-                        <Image
-                          alt="User Image"
-                          src={item?.usuario.imagen}
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      </div>
+                      
                       <div className="w-full h-auto flex flex-col items-start justify-start">
                         <span className="flex gap-2 items-center font-semibold text-left text-texto text-lg">
                           <UserCircleIcon width={20} color="#A3AED0" />
@@ -121,23 +138,16 @@ const Reclamo = () => {
                       </div>
                     </div>
                     <div className="w-full h-auto flex flex-col items-center justify-start gap-2">
-                      <div className="w-[60px] min-w-[60px] h-[60px] rounded-lg shadow-md relative overflow-hidden">
-                        <Image
-                          alt="Product Image"
-                          src={item?.producto.imagen}
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      </div>
-                      <span className="flex gap-2 items-center font-semibold text-left text-texto text-lg">
-                        {item?.producto.nombre}
-                      </span>
+                    
                       <span className="w-full text-center text-gray-400">
                         {item?.description}
                       </span>
                     </div>
+                   
                     {item?.estado !== EstadReclamo.cerrado && (
+                      
                       <div className="w-full h-full gap-3 flex-grow flex items-center justify-end">
+
                         <button className="relative flex items-center text-white font-semibold gap-2 bg-green-700 cursor-pointer justify-center py-2 px-4 rounded-full shadow-sm">
                           <CheckIcon width={20} color="white" strokeWidth={2} />
                           Cerrar

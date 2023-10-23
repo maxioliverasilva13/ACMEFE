@@ -8,12 +8,14 @@ export const appRoutes = {
     adminInicio: () => "/admin",
     adminEmpresas: () => "/admin/empresas",
     adminAddEmpresas: () => "/admin/empresas/agregar-empresa",
+    adminEditEmpresas: () => `/admin/empresas/editar-empresa`,
     adminAddTipoIva: () => "/admin/tipos-iva/agregar-tipo-iva",
     adminTiposIva: () => "/admin/tipos-iva",
     adminDepartamentos: () => "/admin/departamentos",
     adminCiudades: () => "/admin/ciudades",
     adminProfile: () => "/admin/profile",
     empresaProfile: () => "/empresa/profile",
+
     // Empresas Routes
     empresaInico: () => "/empresa/inicio",
     empresaUsuarios: () => "/empresa/usuarios",

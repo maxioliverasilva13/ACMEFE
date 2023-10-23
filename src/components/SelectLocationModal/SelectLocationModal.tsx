@@ -1,18 +1,22 @@
+import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import NcModal from "@/shared/NcModal/NcModal";
 import { initMap, generateNewMarker } from "@/utils/mapbox";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import mapboxgl, { Marker } from "mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import { useEffect, useRef, useState } from "react";
+import {toast} from "react-toastify";
+
 let defaultMarker: any = null;
 
 interface Props {
   setOpen: any;
   open: boolean;
   setLatLng: any;
+  onSelectLocation: any
 }
 
-const SelectLocationModal = ({ setOpen, open, setLatLng }: Props) => {
+const SelectLocationModal = ({ setOpen, open, setLatLng  , onSelectLocation}: Props) => {
   const [map, setMap] = useState<any>(null);
   const [shouldUpdate, setShouldUpdate] = useState(true);
   const [mapContainer, setMapContainer] = useState<any>(null);
@@ -86,6 +90,17 @@ const SelectLocationModal = ({ setOpen, open, setLatLng }: Props) => {
     };
   }, [map, defaultMarker]);
 
+  const onSelect = ()=>{
+      if(!defaultMarker){
+            toast.error("Debes seleccionar una ubicacion primero");
+            return;
+      }
+      const { _lngLat }  = defaultMarker;
+      const { lng, lat} = _lngLat;
+      onSelectLocation(lng,lat);
+    
+  }
+
   const renderContent = () => {
     return (
       <div className="w-full h-auto flex flex-col gap-4">
@@ -99,8 +114,13 @@ const SelectLocationModal = ({ setOpen, open, setLatLng }: Props) => {
 
         <div
           ref={(ref) => setMapContainer(ref)}
-          className="rounded-lg overflow-hidden w-full h-[550px] "
+          className="rounded-lg overflow-hidden w-full h-[550px]"
+          
         ></div>
+
+        <ButtonPrimary onClick={onSelect}>
+            Confirmar
+        </ButtonPrimary>
       </div>
     );
   };

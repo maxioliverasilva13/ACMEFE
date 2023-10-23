@@ -20,13 +20,21 @@ import { columnsPickups, formatPickupsToTable } from "@/utils/pickup";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useForm } from "react-hook-form";
 import AddPickupModal from "./components/AddPickupModa";
+import useGlobal from "@/hooks/useGlobal";
+
+import { PikcupService, useListPickupsQuery } from "@/store/service/PickupService";
+import { useDeletePickupsMutation } from "@/store/service/PickupService";
+
+
 import {
   CrearPickupForm,
   CrearPickupFormValidationSchema,
 } from "@/forms/CrearPickup";
+
+import toast from "react-hot-toast";
 
 const PickUpPage = () => {
   const { push } = useRouter();
@@ -35,53 +43,31 @@ const PickUpPage = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [selectedPickupId, setSlectedPickupId] = useState<any>();
+  
+  const [deletePickups] = useDeletePickupsMutation();
 
-  const pickups: Pickup[] = [
-    {
-      id: 1,
-      nombre: "Pickup 1",
-      telefono: "123-456-7890",
-      foto: "https://i.pravatar.cc/150?img=1",
-      lat: 40.7128,
-      lng: -74.006,
-      plazoDiasPreparacion: "2 días",
-      calle: "Calle 1",
-      nroPuerta: "123",
-      calleEntre1: "Entre Calle A y Calle B",
-      calleEntre2: "",
-      ciudad: 1,
-      departamento: 1,
-    },
-    {
-      id: 2,
-      nombre: "Pickup 2",
-      telefono: "987-654-3210",
-      foto: "https://i.pravatar.cc/150?img=17",
-      lat: 34.0522,
-      lng: -118.2437,
-      plazoDiasPreparacion: "3 días",
-      calle: "Calle 2",
-      nroPuerta: "456",
-      calleEntre1: "Entre Calle X y Calle Y",
-      calleEntre2: "",
-      ciudad: 2,
-      departamento: 2,
-    },
-    {
-      id: 3,
-      nombre: "Pickup 3",
-      telefono: "555-555-5555",
-      lat: 51.5074,
-      lng: -0.1278,
-      plazoDiasPreparacion: "1 día",
-      calle: "Calle 3",
-      nroPuerta: "789",
-      calleEntre1: "Entre Calle P y Calle Q",
-      calleEntre2: "",
-      ciudad: 3,
-      departamento: 3,
-    },
-  ];
+
+  const { handleSetLoading } = useGlobal();
+  
+
+  const { data, isLoading } = useListPickupsQuery("PickupInfo");
+
+
+  const [pickups, setPickups] = useState<Pickup[]>(data ? [...data] : []); 
+
+  useEffect(()=>{
+    if(data){
+      setPickups(data)
+    }
+  },[data])
+
+  useEffect(()=>{
+    if(!isLoading){
+       handleSetLoading(false)
+       return;
+    }
+    handleSetLoading(true);
+}, [isLoading])
 
   const rows = formatPickupsToTable(pickups);
   const userRows = rows?.map((item) => {
@@ -90,17 +76,46 @@ const PickUpPage = () => {
       action: () => setSlectedPickupId(item?.id),
     };
   });
+  
 
-  const handleDeleteCategorias = () => {
+  const handleDeletePickups = async() => {
     setOpenDeleteModal(false);
-    setSelectedPickups([]);
-    // delete users on backend
+    handleSetLoading(true);
+    
+    const pickupsIds =  selectedPickups.map(pickup => pickup.id);
+    try{
+      await deletePickups({  pickupsIds});
+
+      const updatedPickups = pickups.filter(
+        (pickup) => !pickupsIds.includes(pickup.id)
+      );
+      setPickups(updatedPickups);
+  
+      toast.success("Pickups eliminadas correctamente");
+      setSelectedPickups([]);
+      handleSetLoading(false);
+      setDisabledActivate(false);
+
+    }catch(e){
+      handleSetLoading(false);
+      toast.error("Ha ocurrido un error");
+
+    }
   };
+
+
 
   const handleNext = (data: CrearPickupForm) => {
     // add backend
     console.log("data is", data);
   };
+
+  const handleNewPickup = (newPickup:Pickup)=>{
+      setOpenAddModal(false);
+      setPickups([...pickups,newPickup]);
+      toast.success(`Pickup creado correctamente`);
+
+  }
 
   return (
     <div className="w-full h-auto flex flex-grow p-5 flex-col items-start justify-start gap-5">
@@ -111,9 +126,9 @@ const PickUpPage = () => {
         description="Esta opcion no  tiene retorno, ya que los pickups se borraran del sistema y ya no tendran acceso al mismo"
         onCloseModalDelete={() => setOpenDeleteModal(false)}
         show={openDeleteModal}
-        onConfirm={() => handleDeleteCategorias()}
+        onConfirm={() => handleDeletePickups()}
       />
-      <AddPickupModal open={openAddModal} setOpen={setOpenAddModal} />
+      <AddPickupModal open={openAddModal} setOpen={setOpenAddModal} handleNewPickup={handleNewPickup} />
       <div className="w-full h-auto gap-4 flex flex-row items-center justify-end">
         {selectedPickups?.length > 0 && (
           <ButtonDelete

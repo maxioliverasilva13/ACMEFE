@@ -48,6 +48,25 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+
+      {
+        protocol: "https",
+        hostname:"i.pinimg.com",
+        port: "",
+        pathname: "/**",
+      },
+
+
+      {
+        protocol: "https",
+        hostname: "as2.ftcdn.net",
+        port: "",
+        pathname: "/**",
+      },
+
+      
+
+
     ],
   },
 };

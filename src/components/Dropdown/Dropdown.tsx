@@ -49,6 +49,7 @@ const Dropdown = ({ items, onChange, placeholder, error, onlyOneSelectable = fal
         <div className="w-full appears z-[1111111] max-h-[400px] overflow-auto bg-white flex flex-col items-center border border-gray-300 jsutify-start h-auto shadow-md p-4 rounded-lg top-full absolute right-0">
           { !onlyOneSelectable && <button
             onClick={() => setSelectedValue(undefined)}
+            type="button"
             className="text-gray-800  px-4 cursor-pointer font-semibold text-left w-full h-auto py-2 rounded-lg bg-transparent hover:bg-gray-200"
           >
             Todos
@@ -57,6 +58,7 @@ const Dropdown = ({ items, onChange, placeholder, error, onlyOneSelectable = fal
             return (
               <button
               key={`dropdown-item-${index}`}
+                type="button"
                 onClick={() => setSelectedValue(item)}
                 className="text-gray-800 px-4  text-left cursor-pointer font-medium w-full h-auto py-2 rounded-lg bg-transparent hover:bg-gray-200"
               >

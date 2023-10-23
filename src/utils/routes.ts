@@ -29,7 +29,8 @@ export const adminRoutes = [
   appRoutes.adminDepartamentos(),
   appRoutes.adminCiudades(),
   appRoutes.adminProfile(),
-  appRoutes.empresaProfile(),
+  appRoutes.empresaProfile(), 
+  appRoutes.adminEditEmpresas()
 ];
 
 export const userRoutes = [

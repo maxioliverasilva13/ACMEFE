@@ -22,6 +22,7 @@ const ButtonDropdown: FC<ButtonDropdownProps> = ({
       fontSize="text-sm"
       translate="hover:border-neutral-300 w-full justify-between"
       {...args}
+      type="button"
     >
       {children}
       <ChevronDownIcon
