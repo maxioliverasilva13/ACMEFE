@@ -73,7 +73,7 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
   };
 
   return (
-    <div className="nc-MainNav2 relative z-10 bg-white dark:bg-slate-900 ">
+    <div className="nc-MainNav2 relative z-10 bg-white border-b border-b-gray-200 mb-5 dark:bg-slate-900 ">
       <div className="container">
         <div className="h-20 flex justify-between">
           <div className="flex items-center md:hidden flex-1">

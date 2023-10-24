@@ -55,7 +55,7 @@ const ProductCard: FC<ProductCardProps> = ({
           <Image
             width={80}
             height={96}
-            src={imagenes[0]?.url || DEFAULT_USER_IMAGE}
+            src={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
             alt={"Producto Imagen"}
             className="absolute object-cover object-center"
           />
@@ -121,7 +121,7 @@ const ProductCard: FC<ProductCardProps> = ({
           >
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
-              src={imagenes[0]?.url || DEFAULT_USER_IMAGE}
+              src={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
               className={clsx("object-cover w-full h-full drop-shadow-xl",
                 !activo && "blur-sm"
               )}

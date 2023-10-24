@@ -35,4 +35,6 @@ export const adminRoutes = [
 
 export const userRoutes = [
  appRoutes.userInicio(),
+ appRoutes.tiendaHome(""),
+ "home-2",
 ];

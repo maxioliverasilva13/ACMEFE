@@ -33,5 +33,6 @@ export const appRoutes = {
     productDetail: () => "/product-detail",
     
     //user routes
-    userInicio: () => "/inicio"
+    userInicio: () => "/inicio",
+    tiendaHome: (empresaId: any) => `${empresaId}/inicio`,
 }

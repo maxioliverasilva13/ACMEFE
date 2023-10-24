@@ -13,18 +13,30 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import AvatarDropdown from "../Header/AvatarDropdown";
+import useGlobal from "@/hooks/useGlobal";
 
 const Dashboard = () => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [expandedUserAccount, setExpandedUserAccount] = useState(false);
   const pathname = usePathname();
   const isAdmin = pathname?.includes("/admin");
+  const { userInfo } = useGlobal();
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
 
   const itemsToUse = isAdmin ? AdminDashboardItems : EmpresaDashboardItems;
+
+  const handleGetRoleString = () => {
+    if (userInfo?.roles?.includes("Admin")) {
+      return "Administrador";
+    } else if (userInfo?.roles?.includes("Vendedor")) {
+      return "Vendedor";
+    } else {
+      return "Usuario";
+    }
+  };
 
   return (
     <div className="w-auto h-full relative overflow-visible">
@@ -119,15 +131,17 @@ const Dashboard = () => {
               )}
             >
               <span className="max-w-full w-full truncate overflow-hidden text-white font-semibold text-base">
-                Maximiliano Olivera
+                {userInfo?.nombre}
               </span>
               <span className="max-w-full w-full truncate overflow-hidden text-gray-200 font-semibold text-sm">
-                Administrador
+                {handleGetRoleString()}
               </span>
             </Link>
           )}
           <div className="relative overflow-visible">
-              {expanded && <AvatarDropdown className="absolute bottom-full -right-full w-[260px] px-4 mt-3.5" />}
+            {expanded && (
+              <AvatarDropdown className="absolute bottom-full -right-full w-[260px] px-4 mt-3.5" />
+            )}
           </div>
         </div>
       </div>

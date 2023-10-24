@@ -19,7 +19,7 @@ import { handleClearToken } from "@/utils/token";
 
 interface Props {
   children: any;
-  params: any;
+  params?: any;
 }
 
 const SessionWrapper = ({ children, params }: Props) => {

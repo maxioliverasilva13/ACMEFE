@@ -41,7 +41,7 @@ export const ProductoService = createApi({
       },
     }),
     disableProductoById: builder.mutation({
-      invalidatesTags: ["ProductoInfo"],
+      invalidatesTags: ["ProductoInfo", "Productos"],
       query: (prodId: number) => ({
         url: apiRoutes.deleteProductoById(prodId),
         method: "DELETE",
