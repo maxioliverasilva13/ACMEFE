@@ -20,6 +20,9 @@ export const EmpresaSlice = createSlice({
     setEmpresa(state, { payload }) {
       state.currentEmpresa = payload;
     },
+    clearEmpresa(state) {
+      state.currentEmpresa = undefined;
+    },
   },
   extraReducers: {},
 });
@@ -31,8 +34,13 @@ export const useEmpresaActions = () => {
     dispatch(EmpresaSlice.actions.setEmpresa(empresa));
   };
 
+  const handleClearEmpresa = () => {
+    dispatch(EmpresaSlice.actions.clearEmpresa());
+  };
+
   return {
     handleSetEmpresa,
+    handleClearEmpresa,
   };
 };
 

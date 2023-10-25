@@ -10,12 +10,14 @@ import DropdownCategories from "./DropdownCategories";
 import CartDropdown from "./CartDropdown";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import useEmpresa from "@/hooks/useEmpresa";
 
 export interface MainNav2Props {
   className?: string;
 }
 
 const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
+  const { currentEmpresa } = useEmpresa();
   const [showSearchForm, setShowSearchForm] = useState(false);
   const router = useRouter();
 
@@ -110,7 +112,7 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
               </button>
             )}
             <AvatarDropdown isBlack />
-            <CartDropdown />
+            {currentEmpresa && <CartDropdown />}
           </div>
         </div>
       </div>

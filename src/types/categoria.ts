@@ -10,4 +10,5 @@ export type Categoria = {
 export type CategoriaList = {
     categoriaNombre: string;
     categoriaId: number;
+    cantidadProductos: number;
 }

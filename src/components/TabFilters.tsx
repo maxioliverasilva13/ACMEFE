@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Popover, Transition } from "@/app/headlessui";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonThird from "@/shared/Button/ButtonThird";
@@ -10,96 +10,151 @@ import Slider from "rc-slider";
 import Radio from "@/shared/Radio/Radio";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import MySwitch from "@/components/MySwitch";
+import { ProductoList } from "@/types/productoList";
+import { useListarCategoriasDeEmpresaQuery } from "@/store/service/CategoriaService";
+import useEmpresa from "@/hooks/useEmpresa";
+import moment from "moment";
 
-// DEMO DATA
-const DATA_categories = [
-  {
-    name: "New Arrivals",
-  },
-  {
-    name: "Sale",
-  },
-  {
-    name: "Backpacks",
-  },
-  {
-    name: "Travel Bags",
-  },
-  {
-    name: "Laptop Sleeves",
-  },
-  {
-    name: "Organization",
-  },
-  {
-    name: "Accessories",
-  },
-];
-
-const DATA_colors = [
-  { name: "White" },
-  { name: "Beige" },
-  { name: "Blue" },
-  { name: "Black" },
-  { name: "Brown" },
-  { name: "Green" },
-  { name: "Navy" },
-];
-
-const DATA_sizes = [
-  { name: "XXS" },
-  { name: "XS" },
-  { name: "S" },
-  { name: "M" },
-  { name: "L" },
-  { name: "XL" },
-  { name: "2XL" },
-];
+enum FilterOrderType {
+  mostPopular = "Most-Popular",
+  bestRating = "Best-Rating",
+  newest = "Newest",
+  priceLowHight = "Price-low-hight",
+  priceHighLow = "Price-hight-low",
+}
 
 const DATA_sortOrderRadios = [
-  { name: "Most Popular", id: "Most-Popular" },
-  { name: "Best Rating", id: "Best-Rating" },
-  { name: "Newest", id: "Newest" },
-  { name: "Price Low - Hight", id: "Price-low-hight" },
-  { name: "Price Hight - Low", id: "Price-hight-low" },
+  { name: "Mas popular", id: FilterOrderType.mostPopular },
+  { name: "Mejor calificados", id: FilterOrderType.bestRating },
+  { name: "Mas nuevo", id: FilterOrderType.newest },
+  { name: "Precio Bajo - Alto", id: FilterOrderType.priceLowHight },
+  { name: "Price Alto - Bajo", id: FilterOrderType.priceHighLow },
 ];
 
-const PRICE_RANGE = [1, 500];
-//
-const TabFilters = () => {
-  const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
-  //
-  const [isOnSale, setIsIsOnSale] = useState(false);
-  const [rangePrices, setRangePrices] = useState([100, 500]);
-  const [categoriesState, setCategoriesState] = useState<string[]>([]);
-  const [colorsState, setColorsState] = useState<string[]>([]);
-  const [sizesState, setSizesState] = useState<string[]>([]);
-  const [sortOrderStates, setSortOrderStates] = useState<string>("");
+const PRICE_RANGE = [1, 50000];
 
+interface Props {
+  filtersProducts: ProductoList[];
+  setFiltersProductos: any;
+  setHasFilters: any;
+}
+//
+const TabFilters = ({
+  filtersProducts,
+  setFiltersProductos,
+  setHasFilters,
+}: Props) => {
+  const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
+  const { currentEmpresa } = useEmpresa();
   //
+  const [rangePrices, setRangePrices] = useState(PRICE_RANGE);
+  const [categoriesState, setCategoriesState] = useState<string[]>([]);
+  const [sortOrderStates, setSortOrderStates] = useState<string>("");
+  const { data: categorias } = useListarCategoriasDeEmpresaQuery(
+    currentEmpresa?.id
+  );
+
+  useEffect(() => {
+    const hasCategoriesFilter = categoriesState?.length > 0;
+    const hasrangePricesFilter =
+      rangePrices[0] !== PRICE_RANGE[0] || rangePrices[1] !== PRICE_RANGE[1];
+    const hasSortOrder = sortOrderStates !== "";
+    setHasFilters(hasCategoriesFilter || hasrangePricesFilter || hasSortOrder);
+  }, [categoriesState, rangePrices, sortOrderStates]);
+
   const closeModalMoreFilter = () => setisOpenMoreFilter(false);
   const openModalMoreFilter = () => setisOpenMoreFilter(true);
 
-  //
   const handleChangeCategories = (checked: boolean, name: string) => {
     checked
       ? setCategoriesState([...categoriesState, name])
       : setCategoriesState(categoriesState.filter((i) => i !== name));
   };
 
-  const handleChangeColors = (checked: boolean, name: string) => {
-    checked
-      ? setColorsState([...colorsState, name])
-      : setColorsState(colorsState.filter((i) => i !== name));
+  const filterByCategories = () => {
+    const newItems: ProductoList[] = [];
+    if (categoriesState?.length === 0) return;
+    if (categoriesState?.includes("Todas")) {
+      setFiltersProductos(filtersProducts);
+      return;
+    }
+    filtersProducts?.forEach((prod) => {
+      const categoriasOfProd = prod?.categorias;
+      const eixtsCategoria = categoriasOfProd?.find((cat) =>
+        categoriesState?.includes(cat?.nombre)
+      );
+      if (eixtsCategoria !== undefined) {
+        newItems?.push(prod);
+      }
+    });
+    setFiltersProductos(newItems);
   };
 
-  const handleChangeSizes = (checked: boolean, name: string) => {
-    checked
-      ? setSizesState([...sizesState, name])
-      : setSizesState(sizesState.filter((i) => i !== name));
+  const filterByPrice = () => {
+    const newItems: ProductoList[] = [];
+    filtersProducts?.forEach((prod) => {
+      const currentPrice = prod?.precio;
+      if (currentPrice >= rangePrices[0] && currentPrice <= rangePrices[1]) {
+        newItems?.push(prod);
+      }
+    });
+    setFiltersProductos(newItems);
   };
 
-  //
+  const applyFiltersSort = () => {
+    switch (sortOrderStates) {
+      case FilterOrderType.bestRating:
+        const ratingSort = [...filtersProducts]?.sort((itemA, itemB) => {
+          if (itemA?.rate >= itemB?.rate) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+        setFiltersProductos(ratingSort);
+        break;
+      case FilterOrderType.mostPopular:
+        const popularSort = [...filtersProducts]?.sort((itemA, itemB) => {
+          if (itemA?.cantCalificaciones >= itemB?.cantCalificaciones) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+        setFiltersProductos(popularSort);
+        break;
+      case FilterOrderType.newest:
+        const newestSort = [...filtersProducts]?.sort((itemA, itemB) => {
+          if (moment(itemA?.createdAt).isAfter(moment(itemB?.createdAt))) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+        setFiltersProductos(newestSort);
+        break;
+      case FilterOrderType.priceHighLow:
+        const priceHightLowSort = [...filtersProducts]?.sort((itemA, itemB) => {
+          if (itemA?.precio >= itemB?.precio) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+        setFiltersProductos(priceHightLowSort);
+        break;
+      case FilterOrderType.priceLowHight:
+        const priceLowHight = [...filtersProducts]?.sort((itemA, itemB) => {
+          if (itemA?.precio <= itemB?.precio) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+        setFiltersProductos(priceLowHight);
+        break;
+    }
+  };
 
   // OK
   const renderXClear = () => {
@@ -211,24 +266,27 @@ const TabFilters = () => {
                 <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
                   <div className="relative flex flex-col px-5 py-6 space-y-5">
                     <Checkbox
-                      name="All Categories"
-                      label="All Categories"
-                      defaultChecked={categoriesState.includes(
-                        "All Categories"
-                      )}
+                      name="Todas"
+                      label="Todas"
+                      defaultChecked={categoriesState.includes("Todas")}
                       onChange={(checked) =>
-                        handleChangeCategories(checked, "All Categories")
+                        handleChangeCategories(checked, "Todas")
                       }
                     />
                     <div className="w-full border-b border-neutral-200 dark:border-neutral-700" />
-                    {DATA_categories.map((item) => (
-                      <div key={item.name} className="">
+                    {categorias?.map((item) => (
+                      <div key={`cat-${item.categoriaId}`} className="">
                         <Checkbox
-                          name={item.name}
-                          label={item.name}
-                          defaultChecked={categoriesState.includes(item.name)}
+                          name={item.categoriaNombre}
+                          label={item.categoriaNombre}
+                          defaultChecked={categoriesState.includes(
+                            item.categoriaNombre
+                          )}
                           onChange={(checked) =>
-                            handleChangeCategories(checked, item.name)
+                            handleChangeCategories(
+                              checked,
+                              item.categoriaNombre
+                            )
                           }
                         />
                       </div>
@@ -242,13 +300,16 @@ const TabFilters = () => {
                       }}
                       sizeClass="px-4 py-2 sm:px-5"
                     >
-                      Clear
+                      Limpiar
                     </ButtonThird>
                     <ButtonPrimary
-                      onClick={close}
+                      onClick={() => {
+                        filterByCategories();
+                        close();
+                      }}
                       sizeClass="px-4 py-2 sm:px-5"
                     >
-                      Apply
+                      Aplicar
                     </ButtonPrimary>
                   </div>
                 </div>
@@ -360,248 +421,19 @@ const TabFilters = () => {
                     <ButtonThird
                       onClick={() => {
                         close();
-                        setSortOrderStates("");
                       }}
                       sizeClass="px-4 py-2 sm:px-5"
                     >
-                      Clear
+                      Limpiar
                     </ButtonThird>
                     <ButtonPrimary
-                      onClick={close}
-                      sizeClass="px-4 py-2 sm:px-5"
-                    >
-                      Apply
-                    </ButtonPrimary>
-                  </div>
-                </div>
-              </Popover.Panel>
-            </Transition>
-          </>
-        )}
-      </Popover>
-    );
-  };
-
-  // OK
-  const renderTabsColor = () => {
-    return (
-      <Popover className="relative">
-        {({ open, close }) => (
-          <>
-            <Popover.Button
-              className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border focus:outline-none select-none
-              ${open ? "!border-primary-500 " : ""}
-                ${
-                  !!colorsState.length
-                    ? "!border-primary-500 bg-primary-50 text-primary-900"
-                    : "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-500"
-                }
-                `}
-            >
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M7.01 18.0001L3 13.9901C1.66 12.6501 1.66 11.32 3 9.98004L9.68 3.30005L17.03 10.6501C17.4 11.0201 17.4 11.6201 17.03 11.9901L11.01 18.0101C9.69 19.3301 8.35 19.3301 7.01 18.0001Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M8.35 1.94995L9.69 3.28992"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M2.07 11.92L17.19 11.26"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M3 22H16"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeMiterlimit="10"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M18.85 15C18.85 15 17 17.01 17 18.24C17 19.26 17.83 20.09 18.85 20.09C19.87 20.09 20.7 19.26 20.7 18.24C20.7 17.01 18.85 15 18.85 15Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-
-              <span className="ml-2">Colors</span>
-              {!colorsState.length ? (
-                <ChevronDownIcon className="w-4 h-4 ml-3" />
-              ) : (
-                <span onClick={() => setColorsState([])}>{renderXClear()}</span>
-              )}
-            </Popover.Button>
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
-              <Popover.Panel className="absolute z-40 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-sm">
-                <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
-                  <div className="relative flex flex-col px-5 py-6 space-y-5">
-                    {DATA_colors.map((item) => (
-                      <div key={item.name} className="">
-                        <Checkbox
-                          name={item.name}
-                          label={item.name}
-                          defaultChecked={colorsState.includes(item.name)}
-                          onChange={(checked) =>
-                            handleChangeColors(checked, item.name)
-                          }
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="p-5 bg-slate-50 dark:bg-slate-900 dark:border-t dark:border-slate-800 flex items-center justify-between">
-                    <ButtonThird
                       onClick={() => {
+                        applyFiltersSort();
                         close();
-                        setColorsState([]);
                       }}
                       sizeClass="px-4 py-2 sm:px-5"
                     >
-                      Clear
-                    </ButtonThird>
-                    <ButtonPrimary
-                      onClick={close}
-                      sizeClass="px-4 py-2 sm:px-5"
-                    >
-                      Apply
-                    </ButtonPrimary>
-                  </div>
-                </div>
-              </Popover.Panel>
-            </Transition>
-          </>
-        )}
-      </Popover>
-    );
-  };
-
-  // OK
-  const renderTabsSize = () => {
-    return (
-      <Popover className="relative">
-        {({ open, close }) => (
-          <>
-            <Popover.Button
-              className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border focus:outline-none select-none
-              ${open ? "!border-primary-500 " : ""}
-                ${
-                  !!sizesState.length
-                    ? "!border-primary-500 bg-primary-50 text-primary-900"
-                    : "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-500"
-                }
-                `}
-            >
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M21 9V3H15"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M3 15V21H9"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M21 3L13.5 10.5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10.5 13.5L3 21"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-
-              <span className="ml-2">Sizes</span>
-              {!sizesState.length ? (
-                <ChevronDownIcon className="w-4 h-4 ml-3" />
-              ) : (
-                <span onClick={() => setSizesState([])}>{renderXClear()}</span>
-              )}
-            </Popover.Button>
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
-              <Popover.Panel className="absolute z-40 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-sm">
-                <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
-                  <div className="relative flex flex-col px-5 py-6 space-y-5">
-                    {DATA_sizes.map((item) => (
-                      <div key={item.name} className="">
-                        <Checkbox
-                          name={item.name}
-                          label={item.name}
-                          defaultChecked={sizesState.includes(item.name)}
-                          onChange={(checked) =>
-                            handleChangeSizes(checked, item.name)
-                          }
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="p-5 bg-slate-50 dark:bg-slate-900 dark:border-t dark:border-slate-800 flex items-center justify-between">
-                    <ButtonThird
-                      onClick={() => {
-                        close();
-                        setSizesState([]);
-                      }}
-                      sizeClass="px-4 py-2 sm:px-5"
-                    >
-                      Clear
-                    </ButtonThird>
-                    <ButtonPrimary
-                      onClick={close}
-                      sizeClass="px-4 py-2 sm:px-5"
-                    >
-                      Apply
+                      Aplicar
                     </ButtonPrimary>
                   </div>
                 </div>
@@ -739,13 +571,16 @@ const TabFilters = () => {
                       }}
                       sizeClass="px-4 py-2 sm:px-5"
                     >
-                      Clear
+                      Limpiar
                     </ButtonThird>
                     <ButtonPrimary
-                      onClick={close}
+                      onClick={() => {
+                        filterByPrice();
+                        close();
+                      }}
                       sizeClass="px-4 py-2 sm:px-5"
                     >
-                      Apply
+                      Aplicar
                     </ButtonPrimary>
                   </div>
                 </div>
@@ -754,59 +589,6 @@ const TabFilters = () => {
           </>
         )}
       </Popover>
-    );
-  };
-
-  // OK
-  const renderTabIsOnsale = () => {
-    return (
-      <div
-        className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border focus:outline-none cursor-pointer select-none ${
-          isOnSale
-            ? "border-primary-500 bg-primary-50 text-primary-900"
-            : "border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-500"
-        }`}
-        onClick={() => setIsIsOnSale(!isOnSale)}
-      >
-        <svg
-          className="w-4 h-4"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M3.9889 14.6604L2.46891 13.1404C1.84891 12.5204 1.84891 11.5004 2.46891 10.8804L3.9889 9.36039C4.2489 9.10039 4.4589 8.59038 4.4589 8.23038V6.08036C4.4589 5.20036 5.1789 4.48038 6.0589 4.48038H8.2089C8.5689 4.48038 9.0789 4.27041 9.3389 4.01041L10.8589 2.49039C11.4789 1.87039 12.4989 1.87039 13.1189 2.49039L14.6389 4.01041C14.8989 4.27041 15.4089 4.48038 15.7689 4.48038H17.9189C18.7989 4.48038 19.5189 5.20036 19.5189 6.08036V8.23038C19.5189 8.59038 19.7289 9.10039 19.9889 9.36039L21.5089 10.8804C22.1289 11.5004 22.1289 12.5204 21.5089 13.1404L19.9889 14.6604C19.7289 14.9204 19.5189 15.4304 19.5189 15.7904V17.9403C19.5189 18.8203 18.7989 19.5404 17.9189 19.5404H15.7689C15.4089 19.5404 14.8989 19.7504 14.6389 20.0104L13.1189 21.5304C12.4989 22.1504 11.4789 22.1504 10.8589 21.5304L9.3389 20.0104C9.0789 19.7504 8.5689 19.5404 8.2089 19.5404H6.0589C5.1789 19.5404 4.4589 18.8203 4.4589 17.9403V15.7904C4.4589 15.4204 4.2489 14.9104 3.9889 14.6604Z"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M9 15L15 9"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M14.4945 14.5H14.5035"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M9.49451 9.5H9.50349"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-
-        <span className="line-clamp-1 ml-2">On sale</span>
-        {isOnSale && renderXClear()}
-      </div>
     );
   };
 
@@ -942,185 +724,6 @@ const TabFilters = () => {
               >
                 &#8203;
               </span>
-              <Transition.Child
-                className="inline-block h-screen w-full max-w-4xl"
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <div className="inline-flex flex-col w-full text-left align-middle transition-all transform bg-white dark:bg-neutral-900 dark:border dark:border-neutral-700 dark:text-neutral-100 h-full">
-                  <div className="relative flex-shrink-0 px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 text-center">
-                    <Dialog.Title
-                      as="h3"
-                      className="text-lg font-medium leading-6 text-gray-900"
-                    >
-                      Products filters
-                    </Dialog.Title>
-                    <span className="absolute left-3 top-3">
-                      <ButtonClose onClick={closeModalMoreFilter} />
-                    </span>
-                  </div>
-
-                  <div className="flex-grow overflow-y-auto">
-                    <div className="px-6 sm:px-8 md:px-10 divide-y divide-neutral-200 dark:divide-neutral-800">
-                      {/* --------- */}
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Categories</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(DATA_categories)}
-                        </div>
-                      </div>
-                      {/* --------- */}
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Colors</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(DATA_colors)}
-                        </div>
-                      </div>
-                      {/* --------- */}
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Size</h3>
-                        <div className="mt-6 relative ">
-                          {renderMoreFilterItem(DATA_sizes)}
-                        </div>
-                      </div>
-
-                      {/* --------- */}
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Range Prices</h3>
-                        <div className="mt-6 relative ">
-                          <div className="relative flex flex-col space-y-8">
-                            <div className="space-y-5">
-                              <Slider
-                                range
-                                className="text-red-400"
-                                min={PRICE_RANGE[0]}
-                                max={PRICE_RANGE[1]}
-                                defaultValue={rangePrices}
-                                allowCross={false}
-                                onChange={(_input: number | number[]) =>
-                                  setRangePrices(_input as number[])
-                                }
-                              />
-                            </div>
-
-                            <div className="flex justify-between space-x-5">
-                              <div>
-                                <label
-                                  htmlFor="minPrice"
-                                  className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
-                                >
-                                  Min price
-                                </label>
-                                <div className="mt-1 relative rounded-md">
-                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span className="text-neutral-500 sm:text-sm">
-                                      $
-                                    </span>
-                                  </div>
-                                  <input
-                                    type="text"
-                                    name="minPrice"
-                                    disabled
-                                    id="minPrice"
-                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900"
-                                    value={rangePrices[0]}
-                                  />
-                                </div>
-                              </div>
-                              <div>
-                                <label
-                                  htmlFor="maxPrice"
-                                  className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
-                                >
-                                  Max price
-                                </label>
-                                <div className="mt-1 relative rounded-md">
-                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span className="text-neutral-500 sm:text-sm">
-                                      $
-                                    </span>
-                                  </div>
-                                  <input
-                                    type="text"
-                                    disabled
-                                    name="maxPrice"
-                                    id="maxPrice"
-                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900"
-                                    value={rangePrices[1]}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* --------- */}
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">Sort Order</h3>
-                        <div className="mt-6 relative ">
-                          <div className="relative flex flex-col space-y-5">
-                            {DATA_sortOrderRadios.map((item) => (
-                              <Radio
-                                id={item.id}
-                                key={item.id}
-                                name="radioNameSort"
-                                label={item.name}
-                                defaultChecked={sortOrderStates === item.id}
-                                onChange={setSortOrderStates}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* --------- */}
-                      {/* ---- */}
-                      <div className="py-7">
-                        <h3 className="text-xl font-medium">On sale!</h3>
-                        <div className="mt-6 relative ">
-                          <MySwitch
-                            label="On sale!"
-                            desc="Products currently on sale"
-                            enabled={isOnSale}
-                            onChange={setIsIsOnSale}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-6 flex-shrink-0 bg-neutral-50 dark:bg-neutral-900 dark:border-t dark:border-neutral-800 flex items-center justify-between">
-                    <ButtonThird
-                      onClick={() => {
-                        setRangePrices(PRICE_RANGE);
-                        setCategoriesState([]);
-                        setColorsState([]);
-                        setSortOrderStates("");
-                        closeModalMoreFilter();
-                      }}
-                      sizeClass="px-4 py-2 sm:px-5"
-                    >
-                      Clear
-                    </ButtonThird>
-                    <ButtonPrimary
-                      onClick={closeModalMoreFilter}
-                      sizeClass="px-4 py-2 sm:px-5"
-                    >
-                      Apply
-                    </ButtonPrimary>
-                  </div>
-                </div>
-              </Transition.Child>
             </div>
           </Dialog>
         </Transition>
@@ -1134,9 +737,6 @@ const TabFilters = () => {
       <div className="hidden lg:flex flex-1 space-x-4">
         {renderTabsPriceRage()}
         {renderTabsCategories()}
-        {renderTabsColor()}
-        {renderTabsSize()}
-        {renderTabIsOnsale()}
         <div className="!ml-auto">{renderTabsSortOrder()}</div>
       </div>
 

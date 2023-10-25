@@ -34,6 +34,7 @@ export type ProductoList = {
   linkFicha?: string;
   activo: boolean;
   productosRelacionados: ProductoList[];
+  createdAt: string;
   categorias: CategoriaList[];
   imagenes: ImageList[];
   calificaciones: Calificacion[],

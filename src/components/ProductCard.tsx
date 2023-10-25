@@ -99,7 +99,7 @@ const ProductCard: FC<ProductCardProps> = ({
   return (
     <>
       <div
-        className={`nc-ProductCard relative flex flex-col bg-transparent w-[300px] ${className}`}
+        className={`nc-ProductCard border rounded-2xl shadow-sm border-gray-200 relative flex flex-col bg-transparent w-[300px] ${className}`}
       >
         <Link
           href={

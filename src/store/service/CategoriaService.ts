@@ -15,9 +15,17 @@ export const CategoriaService = createApi({
         return response as CategoriaList[];
       },
     }),
+    listarCategoriasDeEmpresa: builder.query({
+      query: (empresaId: number) => apiRoutes.listarCategoriasDeEmpresa(empresaId),
+      transformResponse(value) {
+        const response = value;
+        return response as CategoriaList[];
+      },
+    }),
   }),
 });
 
 export const {
   useListarCategoriasQuery,
+  useListarCategoriasDeEmpresaQuery
 } = CategoriaService;

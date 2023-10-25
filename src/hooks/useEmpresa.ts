@@ -8,12 +8,13 @@ const useEmpresa = () => {
     (state: RootState) => state.EmpresaSlice
   );
 
-  const { handleSetEmpresa } =
+  const { handleSetEmpresa, handleClearEmpresa } =
     useEmpresaActions();
 
   return {
     currentEmpresa,
-    handleSetEmpresa
+    handleSetEmpresa,
+    handleClearEmpresa
   };
 };
 

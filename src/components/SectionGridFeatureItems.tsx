@@ -1,29 +1,40 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import HeaderFilterSection from "@/components/HeaderFilterSection";
 import ProductCard from "@/components/ProductCard";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import { Product, PRODUCTS } from "@/data/data";
+import { ProductoList } from "@/types/productoList";
 
 //
 export interface SectionGridFeatureItemsProps {
-  data?: Product[];
+  data?: ProductoList[];
 }
 
 const SectionGridFeatureItems: FC<SectionGridFeatureItemsProps> = ({
-  data = PRODUCTS,
+  data = [],
 }) => {
+  const [filtersProducts, setFiltersProductos] = useState<ProductoList[]>(data);
+  const [hasFIlters, setHasFilters] = useState(false);
+
+  useEffect(() => {
+    if (!hasFIlters) {
+      setFiltersProductos(data);
+    }
+  }, [hasFIlters])
+
   return (
     <div className="nc-SectionGridFeatureItems relative">
-      <HeaderFilterSection />
+      <HeaderFilterSection
+        setHasFilters={setHasFilters}
+        filtersProducts={filtersProducts}
+        setFiltersProductos={setFiltersProductos}
+      />
       <div
-        className={`grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 `}
+        className={`flex flex-row items-start justify-start flex-wrap gap-4`}
       >
-        {data.map((item, index) => (
+        {(hasFIlters ? filtersProducts : data).map((item, index) => (
           <ProductCard data={item} key={index} />
         ))}
-      </div>
-      <div className="flex mt-16 justify-center items-center">
-        <ButtonPrimary loading>Show me more</ButtonPrimary>
       </div>
     </div>
   );

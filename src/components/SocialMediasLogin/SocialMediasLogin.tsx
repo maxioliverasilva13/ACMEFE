@@ -26,7 +26,6 @@ const SocialMediasLogin = () => {
   };
 
   const handleLoginWithGoogle = async () => {
-    console.log("aca 2");
     try {
       const resp = (await signInWithGoogle()) as User;
       await handleCreateUser(resp);

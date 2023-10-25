@@ -174,16 +174,6 @@ const AgregarProducto = () => {
               className="mt-1.5"
             />
           </div>
-          <div className="flex-grow w-full flex flex-col items-start justify-start">
-            <Label>Titulo</Label>
-            <Input
-              {...register(CrearProductoFormFields.titulo)}
-              error={errors[CrearProductoFormFields.titulo]?.message}
-              placeholder="Titulo del producto"
-              type="text"
-              className="mt-1.5"
-            />
-          </div>
         </div>
 
         <div className="flex w-full flex-row items-center justify-center gap-4">
@@ -216,18 +206,7 @@ const AgregarProducto = () => {
               error={errors[CrearProductoFormFields.precio]?.message}
               placeholder="Precio del producto"
               className="mt-1.5"
-              type="text"
-            />
-          </div>
-
-          <div className="flex-grow w-full flex flex-col items-start justify-start">
-            <Label>Link Ficha</Label>
-            <Input
-              {...register(CrearProductoFormFields.linkAcata)}
-              error={errors[CrearProductoFormFields.linkAcata]?.message}
-              placeholder="Link de la ficha del producto"
-              type="text"
-              className="mt-1.5"
+              type="number"
             />
           </div>
         </div>

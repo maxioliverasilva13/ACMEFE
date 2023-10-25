@@ -45,7 +45,7 @@ interface Props {
 }
 
 const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
-  const { imagenes } = product;
+  const imagenes = product?.imagenes ?? [];
   const { userInfo, handleSetProductoToEdit } = useGlobal();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
