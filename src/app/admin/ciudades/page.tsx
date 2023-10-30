@@ -80,6 +80,10 @@ const AdminCiudades = () => {
   const rowsCiudad = formatCiudadesToTable(ciudades);
 
   const handleDeleteCiudades = () => {
+    selectedCiudades?.forEach((ciudad) => {
+      deleteCiudad(ciudad.id as number);
+    })
+
     setOpenDeleteModal(false);
     setSelectedCiudades([]);
   };
