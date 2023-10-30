@@ -182,6 +182,7 @@ const Inicio = () => {
         </h2>
 
         {/* Empresa list */}
+        <div className="w-full h-auto flex flex-row items-start justify-start gap-4">
         {data &&
           data?.map((empresa) => {
             return (
@@ -224,6 +225,7 @@ const Inicio = () => {
               </Link>
             );
           })}
+        </div>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ export const CategoriaService = createApi({
   endpoints: (builder) => ({
     listarCategorias: builder.query({
       query: () => apiRoutes.listarCategorias(),
+      providesTags: ["Categorias"],
       transformResponse(value) {
         const response = value;
         return response as CategoriaList[];
@@ -22,10 +23,36 @@ export const CategoriaService = createApi({
         return response as CategoriaList[];
       },
     }),
+    crearCategoria: builder.mutation({
+      query: (data) => ({
+        url: apiRoutes.crearCategoria(),
+        method: "POST",
+        body: data,
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+      invalidatesTags: ["Categorias"],
+    }),
+    deleteCategorias: builder.mutation({
+      query: (data) => ({
+        url: apiRoutes.deleteCategorias(),
+        method: "DELETE",
+        body: data,
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+      invalidatesTags: ["Categorias"],
+    }),
   }),
 });
 
 export const {
   useListarCategoriasQuery,
-  useListarCategoriasDeEmpresaQuery
+  useListarCategoriasDeEmpresaQuery,
+  useCrearCategoriaMutation,
+  useDeleteCategoriasMutation
 } = CategoriaService;

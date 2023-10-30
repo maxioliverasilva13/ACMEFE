@@ -3,91 +3,161 @@
 import AvatarSelector from "@/components/AvatarSelector/AvatarSelector";
 import Label from "@/components/Label/Label";
 import Modal from "@/components/Modal";
+import MultiSelect from "@/components/MultiSelect/MultiSelect";
 import Table from "@/components/Table/Table";
 import {
   CrearCategoriaForm,
   CrearCategoriaFormFields,
   CrearCategoriaValidationSchema,
 } from "@/forms/CrearCategoria";
+import useGlobal from "@/hooks/useGlobal";
 import ButtonDelete from "@/shared/Button/ButtonDelete";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
+import {
+  useCrearCategoriaMutation,
+  useDeleteCategoriasMutation,
+  useListarCategoriasDeEmpresaQuery,
+  useListarCategoriasQuery,
+} from "@/store/service/CategoriaService";
 import { Categoria } from "@/types/categoria";
 import { columnsCategorias, formatCategoriasToTable } from "@/utils/categoria";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const CategoriasPage = () => {
   const { push } = useRouter();
   const [disabledActivate, setDisabledActivate] = useState<boolean>(false);
   const [selectedCategorias, setSelectedCategorias] = useState<Categoria[]>([]);
+  const [categoriasRelacionadas, setCategoriasRelacionadas] = useState<
+    Categoria[]
+  >([]);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
-  const [selectedFile, setSelectedFile] = useState();
+  const { data: categorias = [], isLoading: isLoadingCategorias } =
+    useListarCategoriasQuery({});
+  const [handleCrearCategoria] = useCrearCategoriaMutation();
+  const [handleRemoveCategorias] = useDeleteCategoriasMutation();
+
+  const { handleSetLoading } = useGlobal();
+
+  const crearCategoriaForm = useForm<CrearCategoriaForm>({
+    resolver: yupResolver(CrearCategoriaValidationSchema()),
+  });
 
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<CrearCategoriaForm>({
-    resolver: yupResolver(CrearCategoriaValidationSchema()),
-  });
+  } = crearCategoriaForm;
 
-  const mockLostOfCategorias: Categoria[] = [
-    {
-      id: 1,
-      imagen: "https://i.pravatar.cc/150?img=61",
-      nombre: "Maximiliano",
-      productos: 0,
-    },
-    {
-      id: 2,
-      imagen: "https://i.pravatar.cc/150?img=55",
-      nombre: "Gustavo",
-      productos: 5,
-    },
-    {
-      id: 3,
-      imagen: "https://i.pravatar.cc/150?img=13",
-      nombre: "Pepe",
-      productos: 0,
-    },
-  ];
+  useEffect(() => {
+    handleSetLoading(isLoadingCategorias);
+  }, [isLoadingCategorias]);
 
-  const userRows = formatCategoriasToTable(mockLostOfCategorias);
+  const userRows = formatCategoriasToTable(categorias);
 
-  const handleDeleteCategorias = () => {
-    setOpenDeleteModal(false);
-    setSelectedCategorias([]);
-    // delete users on backend
+  const handleDeleteCategorias = async () => {
+    try {
+      const selectedCatsIds = selectedCategorias?.map((cat) => cat?.id);
+      if (selectedCatsIds && selectedCatsIds?.length > 0) {
+        const categoriasIds = selectedCategorias?.map((cat) => cat?.id)
+        const resp = (await handleRemoveCategorias(categoriasIds)) as any;
+        if (resp?.data?.ok) {
+          toast.success("Categorias eliminadas correctamente");
+          setOpenAddModal(false);
+          setOpenDeleteModal(false);
+          setDisabledActivate(!disabledActivate);
+          setSelectedCategorias([]);
+        } else {
+          throw new Error(resp?.data?.message ?? "Error al eliminar categoria");
+        }
+
+      }
+    } catch (error) {
+      toast.error("Error al borrar categorias");
+    }
+
+    // delete categorias on backend
   };
 
   const addCategoriaContent = () => {
     return (
-      <div className="w-full my-4 h-auto flex flex-col items-center justify-start gap-2">
-        <div className="w-[150px] h-[150px] min-w-[150px] relative overflow-hidden">
+      <FormProvider {...crearCategoriaForm}>
+        <div className="w-full my-4 h-auto flex flex-col items-center justify-start gap-2">
+          {/* <div className="w-[150px] h-[150px] min-w-[150px] relative overflow-hidden">
           <AvatarSelector setFile={setSelectedFile} />
+        </div> */}
+          <div className="flex-grow w-full flex flex-col items-start justify-start">
+            <Label>Nombre</Label>
+            <Input
+              {...register(CrearCategoriaFormFields.name)}
+              error={errors[CrearCategoriaFormFields.name]?.message}
+              type="text"
+              className="mt-1.5"
+            />
+          </div>
+
+          <div className="flex-grow w-full gap-2 flex flex-col items-start justify-start">
+            <Label>Productos relacionados</Label>
+            <MultiSelect
+              placeholder="Agrega categorias relacionadas"
+              items={categorias?.map((cat) => {
+                return {
+                  label: (
+                    <div className="w-full flex-grow h-auto gap-2 flex flex-row items-center justify-start">
+                      <div className="flex flex-col items-start justify-center gap-0">
+                        <span className="font-semibold text-gray-800">
+                          {cat?.categoriaNombre}
+                        </span>
+                        <span className="font-medium text-sm text-green-700">
+                          Cantidad productos - {cat?.cantidadProductos || 0}
+                        </span>
+                      </div>
+                    </div>
+                  ),
+                  value: cat.categoriaId,
+                };
+              })}
+              onChange={(val: any) => setCategoriasRelacionadas(val)}
+            />
+          </div>
         </div>
-        <div className="flex-grow w-full flex flex-col items-start justify-start">
-          <Label>Nombre</Label>
-          <Input
-            {...register(CrearCategoriaFormFields.name)}
-            error={errors[CrearCategoriaFormFields.name]?.message}
-            type="text"
-            className="mt-1.5"
-          />
-        </div>
-      </div>
+      </FormProvider>
     );
   };
 
-  const handleNext = (data: any) => {
+  const handleNext = async (data: CrearCategoriaForm) => {
     // add backend
-    console.log("data is", data);
+    try {
+      handleSetLoading(true);
+
+      const categoriasIds = categoriasRelacionadas?.map(
+        (item: any) => item?.value
+      );
+
+      const dataToSend = {
+        Nombre: data?.name,
+        CategoriasRelacionadas: categoriasIds,
+      };
+
+      const resp = (await handleCrearCategoria(dataToSend)) as any;
+      if (resp?.data?.ok) {
+        toast.success("Categoria agregada correctamente");
+        setOpenAddModal(false);
+      } else {
+        throw new Error(resp?.data?.message ?? "Error al crear categoria");
+      }
+    } catch (error: any) {
+      toast.error(error?.message);
+    } finally {
+      handleSetLoading(false);
+    }
   };
 
   return (

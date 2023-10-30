@@ -1,5 +1,5 @@
 import Text from "@/components/Table/components/Text";
-import { Categoria } from "@/types/categoria";
+import { Categoria, CategoriaList } from "@/types/categoria";
 import { ColumnItem } from "@/types/table";
 import { Usuario } from "@/types/usuario";
 import defaultImage from "@/images/noimage.jpg";
@@ -38,23 +38,23 @@ export const columnsCategorias: ColumnItem[] = [
   },
 ];
 
-export const formatCategoriasToTable = (categorias: Categoria[]) => {
+export const formatCategoriasToTable = (categorias: CategoriaList[]) => {
   return categorias?.map((categoria) => {
     return {
-      id: categoria?.id,
+      id: categoria?.categoriaId,
       imagen: (
         <div className="w-[60px] relative h-[60px] min-w-[60px] rounded-full overflow-hidden">
           <Image
             alt="Categoria Avatar"
-            src={categoria?.imagen ?? defaultImage?.src}
+            src={defaultImage?.src}
             layout="fill"
             objectFit="cover"
             className="rounded-full "
           />
         </div>
       ),
-      nombre: <Text message={categoria?.nombre} />,
-      productos: <Text message={categoria?.productos} />,
+      nombre: <Text message={categoria?.categoriaNombre} />,
+      productos: <Text message={categoria?.cantidadProductos} />,
     };
   });
 };
