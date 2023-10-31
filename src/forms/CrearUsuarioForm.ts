@@ -37,5 +37,5 @@ export const CrearUsuarioValidationSchema = () =>
     nroPuerta: Yup.string().trim().required("El número de puerta es requerido"),
     calleEntre1: Yup.string().trim().required("La calle entre 1 es requerida"),
     calleEntre2: Yup.string().trim().required("La calle entre 2 es requerida"),
-    ciudadId: Yup.number().required("La ciudad es requerida para su dirección"),
+    ciudadId: Yup.number().min(1).required("La ciudad es requerida para su dirección"),
   });

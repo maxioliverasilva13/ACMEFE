@@ -8,7 +8,7 @@ export const EmpresaService = createApi({
   baseQuery: baseQuery,
   tagTypes: ["EmpresaInfo", "Empresas"],
   endpoints: (builder) => ({
-    listEmpresas : builder.query({
+    listEmpresas: builder.query({
       providesTags: ["Empresas"],
       query: () => {
         return apiRoutes.listEmpresas();
@@ -18,8 +18,8 @@ export const EmpresaService = createApi({
         return response as Empresa[];
       },
     }),
-    GetEmpresaById : builder.query({
-      query: (id:number) => {
+    GetEmpresaById: builder.query({
+      query: (id: number) => {
         return apiRoutes.obtenerEmpresa(id);
       },
       transformResponse(value) {
@@ -36,7 +36,6 @@ export const EmpresaService = createApi({
       invalidatesTags: ["Empresas"],
       transformResponse(value) {
         const response = value;
-     
         return response as any;
       },
     }),
@@ -52,6 +51,18 @@ export const EmpresaService = createApi({
         return response as any;
       },
     }),
+    editLookAndFeel: builder.mutation({
+      query: (data) => ({
+        url: apiRoutes.editLookAndFeel(),
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Empresas", "EmpresaInfo"],
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+    }),
   }),
 });
 
@@ -59,6 +70,6 @@ export const {
   useLazyGetEmpresaByIdQuery,
   useListEmpresasQuery,
   useCreateEmpresaMutation,
-  useDeleteEmpresasMutation
- 
-} =  EmpresaService;
+  useDeleteEmpresasMutation,
+  useEditLookAndFeelMutation,
+} = EmpresaService;

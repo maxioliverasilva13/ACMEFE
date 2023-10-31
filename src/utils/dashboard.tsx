@@ -1,4 +1,4 @@
-import { BuildingOffice2Icon, ExclamationTriangleIcon, MapIcon, MapPinIcon, ReceiptPercentIcon, ShoppingBagIcon, TagIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { BuildingOffice2Icon, Cog6ToothIcon, ExclamationTriangleIcon, MapIcon, MapPinIcon, ReceiptPercentIcon, ShoppingBagIcon, TagIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { appRoutes } from "./appRoutes";
 import { HomeIcon } from "@heroicons/react/24/outline";
 
@@ -70,7 +70,7 @@ export const EmpresaDashboardItems = [
     },
 
     {
-        title: "Categorias",
+        title: "Categorías",
         href: appRoutes.empresaCategorias(),
         validPath: [appRoutes.empresaCategorias()],
         icon: <TagIcon color="white" strokeWidth={2} width={25} />,
@@ -80,5 +80,11 @@ export const EmpresaDashboardItems = [
         href: appRoutes.empresaReclamos(),
         validPath: [appRoutes.empresaReclamos()],
         icon: <ExclamationTriangleIcon color="white" strokeWidth={2} width={25} />,
+    },
+    {
+        title: "Configuarción L&F",
+        href: appRoutes.empresaLookAndFeel(),
+        validPath: [appRoutes.empresaLookAndFeel()],
+        icon: <Cog6ToothIcon color="white" strokeWidth={2} width={25} />,
     },
 ];

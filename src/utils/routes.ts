@@ -18,6 +18,7 @@ export const empresaRoutes = [
   appRoutes.empresaReclamos(),
   appRoutes.empresaPorductDetails(),
   appRoutes.empresaEditarProducto(),
+  appRoutes.empresaLookAndFeel(),
 ];
 
 export const adminRoutes = [
