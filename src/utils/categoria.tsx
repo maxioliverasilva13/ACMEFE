@@ -34,12 +34,12 @@ export const columnsCategorias: ColumnItem[] = [
 
 export const DEFAULT_CATEGORIA_DESTACADA_IMAGE = "https://www.competethemes.com/wp-content/uploads/2015/11/one-category-front-page.png";
 
-export const formatCategoriasToTable = (categorias: Categoria[]) => {
+export const formatCategoriasToTable = (categorias: CategoriaList[]) => {
   return categorias?.map((categoria) => {
     return {
-      id: categoria?.id,
-      nombre: <Text message={categoria?.nombre} />,
-      productos: <Text message={categoria?.productos} />,
+      id: categoria?.categoriaId,
+      nombre: <Text message={categoria?.categoriaNombre} />,
+      productos: <Text message={categoria?.cantidadProductos} />,
     };
   });
 };

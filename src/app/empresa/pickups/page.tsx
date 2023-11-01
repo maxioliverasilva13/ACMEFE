@@ -15,7 +15,6 @@ import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
 import { Categoria } from "@/types/categoria";
 import { Pickup } from "@/types/pickup";
-import { columnsCategorias, formatCategoriasToTable } from "@/utils/categoria";
 import { columnsPickups, formatPickupsToTable } from "@/utils/pickup";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { yupResolver } from "@hookform/resolvers/yup";
