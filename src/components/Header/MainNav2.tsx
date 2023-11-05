@@ -87,11 +87,11 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
             {!showSearchForm && (
               <div className="hidden md:block h-10 border-l border-slate-200 dark:border-slate-700"></div>
             )}
-            {!showSearchForm && (
+            {/* {!showSearchForm && (
               <div className="hidden md:block">
                 <DropdownCategories />
               </div>
-            )}
+            )} */}
           </div>
 
           {showSearchForm && (
@@ -101,7 +101,7 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
           )}
 
           <div className="flex-1 flex items-center justify-end ">
-            {!showSearchForm && <TemplatesDropdown />}
+            {/* {!showSearchForm && <TemplatesDropdown />} */}
             {!showSearchForm && <LangDropdown />}
             {!showSearchForm && (
               <button

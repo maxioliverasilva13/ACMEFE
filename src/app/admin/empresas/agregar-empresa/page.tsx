@@ -13,8 +13,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useGlobal from "@/hooks/useGlobal";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 import { useCreateEmpresaMutation } from "@/store/service/EmpresaService";
 
 import { DEFAULT_EMPRESA_IMAGE } from "@/utils/empresas";

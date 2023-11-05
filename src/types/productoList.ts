@@ -39,3 +39,20 @@ export type ProductoList = {
   imagenes: ImageList[];
   calificaciones: Calificacion[],
 };
+
+export type ProductoCarrito = {
+  id: number;
+  titulo: string;
+  descripcion: string;
+  precio: number;
+  activo: boolean;
+  tipoIva: TipoIvaLIst;
+  fotos: ImageList[];
+};
+
+export type CarritoList = {
+  id: number;
+  cantidad: number;
+  producto: ProductoCarrito,
+};
+

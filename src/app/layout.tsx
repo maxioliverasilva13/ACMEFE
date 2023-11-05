@@ -10,7 +10,7 @@ import DashboardWrapper from "@/components/DashboardWrapper/DashboardWrapper";
 import store from "@/store/store";
 import { Provider } from "react-redux";
 import SessionWrapper from "@/components/SessionWrapper/SessionWrapper";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -36,7 +36,8 @@ export default function RootLayout({
       <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
         <Provider store={store}>
           <SessionWrapper>
-             <DashboardWrapper>{children}</DashboardWrapper>
+            <Toaster />
+            <DashboardWrapper>{children}</DashboardWrapper>
           </SessionWrapper>
         </Provider>
       </body>

@@ -32,6 +32,16 @@ export const PikcupService = createApi({
         },
     }),
 
+    listPickupsByEMpresa : builder.query({
+      query: (empresaId: number) => {
+        return apiRoutes.pickupsByEmpresa(empresaId)
+      },
+      transformResponse(value) {
+        const response = value;
+        return response as Pickup[];
+      },
+  }),
+
     deletePickups: builder.mutation({
       query: (data) => ({
         url: apiRoutes.deletePickups(),
@@ -47,4 +57,4 @@ export const PikcupService = createApi({
   }),
 });
 
-export const { useListPickupsQuery  , useCreatePickupMutation ,useDeletePickupsMutation } =  PikcupService;
+export const { useListPickupsQuery  , useCreatePickupMutation, useListPickupsByEMpresaQuery ,useDeletePickupsMutation } =  PikcupService;

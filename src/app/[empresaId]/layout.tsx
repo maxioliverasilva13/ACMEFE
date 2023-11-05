@@ -8,6 +8,7 @@ import Spinner from "@/components/Spinner/Spinner";
 import { useLazyGetEmpresaByIdQuery } from "@/store/service/EmpresaService";
 import { Empresa } from "@/types/empresa";
 import useEmpresa from "@/hooks/useEmpresa";
+import CarritoWrapper from "@/components/CarritoWrapper/CarritoWrapper";
 
 export const LayoutEmpresaId = ({ children }: any) => {
   const params = useParams();
@@ -53,7 +54,7 @@ export const LayoutEmpresaId = ({ children }: any) => {
   return (
     <div className="md:px-20">
       <Header />
-      {children}
+      <CarritoWrapper>{children}</CarritoWrapper>
     </div>
   );
 };

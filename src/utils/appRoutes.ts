@@ -36,4 +36,11 @@ export const appRoutes = {
     //user routes
     userInicio: () => "/inicio",
     tiendaHome: (empresaId: any) => `${empresaId}/inicio`,
+    productoDetails: () => `/detalles`,
+    carrito: () => `/carrito`,
+    carritoPath: (empresaId: any) => `/${empresaId}/carrito`,
+    checkout: () => `/checkout`,
+    checkoutPath: (empresaId: any) => `/${empresaId}/checkout`,
+    productoDetailsFullPath: (productId: any, empresaId: any) => `productos/${productId}/detalles`,
+
 }

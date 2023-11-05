@@ -1,31 +1,85 @@
 "use client";
 
 import Label from "@/components/Label/Label";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Input from "@/shared/Input/Input";
 import Radio from "@/shared/Radio/Radio";
-
+import useCarrito from "@/hooks/useCarrito";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  PaymentForm,
+  PaymentFormFields,
+  PaymentFormValidationSchema,
+} from "@/forms/PaymentForm";
 interface Props {
   isActive: boolean;
   onCloseActive: () => void;
   onOpenActive: () => void;
+  setIsValid?: any,
 }
 
 const PaymentMethod: FC<Props> = ({
   isActive,
   onCloseActive,
   onOpenActive,
+  setIsValid,
 }) => {
-  const [mothodActive, setMethodActive] = useState<
-    "Credit-Card" | "Internet-banking" | "Wallet"
-  >("Credit-Card");
+  const {
+    handleSetPaymentMethod,
+    paymentMethod,
+    paymentInfo,
+    handleSetPaymentInfo,
+  } = useCarrito();
 
-  console.log("checkout page")
+  const handleChangeField = (field: string, value: any) => {
+    const newInfo = {
+      ...paymentInfo,
+      [field]: value,
+    };
+    handleSetPaymentInfo(newInfo);
+  };
+
+  const {
+    register,
+    getValues,
+    watch,
+    formState: { errors, isValid },
+  } = useForm<PaymentForm>({
+    resolver: yupResolver(PaymentFormValidationSchema()),
+    mode: "onChange",
+  });
+  
+  useEffect(() => {
+    if (setIsValid) {
+      setIsValid(isValid);
+    }
+  }, [isValid])
+
+  useEffect(() => {
+    const value = getValues(PaymentFormFields.card);
+    handleChangeField(PaymentFormFields.card, value);
+  }, [watch(PaymentFormFields.card)]);
+
+  useEffect(() => {
+    const value = getValues(PaymentFormFields.cvc);
+    handleChangeField(PaymentFormFields.cvc, value);
+  }, [watch(PaymentFormFields.cvc)]);
+
+  useEffect(() => {
+    const value = getValues(PaymentFormFields.expiration);
+    handleChangeField(PaymentFormFields.expiration, value);
+  }, [watch(PaymentFormFields.expiration)]);
+
+  useEffect(() => {
+    const value = getValues(PaymentFormFields.titular);
+    handleChangeField(PaymentFormFields.titular, value);
+  }, [watch(PaymentFormFields.titular)]);
 
   const renderDebitCredit = () => {
-    const active = mothodActive === "Credit-Card";
+    const active = paymentMethod === "CARD";
     return (
       <div className="flex items-start space-x-4 sm:space-x-6">
         <Radio
@@ -33,7 +87,7 @@ const PaymentMethod: FC<Props> = ({
           name="payment-method"
           id="Credit-Card"
           defaultChecked={active}
-          onChange={(e) => setMethodActive(e as any)}
+          onChange={(e) => handleSetPaymentMethod("CARD")}
         />
         <div className="flex-1">
           <label
@@ -92,7 +146,7 @@ const PaymentMethod: FC<Props> = ({
                 />
               </svg>
             </div>
-            <p className="font-medium">Debit / Credit Card</p>
+            <p className="font-medium">Tarjeta de Debito / Credito</p>
           </label>
 
           <div
@@ -100,152 +154,53 @@ const PaymentMethod: FC<Props> = ({
               active ? "block" : "hidden"
             }`}
           >
-            <div className="max-w-lg">
-              <Label className="text-sm">Card number</Label>
-              <Input autoComplete="off" className="mt-1.5" type={"text"} />
+            <div className="max-w-lg w-full">
+              <Label className="text-sm">Numero de tarjeta</Label>
+              <Input
+                // onChange={(e) => handleChangeField("Numero", e?.target?.value)}
+                autoComplete="off"
+                className="mt-1.5"
+                type={"text"}
+                {...register(PaymentFormFields.card)}
+                error={errors[PaymentFormFields.card]?.message}
+              />
             </div>
-            <div className="max-w-lg">
-              <Label className="text-sm">Name on Card</Label>
-              <Input autoComplete="off" className="mt-1.5" />
+            <div className="max-w-lg w-full">
+              <Label className="text-sm">Nombre del titular</Label>
+              <Input
+                autoComplete="off"
+                // onChange={(e) => handleChangeField("Titular", e?.target?.value)}
+                className="mt-1.5"
+                {...register(PaymentFormFields.titular)}
+                error={errors[PaymentFormFields.titular]?.message}
+              />
             </div>
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
               <div className="sm:w-2/3">
-                <Label className="text-sm">Expiration date (MM/YY)</Label>
+                <Label className="text-sm">Fecha de expiracion (MM/YY)</Label>
                 <Input
+                  // onChange={(e) =>
+                  //   handleChangeField("Expiracion", e?.target?.value)
+                  // }
                   autoComplete="off"
                   className="mt-1.5"
                   placeholder="MM/YY"
+                  {...register(PaymentFormFields.expiration)}
+                  error={errors[PaymentFormFields.expiration]?.message}
                 />
               </div>
               <div className="flex-1">
                 <Label className="text-sm">CVC</Label>
                 <Input
+                  // onChange={(e) => handleChangeField("CVC", e?.target?.value)}
                   autoComplete="off"
                   className="mt-1.5"
                   placeholder="CVC"
+                  {...register(PaymentFormFields.cvc)}
+                  error={errors[PaymentFormFields.cvc]?.message}
                 />
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderInterNetBanking = () => {
-    const active = mothodActive === "Internet-banking";
-    return (
-      <div className="flex items-start space-x-4 sm:space-x-6">
-        <Radio
-          className="pt-3.5"
-          name="payment-method"
-          id="Internet-banking"
-          defaultChecked={active}
-          onChange={(e) => setMethodActive(e as any)}
-        />
-        <div className="flex-1">
-          <label
-            htmlFor="Internet-banking"
-            className="flex items-center space-x-4 sm:space-x-6"
-          >
-            <div
-              className={`p-2.5 rounded-xl border-2 ${
-                active
-                  ? "border-slate-600 dark:border-slate-300"
-                  : "border-gray-200 dark:border-slate-600"
-              }`}
-            >
-              <svg
-                className="w-6 h-6 sm:w-7 sm:h-7"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M7.99998 3H8.99998C7.04998 8.84 7.04998 15.16 8.99998 21H7.99998"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M15 3C16.95 8.84 16.95 15.16 15 21"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M3 16V15C8.84 16.95 15.16 16.95 21 15V16"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M3 9.0001C8.84 7.0501 15.16 7.0501 21 9.0001"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            <p className="font-medium">Internet banking</p>
-          </label>
-          <div className={`mt-6 mb-4 ${active ? "block" : "hidden"}`}>
-            <p className="text-sm dark:text-slate-300">
-              Your order will be delivered to you after you transfer to:
-            </p>
-            <ul className="mt-3.5 text-sm text-slate-500 dark:text-slate-400 space-y-2">
-              <li>
-                <h3 className="text-base text-slate-800 dark:text-slate-200 font-semibold mb-1">
-                  ChisNghiax
-                </h3>
-              </li>
-              <li>
-                {" "}
-                Bank name:{" "}
-                <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  Example Bank Name
-                </span>
-              </li>
-              <li>
-                {" "}
-                Account number:{" "}
-                <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  555 888 777
-                </span>
-              </li>
-              <li>
-                {" "}
-                Sort code:{" "}
-                <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  999
-                </span>
-              </li>
-              <li>
-                {" "}
-                IBAN:{" "}
-                <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  IBAN
-                </span>
-              </li>
-              <li>
-                {" "}
-                BIC:{" "}
-                <span className="text-slate-900 dark:text-slate-200 font-medium">
-                  BIC/Swift
-                </span>
-              </li>
-            </ul>
           </div>
         </div>
       </div>
@@ -253,7 +208,7 @@ const PaymentMethod: FC<Props> = ({
   };
 
   const renderWallet = () => {
-    const active = mothodActive === "Wallet";
+    const active = paymentMethod === "WALLET";
     return (
       <div className="flex items-start space-x-4 sm:space-x-6">
         <Radio
@@ -261,7 +216,7 @@ const PaymentMethod: FC<Props> = ({
           name="payment-method"
           id="Wallet"
           defaultChecked={active}
-          onChange={(e) => setMethodActive(e as any)}
+          onChange={(e) => handleSetPaymentMethod("WALLET")}
         />
         <div className="flex-1">
           <label
@@ -379,7 +334,7 @@ const PaymentMethod: FC<Props> = ({
           </span>
           <div className="sm:ml-8">
             <h3 className=" text-slate-700 dark:text-slate-400 flex ">
-              <span className="uppercase tracking-tight">PAYMENT METHOD</span>
+              <span className="uppercase tracking-tight">Metodo de pago</span>
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
@@ -395,7 +350,7 @@ const PaymentMethod: FC<Props> = ({
               </svg>
             </h3>
             <div className="font-semibold mt-1 text-sm">
-              <span className="">Google / Apple Wallet</span>
+              <span className="">Tarjetas / Etherium Wallet</span>
               <span className="ml-3">xxx-xxx-xx55</span>
             </div>
           </div>
@@ -403,7 +358,7 @@ const PaymentMethod: FC<Props> = ({
             className="py-2 px-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 mt-5 sm:mt-0 sm:ml-auto text-sm font-medium rounded-lg"
             onClick={onOpenActive}
           >
-            Change
+            Cambiar
           </button>
         </div>
 
@@ -414,24 +369,8 @@ const PaymentMethod: FC<Props> = ({
         >
           {/* ==================== */}
           <div>{renderDebitCredit()}</div>
-
-          {/* ==================== */}
-          <div>{renderInterNetBanking()}</div>
-
           {/* ==================== */}
           <div>{renderWallet()}</div>
-
-          <div className="flex pt-6">
-            <ButtonPrimary
-              className="w-full max-w-[240px]"
-              onClick={onCloseActive}
-            >
-              Confirm order
-            </ButtonPrimary>
-            <ButtonSecondary className="ml-3" onClick={onCloseActive}>
-              Cancel
-            </ButtonSecondary>
-          </div>
         </div>
       </div>
     );

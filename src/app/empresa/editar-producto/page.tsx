@@ -28,8 +28,7 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const EditarProducto = () => {
   const {
     register,

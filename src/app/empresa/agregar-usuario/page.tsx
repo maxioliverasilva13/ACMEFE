@@ -57,7 +57,6 @@ const AgregarUsuario = () => {
 
   useEffect(() => {
     setValue(CrearUsuarioFormFields.ciudadId, 0);
-    console.log('cambiuooo')
   }, [selectedDepartamentoId]);
 
   const createUserForm = useForm<CrearUsuarioForm>({

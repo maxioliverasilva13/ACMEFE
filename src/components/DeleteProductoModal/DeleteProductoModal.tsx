@@ -1,7 +1,6 @@
 "use client";
 
-import { toast } from "react-toastify";
-import ModalDelete from "../Modal";
+import toast from "react-hot-toast";import ModalDelete from "../Modal";
 import useScroll from "@/hooks/useScroll";
 import { useDisableProductoByIdMutation } from "@/store/service/ProductoService";
 import useGlobal from "@/hooks/useGlobal";
@@ -21,7 +20,6 @@ const DeleteProductoModal = ({ setOpen, open, productId }: Props) => {
     handleSetLoading(true);
     try {
       const resp = (await deleteProduct(productId)) as any;
-      console.log("resp", resp);
       if (resp?.data?.ok) {
         setOpen(false);
         scrollToTop();

@@ -1,21 +1,24 @@
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import NcModal from "@/shared/NcModal/NcModal";
+import { Pickup } from "@/types/pickup";
 import { initMap, generateNewMarker } from "@/utils/mapbox";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import mapboxgl, { Marker } from "mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import Label from "../Label/Label";
+import Image from "next/image";
+import { PRODUCT_NO_IMAGE } from "@/utils/usuarios";
 let defaultMarker: any = null;
 
 interface Props {
   setOpen: any;
   open: boolean;
-  setLatLng: any;
-  onSelectLocation: any
+  pickup: Pickup;
 }
 
-const SelectLocationModal = ({ setOpen, open, setLatLng  , onSelectLocation}: Props) => {
+const ViewSucursalDetails = ({ setOpen, open, pickup }: Props) => {
   const [map, setMap] = useState<any>(null);
   const [shouldUpdate, setShouldUpdate] = useState(true);
   const [mapContainer, setMapContainer] = useState<any>(null);
@@ -33,9 +36,6 @@ const SelectLocationModal = ({ setOpen, open, setLatLng  , onSelectLocation}: Pr
     return () => {
       if (defaultMarker) {
         const currentOffset = defaultMarker?.getLngLat();
-        setLatLng({
-          ...currentOffset,
-        });
         // map.current = null;
         setMapContainer(null);
       }
@@ -46,12 +46,11 @@ const SelectLocationModal = ({ setOpen, open, setLatLng  , onSelectLocation}: Pr
     if (map) {
       map.on("load", (event: any) => {
         map?.resize();
-        if (defaultMarker) {
-          const currentOffset = defaultMarker?.getLngLat();
+        if (pickup) {
           generateNewMarker({
+            lat: pickup?.lng,
+            lng: pickup?.lat,
             map: map,
-            lat: currentOffset?.lat,
-            lng: currentOffset?.lng,
           });
         }
         const geolocate = new mapboxgl.GeolocateControl({
@@ -68,58 +67,49 @@ const SelectLocationModal = ({ setOpen, open, setLatLng  , onSelectLocation}: Pr
     }
   }, [map]);
 
-  useEffect(() => {
-    if (map) {
-      map.on("dblclick", ({ lngLat }: any) => {
-        if (!defaultMarker) {
-          const newMarker = generateNewMarker({
-            ...lngLat,
-            map: map,
-          });
-          newMarker.on("dragend", (event: any) => {
-            defaultMarker = event?.target as any;
-          });
-          defaultMarker = newMarker;
-        }
-      });
-    }
-
-    return () => {
-      map?.off("click");
-    };
-  }, [map, defaultMarker]);
-
-  const onSelect = ()=>{
-      if(!defaultMarker){
-            toast.error("Debes seleccionar una ubicacion primero");
-            return;
-      }
-      const { _lngLat }  = defaultMarker;
-      const { lng, lat} = _lngLat;
-      onSelectLocation(lng,lat);
-    
-  }
-
   const renderContent = () => {
     return (
       <div className="w-full h-auto flex flex-col gap-4">
         <p className="text-[24px] font-semibold text-black">
-          Selecciona una ubicacion
+          Pickup - {pickup?.nombre}
         </p>
 
-        <p className="mt-4 text-[14px] font-semibold text-gray-400">
-          Selecciona la ubicacion en el mapa haciendo click en el mismo
-        </p>
+        <div className="w-[100px] relative h-[100px] shadow-sm overflow-hidden rounded-full">
+            <Image 
+                src={pickup?.foto ?? PRODUCT_NO_IMAGE}
+                alt={pickup?.nombre}
+                layout="fill"
+                objectFit="cover"
+            />
+        </div>
 
+        <div className="flex flex-col items-start justify-start gap-1">
+          <Label>Departamento:</Label>
+          <span className="text-sm font-semibold text-gray-600">
+            {pickup?.departamentoNombre} - {pickup?.ciudadNombre}
+          </span>
+        </div>
+        <div className="flex flex-col items-start justify-start gap-1">
+          <Label>Direccion:</Label>
+          <span className="text-sm font-semibold text-gray-600">
+            {pickup?.calle} {pickup?.nroPuerta} - entre {pickup?.calleEntre1} y {pickup?.calleEntre1}
+          </span>
+        </div>
+
+        <div className="flex flex-col items-start justify-start gap-1">
+          <Label>Datos varios:</Label>
+          <span className="text-sm font-semibold text-gray-600">
+            Telefono - {pickup?.telefono}
+          </span>
+          <span className="text-sm font-semibold text-gray-600">
+            Plazo de dias de preparacion - {pickup?.plazoDiasPreparacion}
+          </span>
+        </div>
         <div
           ref={(ref) => setMapContainer(ref)}
           className="rounded-lg overflow-hidden w-full h-[550px]"
-          
         ></div>
-
-        <ButtonPrimary onClick={onSelect}>
-            Confirmar
-        </ButtonPrimary>
+        <ButtonPrimary onClick={() => setOpen(false)}>Cerrar</ButtonPrimary>
       </div>
     );
   };
@@ -137,4 +127,4 @@ const SelectLocationModal = ({ setOpen, open, setLatLng  , onSelectLocation}: Pr
   );
 };
 
-export default SelectLocationModal;
+export default ViewSucursalDetails;

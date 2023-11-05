@@ -16,8 +16,7 @@ import AvatarSelector from "@/components/AvatarSelector/AvatarSelector";
 import { DEFAULT_USER_IMAGE } from "@/utils/usuarios";
 import useUploadImage from "@/hooks/useUploadFile";
 import { useRegisterMutation } from "@/store/service/UserService";
-import { toast } from "react-toastify";
-import registerMail from "@/images/registerMail.svg";
+import toast from "react-hot-toast";import registerMail from "@/images/registerMail.svg";
 import useGlobal from "@/hooks/useGlobal";
 import SocialMediasLogin from "@/components/SocialMediasLogin/SocialMediasLogin";
 

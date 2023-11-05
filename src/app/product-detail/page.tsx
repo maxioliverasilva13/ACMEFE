@@ -36,6 +36,8 @@ import { useRouter } from "next/navigation";
 import { appRoutes } from "@/utils/appRoutes";
 import { Route } from "next";
 import ProductCard from "@/components/ProductCard";
+import { useAgregarProductoACarritoMutation } from "@/store/service/CarritoService";
+import { toast as toastify } from "react-toastify";
 
 const LIST_IMAGES_DEMO = [detail1JPG, detail2JPG, detail3JPG];
 
@@ -46,10 +48,14 @@ interface Props {
 
 const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
   const imagenes = product?.imagenes ?? [];
-  const { userInfo, handleSetProductoToEdit } = useGlobal();
+  const { userInfo, handleSetProductoToEdit, handleSetLoading } = useGlobal();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const isVendedor = userInfo?.roles?.includes("Vendedor") ?? false;
+  const isUsuario = userInfo?.roles?.includes("Usuario") ?? false;
+
+  const [handleAddProductToCart] = useAgregarProductoACarritoMutation();
+
   const { push } = useRouter();
 
   const [variantActive, setVariantActive] = useState(0);
@@ -58,66 +64,38 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
     useState(false);
 
   //
-  const notifyAddTocart = () => {
-    toast.custom(
-      (t) => (
-        <NotifyAddTocart
-          productImage={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
-          qualitySelected={qualitySelected}
-          show={t.visible}
-          variantActive={variantActive}
-        />
-      ),
-      { position: "top-right", id: "nc-product-notify", duration: 3000 }
-    );
+  const notifyAddTocart = async () => {
+    try {
+      handleSetLoading(true);
+      const dataToSend = {
+        ProductoId: product?.id,
+        Cantidad: qualitySelected,
+      };
+      const resp = (await handleAddProductToCart(dataToSend)) as any;
+      if (resp?.data?.ok) {
+        toast.custom(
+          (t) => (
+            <NotifyAddTocart
+              productImage={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
+              qualitySelected={qualitySelected}
+              show={t.visible}
+              price={product?.precio}
+              name={product?.nombre}
+              descripcion={product?.descripcion}
+              variantActive={variantActive}
+            />
+          ),
+          { position: "top-right", id: "nc-product-notify", duration: 3000 }
+        );
+      } else {
+        throw new Error("Error al agregar producto al carrito");
+      }
+    } catch (error) {
+      toastify.error("Error al agregar producto al carrito");
+    } finally {
+      handleSetLoading(false);
+    }
   };
-
-  // const renderVariants = () => {
-  //   if (!variants || !variants.length) {
-  //     return null;
-  //   }
-
-  //   return (
-  //     <div>
-  //       <label htmlFor="">
-  //         <span className="text-sm font-medium">
-  //           Color:
-  //           <span className="ml-1 font-semibold">
-  //             {variants[variantActive].name}
-  //           </span>
-  //         </span>
-  //       </label>
-  //       <div className="flex mt-3">
-  //         {/* {variants.map((variant, index) => (
-  //           <div
-  //             key={index}
-  //             onClick={() => setVariantActive(index)}
-  //             className={`relative flex-1 max-w-[75px] h-10 sm:h-11 rounded-full border-2 cursor-pointer ${
-  //               variantActive === index
-  //                 ? "border-primary-6000 dark:border-primary-500"
-  //                 : "border-transparent"
-  //             }`}
-  //           >
-  //             <div
-  //               className="absolute inset-0.5 rounded-full overflow-hidden z-0 object-cover bg-cover"
-  //               style={{
-  //                 backgroundImage: `url(${
-  //                   // @ts-ignore
-  //                   typeof variant.thumbnail?.src === "string"
-  //                     ? // @ts-ignore
-  //                       variant.thumbnail?.src
-  //                     : typeof variant.thumbnail === "string"
-  //                     ? variant.thumbnail
-  //                     : ""
-  //                 })`,
-  //               }}
-  //             ></div>
-  //           </div>
-  //         ))} */}
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   const renderStatus = () => {
     if (!status) {
@@ -168,11 +146,11 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
           <h2 className="text-2xl sm:text-3xl font-semibold">
             {product?.nombre}
           </h2>
-          {
-            !product?.activo && <p className="h-auto px-4 py-2 my-4 w-fit rounded-lg shadow-sm text-white bg-red-400">
+          {!product?.activo && (
+            <p className="h-auto px-4 py-2 my-4 w-fit rounded-lg shadow-sm text-white bg-red-400">
               Producto deshabilitado
             </p>
-          }
+          )}
 
           <div className="flex items-center mt-5 space-x-4 sm:space-x-5">
             {/* <div className="flex text-xl font-semibold">$112.00</div> */}
@@ -210,7 +188,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
         {/* <div className="">{renderVariants()}</div> */}
 
         {/*  ---------- 4  QTY AND ADD TO CART BUTTON */}
-        {!isEmpresa && (
+        {isUsuario && (
           <div className="flex space-x-3.5">
             <div className="flex items-center justify-center bg-slate-100/70 dark:bg-slate-800/70 px-2 py-3 sm:p-3.5 rounded-full">
               <NcInputNumber
@@ -223,7 +201,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
               onClick={notifyAddTocart}
             >
               <BagIcon className="hidden sm:inline-block w-5 h-5 mb-0.5" />
-              <span className="ml-3">Add to cart</span>
+              <span className="ml-3">Agregar al carrito</span>
             </ButtonPrimary>
           </div>
         )}
@@ -253,7 +231,9 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
 
         <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl mt-7">
           <span>Tipo de iva:</span>
-          <span className="font-bold ml-2 text-gray-900">{product?.tipoIva?.nombre} - %{product?.tipoIva?.porcentaje}</span>
+          <span className="font-bold ml-2 text-gray-900">
+            {product?.tipoIva?.nombre} - %{product?.tipoIva?.porcentaje}
+          </span>
         </div>
 
         <h2 className="text-2xl font-semibold mt-7">Categorias</h2>
@@ -287,7 +267,10 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
 
         {/* comment */}
         <div className="mt-10">
-          <div id="reviews" className="grid grid-cols-1 md:grid-cols-2 gap-y-11 gap-x-28">
+          <div
+            id="reviews"
+            className="grid grid-cols-1 md:grid-cols-2 gap-y-11 gap-x-28"
+          >
             {product?.calificaciones?.length === 0 && (
               <span className="font-medium text-base text-gray-900">
                 Este producto aun no tiene ninguna calificacion
@@ -382,44 +365,47 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
 
           <hr className="border-slate-200 dark:border-slate-700" />
 
-          
-          <h2 className="font-bold text-2xl text-gray-900">Productos relacionados</h2>
+          <h2 className="font-bold text-2xl text-gray-900">
+            Productos relacionados
+          </h2>
           <div className="w-full h-auto flex flex-row items-center justify-start gap-4 flex-wrap">
-          {
-            product?.productosRelacionados?.map((prod) => {
+            {product?.productosRelacionados?.map((prod) => {
               return (
-                <ProductCard isEmpresa data={prod} isLiked={false} key={prod?.id} />
+                <ProductCard
+                  isEmpresa
+                  data={prod}
+                  isLiked={false}
+                  key={prod?.id}
+                />
               );
-            })
-          }
+            })}
           </div>
           {/* SECTION */}
           <div className="pb-20 xl:pb-28 lg:pt-14">
             <SectionPromo2 />
           </div>
-
         </div>
 
         <div className="w-full h-auto flex flex-row items-center justify-start gap-4 flex-wrap">
-        {isVendedor && product.activo && (
-          <ButtonPrimary
-            icon={<PencilIcon width={20} color="white" />}
-            onClick={() => {
-              handleSetProductoToEdit(product);
-              push(appRoutes.empresaEditarProducto() as Route)
-            }}
-          >
-            Editar Producto
-          </ButtonPrimary>
-        )}
-        {isVendedor && product.activo && (
-          <ButtonDelete
-            icon={<TrashIcon width={20} color="white" />}
-            onClick={() => setOpenDeleteModal(!openDeleteModal)}
-          >
-            Borrar Producto
-          </ButtonDelete>
-        )}
+          {isVendedor && product.activo && (
+            <ButtonPrimary
+              icon={<PencilIcon width={20} color="white" />}
+              onClick={() => {
+                handleSetProductoToEdit(product);
+                push(appRoutes.empresaEditarProducto() as Route);
+              }}
+            >
+              Editar Producto
+            </ButtonPrimary>
+          )}
+          {isVendedor && product.activo && (
+            <ButtonDelete
+              icon={<TrashIcon width={20} color="white" />}
+              onClick={() => setOpenDeleteModal(!openDeleteModal)}
+            >
+              Borrar Producto
+            </ButtonDelete>
+          )}
         </div>
       </main>
 

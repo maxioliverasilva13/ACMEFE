@@ -14,8 +14,7 @@ import Page404 from "../not-found";
 import useGlobal from "@/hooks/useGlobal";
 import { useResetPasswordMutation } from "@/store/service/UserService";
 import { useState } from "react";
-import { toast } from "react-toastify";
-import Image from "next/image";
+import toast from "react-hot-toast";import Image from "next/image";
 import passwordSuccess from "@/images/passwordSuccess.svg";
 
 const ResetPassword = () => {

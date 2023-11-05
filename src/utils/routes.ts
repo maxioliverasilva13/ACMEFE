@@ -38,4 +38,7 @@ export const userRoutes = [
  appRoutes.userInicio(),
  appRoutes.tiendaHome(""),
  "home-2",
+ appRoutes.productoDetails(),
+ appRoutes.carrito(),
+ appRoutes.checkout(),
 ];

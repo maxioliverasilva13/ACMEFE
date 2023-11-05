@@ -195,8 +195,6 @@ const ModificarLookAndFeel = () => {
               : currentEmpresa?.lookAndFeel.nombreSitio,
           categoriaDestacada: newOrModifiedCatDestacada,
         } as LookAndFeel;
-        console.log("data to send is ", dataToSend);
-
         const response: any = await editLookAndFeel(dataToSend);
         if (response.error) {
           const messageError = response.error.data;

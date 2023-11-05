@@ -30,7 +30,6 @@ import {
 } from "@/store/service/DepartamentoService";
 import useGlobal from "@/hooks/useGlobal";
 import toast from "react-hot-toast";
-
 const AdminDepartamentos = () => {
   const { push } = useRouter();
   const [disabledActivate, setDisabledActivate] = useState<boolean>(false);

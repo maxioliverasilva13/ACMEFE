@@ -28,8 +28,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const CategoriasPage = () => {
   const { push } = useRouter();
   const [disabledActivate, setDisabledActivate] = useState<boolean>(false);
@@ -104,7 +103,7 @@ const CategoriasPage = () => {
           </div>
 
           <div className="flex-grow w-full gap-2 flex flex-col items-start justify-start">
-            <Label>Productos relacionados</Label>
+            <Label>Categorias relacionadas</Label>
             <MultiSelect
               placeholder="Agrega categorias relacionadas"
               items={categorias?.map((cat) => {

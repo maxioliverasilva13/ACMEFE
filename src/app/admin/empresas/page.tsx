@@ -15,8 +15,7 @@ import { useState ,useEffect} from "react";
 import { useListEmpresasQuery } from "@/store/service/EmpresaService";
 import { useDeleteEmpresasMutation  } from "@/store/service/EmpresaService";
 import useGlobal from "@/hooks/useGlobal";
-import {toast} from "react-toastify";
-
+import toast from "react-hot-toast";
 const AdminEmpresas = () => {
 
   const { handleSetLoading} = useGlobal();

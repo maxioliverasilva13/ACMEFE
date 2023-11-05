@@ -15,6 +15,7 @@ import { ProductoList } from "@/types/productoList";
 import { DEFAULT_USER_IMAGE } from "@/utils/usuarios";
 import useGlobal from "@/hooks/useGlobal";
 import clsx from "clsx";
+import useEmpresa from "@/hooks/useEmpresa";
 
 export interface ProductCardProps {
   className?: string;
@@ -29,6 +30,10 @@ const ProductCard: FC<ProductCardProps> = ({
   isLiked,
   isEmpresa = false,
 }) => {
+  const { userInfo } = useGlobal();
+  const isVendedor = userInfo?.roles?.includes("Usuario");
+  const { currentEmpresa } = useEmpresa();
+
   const {
     id,
     nombre,
@@ -42,6 +47,7 @@ const ProductCard: FC<ProductCardProps> = ({
     imagenes,
     activo,
   } = data;
+  console.log("newPath is", appRoutes.productoDetailsFullPath(id, currentEmpresa?.id))
 
   const {} = useGlobal();
 
@@ -78,7 +84,7 @@ const ProductCard: FC<ProductCardProps> = ({
           <div className="flex flex-1 items-end justify-between text-sm">
             <p className="text-gray-500 dark:text-slate-400">Qty 1</p>
 
-            <div className="flex">
+            {/* <div className="flex">
               <button
                 type="button"
                 className="font-medium text-primary-6000 dark:text-primary-500 "
@@ -89,7 +95,7 @@ const ProductCard: FC<ProductCardProps> = ({
               >
                 Ver carrito
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -105,6 +111,8 @@ const ProductCard: FC<ProductCardProps> = ({
           href={
             (isEmpresa
               ? appRoutes.empresaPorductDetailsWithId(data?.id ?? 0)
+              : isVendedor
+              ? appRoutes.productoDetailsFullPath(id, currentEmpresa?.id)
               : appRoutes.productDetail()) as any
           }
           className="absolute inset-0"
@@ -115,6 +123,8 @@ const ProductCard: FC<ProductCardProps> = ({
             href={
               (isEmpresa
                 ? appRoutes.empresaPorductDetailsWithId(data?.id ?? 0)
+                : isVendedor
+                ? appRoutes.productoDetailsFullPath(id, currentEmpresa?.id)
                 : appRoutes.productDetail()) as any
             }
             className="block"
@@ -122,23 +132,28 @@ const ProductCard: FC<ProductCardProps> = ({
             <NcImage
               containerClassName="flex aspect-w-11 aspect-h-12 w-full h-0"
               src={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
-              className={clsx("object-cover w-full h-full drop-shadow-xl",
+              className={clsx(
+                "object-cover w-full h-full drop-shadow-xl",
                 !activo && "blur-sm"
               )}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 40vw"
               alt="product"
             />
-          {!activo && <div className="w-full h-full top-0 absolute flex items-center justify-start ">
-            <div className="absolute w-full h-full blur-xl bg-black/10 top-0 left-0 z-[1] " />
-            <span className="w-full h-auto text-white text-base z-[2] font-semibold transition-all px-4 py-2 transform rotate-[42deg] bg-red-400 rounded-lg hover:scale-125 cursor-pointer">
-              Deshabilitado
-            </span>
-          </div>}
+            {!activo && (
+              <div className="w-full h-full top-0 absolute flex items-center justify-start ">
+                <div className="absolute w-full h-full blur-xl bg-black/10 top-0 left-0 z-[1] " />
+                <span className="w-full h-auto text-white text-base z-[2] font-semibold transition-all px-4 py-2 transform rotate-[42deg] bg-red-400 rounded-lg hover:scale-125 cursor-pointer">
+                  Deshabilitado
+                </span>
+              </div>
+            )}
           </Link>
 
           <ProductStatus status={"Nuevo"} />
-          {!isEmpresa && <LikeButton liked={isLiked} className="absolute top-3 end-3 z-10" />}
+          {!isEmpresa && (
+            <LikeButton liked={isLiked} className="absolute top-3 end-3 z-10" />
+          )}
           {/* {sizes ? renderSizeList() : renderGroupButtons()} */}
         </div>
 
