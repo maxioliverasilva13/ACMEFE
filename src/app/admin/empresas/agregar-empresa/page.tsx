@@ -31,7 +31,7 @@ const AgregarEmpresa = () => {
   }>({
     main: "#332f7f",
     secondary: "#95d5c7",
-    background: "#ededed",
+    background: "#ffffff",
   });
 
   const [openPickers, setOpenPickers] = useState<{

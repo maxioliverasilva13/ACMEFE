@@ -37,7 +37,7 @@ const Logo: React.FC<LogoProps> = ({
         />
       </div>}
       <span className="font-medium text-2xl">
-        {currentEmpresa?.nombre ?? "ACME"}
+        {currentEmpresa?.lookAndFeel.nombreSitio ?? "ACME"}
       </span>
     </Link>
   );

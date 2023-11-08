@@ -41,4 +41,5 @@ export const userRoutes = [
  appRoutes.productoDetails(),
  appRoutes.carrito(),
  appRoutes.checkout(),
+ appRoutes.userAccount(),
 ];

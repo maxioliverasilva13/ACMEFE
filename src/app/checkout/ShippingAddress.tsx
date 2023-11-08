@@ -129,7 +129,7 @@ const ShippingAddress: FC<Props> = ({
                       label={`<div class='w-full flex-grow max-w-[200px] flex flex-col items-start justify-start gap-1'>
                 <span class="text-sm font-medium" title="${item?.nombre}">${item?.nombre}</span>
                 <span class="text-xs max-w-full overflow-hidden truncate font-medium">${item?.ciudadNombre} - ${item?.ciudadDepartamentoNombre}</span>
-                <span title="${item?.calle} ${item?.nroPuerta} - entre ${item?.calleEntre1} y ${item?.calleEntre1}" class="text-[10px] max-w-full overflow-hidden truncate  -mt-1 ">${item?.calle} ${item?.nroPuerta} - entre ${item?.calleEntre1} y ${item?.calleEntre1}</span>
+                <span title="${item?.calle} ${item?.nroPuerta} - entre ${item?.calleEntre1} y ${item?.calleEntre2}" class="text-[10px] max-w-full overflow-hidden truncate  -mt-1 ">${item?.calle} ${item?.nroPuerta} - entre ${item?.calleEntre1} y ${item?.calleEntre1}</span>
                 </div>`}
                       name="sucursal-selected"
                       id={item?.id?.toString()}
@@ -141,10 +141,11 @@ const ShippingAddress: FC<Props> = ({
               })}
               {myDirecciones?.length === 0 && (
                 <span className="text-sm">
-                  Al parecer este usuario no tiene niguna direccion,{" "}
+                  Al parecer este usuario no tiene niguna dirección,{" "}
                   <Link href="#" className="text-primary-500 font-medium">
-                    Agrega una nueva
+                    agrega una nueva en tu perfil
                   </Link>
+                  .
                 </span>
               )}
             </div>

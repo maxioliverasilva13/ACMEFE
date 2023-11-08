@@ -9,8 +9,9 @@ import TemplatesDropdown from "./TemplatesDropdown";
 import DropdownCategories from "./DropdownCategories";
 import CartDropdown from "./CartDropdown";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useEmpresa from "@/hooks/useEmpresa";
+import { adminRoutes, empresaRoutes } from "@/utils/routes";
 
 export interface MainNav2Props {
   className?: string;
@@ -20,6 +21,18 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
   const { currentEmpresa } = useEmpresa();
   const [showSearchForm, setShowSearchForm] = useState(false);
   const router = useRouter();
+
+  const pathname = usePathname();
+  const isInAdminRoute = adminRoutes.includes(pathname);
+  const isInEmpresaRoute = empresaRoutes.includes(pathname);
+  const userRoute = currentEmpresa && !isInAdminRoute && !isInEmpresaRoute;
+
+  let empresaStyles = {};
+  if (userRoute) {
+    empresaStyles = {
+      backgroundColor: currentEmpresa.lookAndFeel.colorFondo,
+    };
+  }
 
   const renderMagnifyingGlassIcon = () => {
     return (
@@ -75,7 +88,7 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
   };
 
   return (
-    <div className="nc-MainNav2 relative z-10 bg-white border-b border-b-gray-200 mb-5 dark:bg-slate-900 ">
+    <div style={empresaStyles} className="nc-MainNav2 relative z-10 bg-white border-b border-b-gray-200 mb-5 dark:bg-slate-900 ">
       <div className="container">
         <div className="h-20 flex justify-between">
           <div className="flex items-center md:hidden flex-1">

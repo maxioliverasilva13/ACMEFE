@@ -33,7 +33,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
+      <body className="text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
         <Provider store={store}>
           <SessionWrapper>
             <Toaster />

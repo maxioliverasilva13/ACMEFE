@@ -27,3 +27,10 @@ export type UsuarioCreate = {
   empresaId: number;
   direccion: Direccion;
 };
+
+export type UsuarioUpdate = {
+  id?: any;
+  nombre: string;
+  celular: string;
+  imagen: string;
+};

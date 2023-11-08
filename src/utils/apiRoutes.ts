@@ -39,7 +39,9 @@ export const apiRoutes = {
   listarReclamos: () => "api/Reclamo",
   listarEstadisticasSort: () => "/api/Estadisticas/sort",
   editLookAndFeel: () => "/api/Empresa/editLookAndFeel",
-
+  listarDirecciones: () => "/api/User/listarDirecciones",
+  agregarDireccion: () => "/api/User/agregarDireccion",
+  modificarDireccion: () => "/api/User/modificarDireccion",
   agregarProductoCarrito: () => "/api/Carrito",
   borrarLinea: () => "/api/Carrito/borrarLinea",
   obtenerCarrito: (empresaId: any) => `/api/Carrito/obtenerCarrito?EmpresaId=${empresaId}`,

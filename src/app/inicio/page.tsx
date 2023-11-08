@@ -49,14 +49,14 @@ const Inicio = () => {
   const [text, setText] = useState("");
   const { handleSetLoading } = useGlobal();
 
-  useEffect(() => {
-    async function animateText() {
-      const originalText = "Bienvenido a ACME";
-      for (let i = 0; i <= originalText.length; i++) {
-        setText(originalText.slice(0, i));
-        await controls.start({ opacity: 1, x: 0 });
-      }
+  async function animateText() {
+    const originalText = "Bienvenido a ACME";
+    for (let i = 0; i <= originalText.length; i++) {
+      setText(originalText.slice(0, i));
+      await controls.start({ opacity: 1, x: 0 });
     }
+  }
+  useEffect(() => {
     animateText();
   }, [controls]);
 

@@ -59,7 +59,7 @@ const ModificarLookAndFeel = () => {
   }>({
     main: currentEmpresa?.lookAndFeel?.colorPrincipal || "#332f7f",
     secondary: currentEmpresa?.lookAndFeel?.colorSecundario || "#95d5c7",
-    background: currentEmpresa?.lookAndFeel?.colorFondo || "#ededed",
+    background: currentEmpresa?.lookAndFeel?.colorFondo || "#ffffff",
   });
 
   const [openPickers, setOpenPickers] = useState<{

@@ -38,6 +38,7 @@ export const appRoutes = {
     tiendaHome: (empresaId: any) => `${empresaId}/inicio`,
     productoDetails: () => `/detalles`,
     carrito: () => `/carrito`,
+    userAccount: () => `/account`,
     carritoPath: (empresaId: any) => `/${empresaId}/carrito`,
     checkout: () => `/checkout`,
     checkoutPath: (empresaId: any) => `/${empresaId}/checkout`,

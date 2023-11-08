@@ -23,11 +23,15 @@ import {
 function EmpresaHome() {
   const { currentEmpresa } = useEmpresa();
   const { handleSetLoading } = useGlobal();
-  const { data: productos = [], isLoading: isLoadingProductos } =
-    useListarProductosByEmpresaQuery(currentEmpresa?.id);
+  const {
+    data: productos = [],
+    isLoading: isLoadingProductos,
+  } = useListarProductosByEmpresaQuery(currentEmpresa?.id);
 
-  const { data: categorias = [], isLoading: isLoadingCategorias } =
-    useListarCategoriasDeEmpresaQuery(currentEmpresa?.id);
+  const {
+    data: categorias = [],
+    isLoading: isLoadingCategorias,
+  } = useListarCategoriasDeEmpresaQuery(currentEmpresa?.id);
 
   const categoriasWithMaxCantProductos = [...categorias]?.sort((catA, catB) => {
     if (catA?.cantidadProductos >= catB?.cantidadProductos) {
@@ -67,7 +71,7 @@ function EmpresaHome() {
           </span>
         )}
         {/* SECTION */}
-        <SectionPromo2 />
+        {currentEmpresa?.lookAndFeel.categoriaDestacada && <SectionPromo2 />}
 
         {/* SECTION */}
         <div className="relative py-24 lg:py-32">
