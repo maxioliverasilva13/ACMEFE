@@ -110,9 +110,9 @@ const Dashboard = () => {
               "min-w-[50px] overflow-hidden w-[50px] bg-white h-[50px] rounded-full shadow-md relative"
             )}
           >
-            <Image
+            <img
               src={
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfeBJTW2dVeUP1sq_zTYKDMrPmlvLdtTxb6A&usqp=CAU"
+                userInfo?.imagen ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfeBJTW2dVeUP1sq_zTYKDMrPmlvLdtTxb6A&usqp=CAU"
               }
               alt="User Image Icon"
               layout="fill"

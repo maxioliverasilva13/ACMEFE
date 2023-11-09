@@ -139,7 +139,7 @@ const SessionWrapper = ({ children, params }: Props) => {
   }
 
   return (
-    <div style={empresaStyles} className="bg-white w-full h-auto">
+    <div style={empresaStyles} className="bg-white min-h-screen w-full h-auto">
       <ToastContainer
         position="top-right"
         autoClose={5000}

@@ -6,6 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { FC } from "react";
+import SiteHeader from "../SiteHeader";
+import MainNav2 from "@/components/Header/MainNav2";
 
 export interface CommonLayoutProps {
   children?: React.ReactNode;
@@ -38,6 +40,7 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
   const { userInfo } = useGlobal();
   return (
     <div className="nc-AccountCommonLayout container">
+      <MainNav2 />
       <div className="mt-14 sm:mt-20">
         <div className="max-w-4xl mx-auto">
           <div className="max-w-2xl">

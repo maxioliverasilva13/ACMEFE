@@ -313,7 +313,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
             {/* HEADING */}
             <div className="relative">
               <div className="aspect-w-16 aspect-h-16 relative">
-                <Image
+                <img
                   fill
                   sizes="(max-width: 640px) 100vw, 33vw"
                   src={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
@@ -332,7 +332,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
                     key={index}
                     className="aspect-w-11 xl:aspect-w-10 2xl:aspect-w-11 aspect-h-16 relative"
                   >
-                    <Image
+                    <img
                       sizes="(max-width: 640px) 100vw, 33vw"
                       fill
                       src={item?.url}
