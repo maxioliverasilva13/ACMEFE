@@ -24,6 +24,7 @@ export const apiRoutes = {
     `/api/Producto/relacionados`,
   deleteProductoById: (prodId: any) =>
     `/api/Producto/${prodId ? prodId : "[prodId]"}`,
+  calificarProducto: () => "/api/Producto/calificarProducto",
   listarTiposIva: () => "/api/TipoIva",
   userById: (userId: string) => `/api/User/${userId}`,
   listarPickups: () => "/api/PickUp",

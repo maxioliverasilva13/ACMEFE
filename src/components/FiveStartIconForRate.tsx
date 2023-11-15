@@ -7,7 +7,8 @@ export interface FiveStartIconForRateProps {
   className?: string;
   iconClass?: string;
   defaultPoint?: number;
-  withHover?: boolean,
+  withHover?: boolean;
+  setPuntuacion?: Function;
 }
 
 const FiveStartIconForRate: FC<FiveStartIconForRateProps> = ({
@@ -15,6 +16,7 @@ const FiveStartIconForRate: FC<FiveStartIconForRateProps> = ({
   iconClass = "w-4 h-4",
   defaultPoint = 5,
   withHover = true,
+  setPuntuacion = () => null,
 }) => {
   const [point, setPoint] = useState(defaultPoint);
   const [currentHover, setCurrentHover] = useState(0);
@@ -22,6 +24,13 @@ const FiveStartIconForRate: FC<FiveStartIconForRateProps> = ({
   useEffect(() => {
     setPoint(defaultPoint);
   }, [defaultPoint]);
+
+  const handleChangePuntuacion = (rate: number) => {
+    setPoint(rate);
+    if (setPuntuacion) {
+      setPuntuacion(rate);
+    }
+  };
 
   return (
     <div
@@ -37,7 +46,7 @@ const FiveStartIconForRate: FC<FiveStartIconForRateProps> = ({
             } ${iconClass}`}
             onMouseEnter={() => withHover && setCurrentHover(() => item)}
             onMouseLeave={() => withHover && setCurrentHover(() => 0)}
-            onClick={() => withHover && setPoint(() => item)}
+            onClick={() => withHover && handleChangePuntuacion(item)}
           />
         );
       })}

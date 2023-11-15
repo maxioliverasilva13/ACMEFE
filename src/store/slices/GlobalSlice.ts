@@ -35,7 +35,6 @@ export const GlobalSlice = createSlice({
       state.selectedProduct = payload;
     },
   },
-  extraReducers: {},
 });
 
 export const useGlobalActions = () => {

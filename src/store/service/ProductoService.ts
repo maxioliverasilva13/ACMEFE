@@ -88,6 +88,18 @@ export const ProductoService = createApi({
         return response as any;
       },
     }),
+    calificarProducto: builder.mutation({
+      invalidatesTags: ["ProductoInfo"],
+      query: (data) => ({
+        url: apiRoutes.calificarProducto(),
+        method: "POST",
+        body: data,
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+    }),
   }),
 });
 
@@ -99,4 +111,5 @@ export const {
   useEditProductoMutation,
   useListarProductosByEmpresaQuery,
   useObtenerProductosRelacionadosMutation,
+  useCalificarProductoMutation,
 } = ProductoService;

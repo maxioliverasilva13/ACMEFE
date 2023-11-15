@@ -50,7 +50,6 @@ export const CarritoSlice = createSlice({
       state.errors = payload;
     }
   },
-  extraReducers: {},
 });
 
 export const useCarritoActions = () => {

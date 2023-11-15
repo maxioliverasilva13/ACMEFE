@@ -237,7 +237,7 @@ const EditarProducto = () => {
             <Textarea
               {...register(CrearProductoFormFields.descripcion)}
               error={errors[CrearProductoFormFields.descripcion]?.message}
-              placeholder="Descripcion del producto"
+              placeholder="Descripción del producto"
               className="mt-1.5 max-h-[300px]"
             />
           </div>
