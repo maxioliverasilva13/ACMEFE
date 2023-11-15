@@ -4,7 +4,7 @@ import Label from "@/components/Label/Label";
 import NcInputNumber from "@/components/NcInputNumber";
 import Prices from "@/components/Prices";
 import { Product, PRODUCTS } from "@/data/data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Input from "@/shared/Input/Input";
 import ContactInfo from "@/app/checkout/ContactInfo";
@@ -20,8 +20,15 @@ import useCarrito from "@/hooks/useCarrito";
 import SelectShippingType from "@/app/checkout/SelectShippingType";
 import SelectSucursal from "@/app/checkout/SelectSucursal";
 import { getProductFinalPrice, getProductTax } from "@/utils/producto";
+import useGlobal from "@/hooks/useGlobal";
+import toast from "react-hot-toast";
+import OneLineError from "@/components/OneLineError/OneLineError";
+import { useEfectuarCompraMutation } from "@/store/service/CarritoService";
+import Page404 from "@/app/not-found";
+import PaymentSuccessModal from "./components/PaymentSuccessModal";
 
 const CheckoutPage = () => {
+  const { handleSetLoading, userInfo } = useGlobal();
   const [tabActive, setTabActive] = useState<
     | "ContactInfo"
     | "ShippingAddress"
@@ -29,12 +36,25 @@ const CheckoutPage = () => {
     | "PaymentMethod"
     | "ShippingType"
   >("ShippingAddress");
+  const [handleBuy] = useEfectuarCompraMutation();
 
-  const { shippingMethod, productos } = useCarrito();
+  const {
+    productos,
+    handleSetErrors,
+    errors,
+    selectedAddressId,
+    selectedSucursalId,
+    shippingMethod,
+    handleSetPaymentInfo,
+    paymentMethod,
+    paymentInfo,
+  } = useCarrito();
 
   const { currentEmpresa } = useEmpresa();
 
   const [isValidPayment, setIsValidPayment] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [compraId, setCompraId] = useState(false);
 
   const handleScrollToEl = (id: string) => {
     const element = document.getElementById(id);
@@ -42,6 +62,9 @@ const CheckoutPage = () => {
       element?.scrollIntoView({ behavior: "smooth" });
     }, 80);
   };
+  useEffect(() => {
+    handleSetPaymentInfo({});
+  }, []);
 
   let total = 0;
   let subtotal = 0;
@@ -61,7 +84,79 @@ const CheckoutPage = () => {
     total += prod?.cantidad * finalPrice;
   });
 
-  total += currentEmpresa?.costoEnvio;
+  total += shippingMethod === "DOMICILIO" ? currentEmpresa?.costoEnvio ?? 0 : 0;
+
+  const handleSendOrder = async () => {
+    try {
+      handleSetLoading(true);
+      let erroresToSend = [];
+      if (!shippingMethod) {
+        erroresToSend.push("Seleccina un metodo de envio");
+      } else {
+        if (shippingMethod === "DOMICILIO" && !selectedAddressId) {
+          erroresToSend.push("Seleccina una direccion para el envio");
+        }
+        if (shippingMethod === "RETIRO" && !selectedSucursalId) {
+          erroresToSend.push("Seleccina una sucursal para retirar la compra");
+        }
+      }
+
+      if (!paymentMethod) {
+        erroresToSend.push("Seleccione un metodo de pago");
+      } else {
+        if (paymentMethod === "CARD" && !paymentInfo["card"]) {
+          erroresToSend.push("Ingrese un numero de tarjeta");
+        }
+        if (paymentMethod === "CARD" && !paymentInfo["cvc"]) {
+          erroresToSend.push("Ingrese un cvc valido");
+        }
+        if (paymentMethod === "CARD" && !paymentInfo["expiration"]) {
+          erroresToSend.push("Ingrese una expiracion de tarjeta valida");
+        }
+        if (paymentMethod === "CARD" && !paymentInfo["titular"]) {
+          erroresToSend.push("Ingrese un titular valido");
+        }
+      }
+      if (erroresToSend?.length > 0) {
+        handleSetErrors(erroresToSend);
+        return;
+      }
+
+      const dataToSend = {
+        MetodoEnvio: shippingMethod === "DOMICILIO" ? 1 : 2,
+        MetodoPago: paymentMethod === "CARD" ? 1 : 2,
+        EmpresaId: currentEmpresa?.id,
+        DireccionSeleccionadaId:
+          shippingMethod === "DOMICILIO"
+            ? selectedAddressId
+            : selectedSucursalId,
+        PaymentInfo: {
+          CardNumber: paymentInfo?.card,
+          ExpiryDate: paymentInfo?.expiration,
+          CVV: paymentInfo?.cvc,
+          Amount: subtotal,
+        },
+        wallet: "1",
+      };
+      handleSetErrors([]);
+      const resp = (await handleBuy(dataToSend)) as any;
+      if (resp?.data?.ok) {
+        toast.success("Orden creada correctamente");
+        if (!resp?.data?.compraId) {
+          throw new Error("Compra invalida");
+        }
+        setPaymentSuccess(true);
+        setCompraId(resp?.data?.compraId);
+        // show modal
+      } else {
+        toast.error(resp?.error?.data?.mensaje ?? "Error al comprar productos");
+      }
+    } catch (error: any) {
+      toast.error(error?.message ?? "Error al comprar productos");
+    } finally {
+      handleSetLoading(false);
+    }
+  };
 
   const renderProduct = (item: CarritoList, index: number) => {
     const { producto, cantidad, id } = item;
@@ -170,7 +265,7 @@ const CheckoutPage = () => {
           </div>
         )}
 
-        {shippingMethod === "ENVIO" && (
+        {shippingMethod === "RETIRO" && (
           <div id="SelectSucursal" className="scroll-mt-24">
             <SelectSucursal
               isActive={tabActive === "SelectSucursal"}
@@ -202,68 +297,76 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div className="nc-CheckoutPage">
-      <main className="container py-16 lg:pb-28 lg:pt-20 ">
-        <div className="mb-16">
-          <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold ">
-            Checkout
-          </h2>
-          <div className="block mt-3 sm:mt-5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-400">
-            <Link href={"/" as any} className="">
-              Homepage
-            </Link>
-            <span className="text-xs mx-1 sm:mx-1.5">/</span>
-            <Link href={"/collection-2"} className="">
-              Clothing Categories
-            </Link>
-            <span className="text-xs mx-1 sm:mx-1.5">/</span>
-            <span className="underline">Checkout</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col lg:flex-row">
-          <div className="flex-1">{renderLeft()}</div>
-
-          <div className="flex-shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:lg:mx-14 2xl:mx-16 "></div>
-
-          <div className="w-full lg:w-[36%] ">
-            <h3 className="text-lg font-semibold">Resumen de la orden</h3>
-            <div className="mt-8 divide-y divide-slate-200/70 dark:divide-slate-700 ">
-              {productos.map(renderProduct)}
-            </div>
-
-            <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700 ">
-              <div className="mt-4 flex justify-between py-2.5">
-                <span>Subtotal</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-200">
-                  ${subtotal}
-                </span>
-              </div>
-              {shippingMethod === "DOMICILIO" && (
-                <div className="flex justify-between py-2.5">
-                  <span>Costo de envio</span>
-                  <span className="font-semibold text-slate-900 dark:text-slate-200">
-                    {currentEmpresa?.costoEnvio}
-                  </span>
+    <div className="">
+      {paymentSuccess && (
+        <PaymentSuccessModal compraId={compraId} setOpen={() => setPaymentSuccess(false)} />
+      )}
+      {productos?.length === 0 && !paymentSuccess ? (
+        <Page404 message="El carrito esta vacio, intenta agregar algun producto" />
+      ) : (
+        <main className="container py-16 lg:pb-28 lg:pt-20 ">
+          <div className="mb-16">
+            <h2 className="block text-2xl sm:text-3xl lg:text-4xl font-semibold ">
+              Checkout
+            </h2>
+            <div className="block mt-3 sm:mt-5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-400">
+              {errors?.length > 0 && (
+                <div className="w-full h-auto mt-4 flex flex-col gap-2">
+                  {errors?.map((item) => {
+                    return <OneLineError message={item} key={item} />;
+                  })}
                 </div>
               )}
-              <div className="flex justify-between py-2.5">
-                <span>Impuestos/Iva</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-200">
-                  ${taxes}
-                </span>
-              </div>
-              <div className="flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4">
-                <span>Total</span>
-                <span>{total ? total?.toFixed(2): 0}</span>
-              </div>
             </div>
-            <ButtonPrimary className="mt-8 w-full">
-              Confirmar orden
-            </ButtonPrimary>
           </div>
-        </div>
-      </main>
+
+          <div className="flex flex-col lg:flex-row">
+            <div className="flex-1">{renderLeft()}</div>
+
+            <div className="flex-shrink-0 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:lg:mx-14 2xl:mx-16 "></div>
+
+            <div className="w-full lg:w-[36%] ">
+              <h3 className="text-lg font-semibold">Resumen de la orden</h3>
+              <div className="mt-8 divide-y divide-slate-200/70 dark:divide-slate-700 ">
+                {productos.map(renderProduct)}
+              </div>
+
+              <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700 ">
+                <div className="mt-4 flex justify-between py-2.5">
+                  <span>Subtotal</span>
+                  <span className="font-semibold text-slate-900 dark:text-slate-200">
+                    ${subtotal}
+                  </span>
+                </div>
+                {shippingMethod === "DOMICILIO" && (
+                  <div className="flex justify-between py-2.5">
+                    <span>Costo de envio</span>
+                    <span className="font-semibold text-slate-900 dark:text-slate-200">
+                      {currentEmpresa?.costoEnvio}
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between py-2.5">
+                  <span>Impuestos/Iva</span>
+                  <span className="font-semibold text-slate-900 dark:text-slate-200">
+                    ${taxes}
+                  </span>
+                </div>
+                <div className="flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4">
+                  <span>Total</span>
+                  <span>{total ? total?.toFixed(2) : 0}</span>
+                </div>
+              </div>
+              <ButtonPrimary
+                onClick={() => handleSendOrder()}
+                className="mt-8 w-full"
+              >
+                Confirmar orden
+              </ButtonPrimary>
+            </div>
+          </div>
+        </main>
+      )}
     </div>
   );
 };

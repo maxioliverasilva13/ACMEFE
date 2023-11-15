@@ -18,7 +18,7 @@ export const PaymentFormValidationSchema = () =>
   Yup.object().shape({
     card: Yup.string()
       .trim()
-      .matches(/^\d{16}$/, "El número de tarjeta debe contener 16 dígitos")
+      // .matches(/^\d{16}$/, "El número de tarjeta debe contener 16 dígitos")
       .required("El número de tarjeta es requerido"),
     cvc: Yup.string()
       .matches(/^\d{3,4}$/, "El CVC debe contener 3 o 4 dígitos")

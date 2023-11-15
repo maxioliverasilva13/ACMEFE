@@ -61,7 +61,7 @@ function EmpresaHome() {
         {firstFiveCategories?.length > 0 && (
           <SectionSliderProductCard
             heading="Lo mas nuevo!"
-            data={firstNewTwentyProductos}
+            data={firstNewTwentyProductos ?? []}
             subHeading=""
           />
         )}

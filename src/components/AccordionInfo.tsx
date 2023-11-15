@@ -8,25 +8,25 @@ const DEMO_DATA = [
   {
     name: "Metodo de envio",
     content:
-      "Puedes elejir metodo de envio a domicilio o retiro en el local",
+      "Puedes elegir entre envío a domicilio, o coordinar el retiro en una sucursal.",
   },
   {
     name: "FAQ",
     content: `
     <ul class="list-disc list-inside leading-7">
-    <li>Cuanto demora en llegar el producto?</li>
-    Dependera de tu zona geografica, lo podras ver al momento de la compra
+    <li>¿Cuánto demora en llegar el producto?</li>
+    Dependerá de tu zona geográfica, lo podrás ver al momento de la compra.
     <li>
-    Que calidad tienen los productos?
+    ¿Qué calidad tienen los productos?
     </li>
-    Calidad premium
+    Intentamos que todos nuestros productos sean de una calidad premium, para asegurar tu confort.
     <li>
-    Quiero una devolucion.
+    Quiero una devolución.
     </li>
-    Puedes solicitar la devolucion de tus productos, y la empresa se pondra en contacto contigo.
+    Puedes solicitar la devolución de tus productos, y la empresa se pondrá en contacto contigo.
     <li>
-    Quiero mas informacion sobre el producto.
-    Puedes ver la informacion en la seccion "Informacion"
+    Quiero mas información sobre el producto.
+    Puedes ver la información en la sección "Informacion".
     </li>
   </ul>
     `,

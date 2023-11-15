@@ -7,12 +7,13 @@ import { useDispatch } from "react-redux";
 // import { handleGetToken, handleStorageToken } from "utils/userUtils";
 
 const initialState: {
-  shippingMethod?: "DOMICILIO" | "ENVIO";
+  shippingMethod?: "DOMICILIO" | "RETIRO";
   productos: CarritoList[];
   selectedSucursalId?: number;
   selectedAddressId?: number;
   paymentMethod?: "CARD" | "WALLET";
   paymentInfo?: any;
+  errors: string[],
 } = {
   shippingMethod: undefined,
   productos: [],
@@ -20,6 +21,7 @@ const initialState: {
   selectedAddressId: undefined,
   paymentMethod: undefined,
   paymentInfo: {},
+  errors: [],
 };
 
 export const CarritoSlice = createSlice({
@@ -44,8 +46,10 @@ export const CarritoSlice = createSlice({
     setPaymentInfo(state, { payload }) {
       state.paymentInfo = payload;
     },
+    setErrors(state, { payload }) {
+      state.errors = payload;
+    }
   },
-  extraReducers: {},
 });
 
 export const useCarritoActions = () => {
@@ -55,7 +59,7 @@ export const useCarritoActions = () => {
     dispatch(CarritoSlice.actions.setProductos(productos));
   };
 
-  const handleSetShippingMethod = (method: "DOMICILIO" | "ENVIO") => {
+  const handleSetShippingMethod = (method: "DOMICILIO" | "RETIRO") => {
     dispatch(CarritoSlice.actions.setShippingMethod(method));
   };
 
@@ -75,6 +79,11 @@ export const useCarritoActions = () => {
     dispatch(CarritoSlice.actions.setPaymentInfo(info));
   };
 
+  const handleSetErrors = (info: any) => {
+    dispatch(CarritoSlice.actions.setErrors(info));
+  };
+
+
   return {
     handleSetProductos,
     handleSetShippingMethod,
@@ -82,6 +91,7 @@ export const useCarritoActions = () => {
     handleSetSelectedAddressId,
     handleSetPaymentMethod,
     handleSetPaymentInfo,
+    handleSetErrors,
   };
 };
 

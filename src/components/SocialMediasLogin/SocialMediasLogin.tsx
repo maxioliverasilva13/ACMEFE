@@ -17,7 +17,7 @@ const SocialMediasLogin = () => {
   const handleLoginWithFacebook = async () => {
     try {
       const resp = (await signInWithFacebook()) as User;
-      await handleCreateUser(resp);
+      await handleCreateUser(resp, "Facebook");
     } catch (error) {
       console.log("error", error);
       toast.error("Error al loguearse con Facebook");
@@ -27,20 +27,18 @@ const SocialMediasLogin = () => {
   const handleLoginWithGoogle = async () => {
     try {
       const resp = (await signInWithGoogle()) as User;
-      await handleCreateUser(resp);
+      await handleCreateUser(resp, "Google");
     } catch (error) {
       toast.error("Error al loguearse con Facebook");
     }
   };
 
-  const handleCreateUser = async (user: User) => {
+  const handleCreateUser = async (user: any, type: string) => {
+    const token = user?.accessToken as any;
     handleSetLoading(true);
     const dataToSend = {
-      Imagen: user.photoURL,
-      Name: user.displayName,
-      Email: user.email,
-      Uid: user.uid,
-      SecretWord: "Secret_Work_Create_EXTERNAL",
+      Token: token,
+      Service: type,
     };
 
     const resp = (await handleCreateUserWithExternalService(dataToSend)) as any;
@@ -48,7 +46,6 @@ const SocialMediasLogin = () => {
       const token = resp?.data?.token;
       handleSetToken(token);
     } else {
-      console.log("resp", resp);
       toast.error(
         "Error al crear usuario con servicio externo " + resp?.error?.data ??
           "Error"
@@ -63,11 +60,6 @@ const SocialMediasLogin = () => {
       href: "#",
       icon: facebookSvg,
       action: () => handleLoginWithFacebook(),
-    },
-    {
-      name: "Continuar con Twitter",
-      href: "#",
-      icon: twitterSvg,
     },
     {
       name: "Continuar con Google",

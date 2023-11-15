@@ -1,6 +1,7 @@
 import { StarIcon } from "@heroicons/react/24/solid";
 import React, { FC } from "react";
 import Avatar from "@/shared/Avatar/Avatar";
+import FiveStartIconForRate from "./FiveStartIconForRate";
 
 interface ReviewItemDataType {
   name: string;
@@ -50,18 +51,20 @@ const ReviewItem: FC<ReviewItemProps> = ({
             </span>
           </div>
 
-          <div className="mt-0.5 flex text-yellow-500">
-            <StarIcon className="w-5 h-5" />
-            <StarIcon className="w-5 h-5" />
-            <StarIcon className="w-5 h-5" />
-            <StarIcon className="w-5 h-5" />
-            <StarIcon className="w-5 h-5" />
+          <div className="mt-0.5 flex items-center gap-1 text-yellow-500">
+            <FiveStartIconForRate
+              withHover={false}
+              defaultPoint={data.starPoint}
+            />
+            <span className="text-sm text-gray-600">{`(${data.starPoint})`}</span>
           </div>
         </div>
       </div>
-      <div className="mt-4 prose prose-sm sm:prose dark:prose-invert sm:max-w-2xl">
-        <p className="text-slate-600 dark:text-slate-300">{data.comment}</p>
-      </div>
+      {data.comment.trim() !== "" && (
+        <div className="mt-4 prose prose-sm sm:prose dark:prose-invert sm:max-w-2xl">
+          <p className="text-slate-600 dark:text-slate-300">{data.comment}</p>
+        </div>
+      )}
     </div>
   );
 };

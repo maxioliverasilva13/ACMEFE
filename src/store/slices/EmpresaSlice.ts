@@ -24,7 +24,6 @@ export const EmpresaSlice = createSlice({
       state.currentEmpresa = undefined;
     },
   },
-  extraReducers: {},
 });
 
 export const useEmpresaActions = () => {

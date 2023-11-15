@@ -18,6 +18,33 @@ export interface SectionSliderProductCardProps {
   data?: ProductoList[];
 }
 
+const OPTIONS: Partial<Glide.Options> = {
+  perView: 4,
+  gap: 32,
+  bound: true,
+  breakpoints: {
+    1280: {
+      perView: 4 - 1,
+    },
+    1024: {
+      gap: 20,
+      perView: 4 - 1,
+    },
+    768: {
+      gap: 20,
+      perView: 4 - 2,
+    },
+    640: {
+      gap: 20,
+      perView: 1.5,
+    },
+    500: {
+      gap: 20,
+      perView: 1.3,
+    },
+  },
+};
+
 const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   className = "",
   itemClassName = "",
@@ -27,62 +54,28 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   subHeading = "REY backpacks & bags",
   data = PRODUCTS.filter((_, i) => i < 8 && i > 2) as any[],
 }) => {
-  let sliderItem: any = null;
-  const sliderRef = useRef(null);
-
-  //
-  const [isShow, setIsShow] = useState(true);
+  console.log("data", data)
+  const [slider, setSlider] = useState<any>(null)
 
   useEffect(() => {
-    const OPTIONS: Partial<Glide.Options> = {
-      // direction: document.querySelector("html")?.getAttribute("dir") || "ltr",
-      perView: 4,
-      gap: 32,
-      bound: true,
-      breakpoints: {
-        1280: {
-          perView: 4 - 1,
-        },
-        1024: {
-          gap: 20,
-          perView: 4 - 1,
-        },
-        768: {
-          gap: 20,
-          perView: 4 - 2,
-        },
-        640: {
-          gap: 20,
-          perView: 1.5,
-        },
-        500: {
-          gap: 20,
-          perView: 1.3,
-        },
-      },
-    };
-    if (!sliderRef.current) return;
-
-    let slider = new Glide(sliderRef.current, OPTIONS);
-    slider.mount();
-    sliderItem = slider;
-    setIsShow(true);
-    // return () => {
-    //   slider.destroy();
-    // };
-  }, [sliderRef.current, sliderRef]);
-
-  useEffect(() => {
+    if (!slider){
+      setTimeout(() => {
+        setSlider(new Glide(`.sliderItem`, OPTIONS))
+      }, 1000);
+    }
+    if (slider) {
+      slider.mount();
+    }
     return () => {
-      if (sliderItem) {
-        sliderItem.destroy();
+      if (slider) {
+      slider.destroy();
       }
     };
-  }, []);
+  }, [slider]);
 
   return (
-    <div className={`nc-SectionSliderProductCard ${className}`}>
-      <div ref={sliderRef} className={`flow-root ${isShow ? "" : "invisible"}`}>
+    <div className={`nc-SectionSliderProductCard sliderItem ${className}`}>
+      <div className={`flow-root`}>
         <Heading
           className={headingClassName}
           fontClass={headingFontClassName}

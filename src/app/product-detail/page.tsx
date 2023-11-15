@@ -38,6 +38,7 @@ import { Route } from "next";
 import ProductCard from "@/components/ProductCard";
 import { useAgregarProductoACarritoMutation } from "@/store/service/CarritoService";
 import { toast as toastify } from "react-toastify";
+import ModalCalificar from "./ModalCalificar";
 
 const LIST_IMAGES_DEMO = [detail1JPG, detail2JPG, detail3JPG];
 
@@ -60,7 +61,9 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
 
   const [variantActive, setVariantActive] = useState(0);
   const [qualitySelected, setQualitySelected] = useState(1);
-  const [isOpenModalViewAllReviews, setIsOpenModalViewAllReviews] =
+  /* const [isOpenModalViewAllReviews, setIsOpenModalViewAllReviews] =
+    useState(false); */
+  const [isOpenCalificarModal, setIsOpenCalificarModal] =
     useState(false);
 
   //
@@ -224,7 +227,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
   const renderDetailSection = () => {
     return (
       <div className="">
-        <h2 className="text-2xl font-semibold">Descripcion del producto</h2>
+        <h2 className="text-2xl font-semibold">Descripción del producto</h2>
         <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl mt-7">
           <p>{product?.descripcion}</p>
         </div>
@@ -236,7 +239,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
           </span>
         </div>
 
-        <h2 className="text-2xl font-semibold mt-7">Categorias</h2>
+        <h2 className="text-2xl font-semibold mt-7">Categorías</h2>
         <div className="flex mt-4 flex-row items-center jsutify-start flex-wrap gap-4">
           {product?.categorias?.map((cat) => {
             return (
@@ -258,10 +261,10 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
       <div className="">
         {/* HEADING */}
         <h2 className="text-2xl font-semibold flex items-center">
-          <StarIcon className="w-7 h-7 mb-0.5" />
+          <StarIcon className="w-7 h-7 mb-0.5 text-yellow-500" />
           <span className="ml-1.5">
             {" "}
-            {product.rate} · {product.cantCalificaciones} Reviews
+            {product.rate} · {product.cantCalificaciones} Calificaciones
           </span>
         </h2>
 
@@ -273,7 +276,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
           >
             {product?.calificaciones?.length === 0 && (
               <span className="font-medium text-base text-gray-900">
-                Este producto aun no tiene ninguna calificacion
+                Este producto aún no tiene ninguna calificación.
               </span>
             )}
             {product.calificaciones?.map((item) => {
@@ -291,6 +294,12 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
               );
             })}
           </div>
+          <ButtonSecondary
+            onClick={() => setIsOpenCalificarModal(true)}
+            className="mt-10 border border-slate-300 dark:border-slate-700 "
+          >
+            Calificar Producto
+          </ButtonSecondary>
 
           {/* <ButtonSecondary
             onClick={() => setIsOpenModalViewAllReviews(true)}
@@ -314,7 +323,6 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
             <div className="relative">
               <div className="aspect-w-16 aspect-h-16 relative">
                 <img
-                  fill
                   sizes="(max-width: 640px) 100vw, 33vw"
                   src={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
                   className="w-full rounded-2xl object-cover"
@@ -332,9 +340,9 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
                     key={index}
                     className="aspect-w-11 xl:aspect-w-10 2xl:aspect-w-11 aspect-h-16 relative"
                   >
-                    <img
-                      sizes="(max-width: 640px) 100vw, 33vw"
+                    <Image
                       fill
+                      sizes="(max-width: 640px) 100vw, 33vw"
                       src={item?.url}
                       className="w-full rounded-2xl object-cover"
                       alt="product detail 1"
@@ -379,6 +387,11 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
                 />
               );
             })}
+            {product?.productosRelacionados?.length === 0 && (
+              <span className="font-medium text-base text-gray-900">
+                Este producto aun no tiene ninguna calificacion
+              </span>
+            )}
           </div>
           {/* SECTION */}
           <div className="pb-20 xl:pb-28 lg:pt-14">
@@ -416,9 +429,16 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
       />
 
       {/* MODAL VIEW ALL REVIEW */}
-      <ModalViewAllReviews
+      {/* <ModalViewAllReviews
         show={isOpenModalViewAllReviews}
         onCloseModalViewAllReviews={() => setIsOpenModalViewAllReviews(false)}
+      /> */}
+
+      {/* MODAL CALIFICAR */}
+      <ModalCalificar
+        show={isOpenCalificarModal}
+        onCloseModalCalificar={() => setIsOpenCalificarModal(false)}
+        productId={product.id}
       />
     </div>
   );

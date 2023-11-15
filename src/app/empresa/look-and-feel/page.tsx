@@ -14,7 +14,7 @@ import {
   CategoriaDestacada,
   CategoriaList,
 } from "@/types/categoria";
-import { useListarCategoriasQuery } from "@/store/service/CategoriaService";
+import { useListarCategoriasDeEmpresaQuery } from "@/store/service/CategoriaService";
 import useGlobal from "@/hooks/useGlobal";
 import Dropdown from "@/components/Dropdown/Dropdown";
 import { formatCategoriasToDropdown } from "@/utils/categoria";
@@ -25,15 +25,15 @@ import { useEditLookAndFeelMutation } from "@/store/service/EmpresaService";
 import toast from "react-hot-toast";
 
 const ModificarLookAndFeel = () => {
-  const {
-    data: categorias,
-    isLoading: isLoadingCategorias,
-  } = useListarCategoriasQuery({});
-
   const { currentEmpresa } = useEmpresa();
   const { handleSetLoading } = useGlobal();
   const { handleUpload } = useUploadImage();
   const [editLookAndFeel] = useEditLookAndFeelMutation();
+
+  const {
+    data: categorias,
+    isLoading: isLoadingCategorias,
+  } = useListarCategoriasDeEmpresaQuery(currentEmpresa?.id);
 
   const categoriaDestacada = currentEmpresa?.lookAndFeel?.categoriaDestacada;
   const [openSelectModal, setOpenSelectModal] = useState<boolean>(false);

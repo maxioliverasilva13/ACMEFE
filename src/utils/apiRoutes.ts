@@ -20,12 +20,16 @@ export const apiRoutes = {
     `/api/Producto/productos-empresa?empresaId=${empresaId}`,
   productoById: (prodId: any) =>
     `/api/Producto/${prodId ? prodId : "[prodId]"}`,
+  productosRelacionados: () =>
+    `/api/Producto/relacionados`,
   deleteProductoById: (prodId: any) =>
     `/api/Producto/${prodId ? prodId : "[prodId]"}`,
+  calificarProducto: () => "/api/Producto/calificarProducto",
   listarTiposIva: () => "/api/TipoIva",
   userById: (userId: string) => `/api/User/${userId}`,
   listarPickups: () => "/api/PickUp",
-  pickupsByEmpresa: (empresaId: number) => `/api/Pickup/listarByEmpresa?empresaId=${empresaId}`,
+  pickupsByEmpresa: (empresaId: number) =>
+    `/api/Pickup/listarByEmpresa?empresaId=${empresaId}`,
 
   tipoIVAById: (id: number) => `/api/TipoIva/${id}`,
   listOrCreateDepartamento: () => "/api/Departamento",
@@ -47,6 +51,7 @@ export const apiRoutes = {
   obtenerCarrito: (empresaId: any) => `/api/Carrito/obtenerCarrito?EmpresaId=${empresaId}`,
   listVentasByEmpresa: () =>  `/api/Empresa/ventas`,
   obtenerDetalleCompra : (id:number) =>  `/api/Compra/${id}`,
-  getMisCompras: ()=>   `/api/Compra/listMyCompras`
-
+  getMisCompras: ()=>   `/api/Compra/listMyCompras`,
+  efectuarCompra: () => "/api/Carrito/comprar",
+  
 };

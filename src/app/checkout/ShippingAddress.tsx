@@ -8,6 +8,7 @@ import Radio from "@/shared/Radio/Radio";
 import useGlobal from "@/hooks/useGlobal";
 import useCarrito from "@/hooks/useCarrito";
 import Link from "next/link";
+import { appRoutes } from "@/utils/appRoutes";
 
 interface Props {
   isActive: boolean;
@@ -142,7 +143,7 @@ const ShippingAddress: FC<Props> = ({
               {myDirecciones?.length === 0 && (
                 <span className="text-sm">
                   Al parecer este usuario no tiene niguna dirección,{" "}
-                  <Link href="#" className="text-primary-500 font-medium">
+                  <Link href={appRoutes.userAccount() as any} className="text-primary-500 font-medium">
                     agrega una nueva en tu perfil
                   </Link>
                   .
