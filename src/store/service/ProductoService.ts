@@ -8,7 +8,7 @@ import { ProductoList } from "@/types/productoList";
 export const ProductoService = createApi({
   reducerPath: "ProductoService",
   baseQuery: baseQuery,
-  tagTypes: ["Productos", "ProductoInfo"],
+  tagTypes: ["Productos", "ProductoInfo", "ProductosRel"],
   endpoints: (builder) => ({
     crearProducto: builder.mutation({
       query: (data) => {
@@ -48,6 +48,20 @@ export const ProductoService = createApi({
         return response as ProductoList;
       },
     }),
+    obtenerProductosRelacionados: builder.mutation({
+      query: (data) => {
+        return {
+          body: data,
+          method: "POST",
+          url: apiRoutes.productosRelacionados(),
+        };
+      },
+      invalidatesTags: ["ProductosRel"],
+      transformResponse(value) {
+        const response = value;
+        return response as ProductoList[];
+      },
+    }),
     disableProductoById: builder.mutation({
       invalidatesTags: ["ProductoInfo", "Productos"],
       query: (prodId: number) => ({
@@ -84,4 +98,5 @@ export const {
   useDisableProductoByIdMutation,
   useEditProductoMutation,
   useListarProductosByEmpresaQuery,
+  useObtenerProductosRelacionadosMutation,
 } = ProductoService;

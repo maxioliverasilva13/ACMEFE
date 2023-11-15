@@ -99,8 +99,8 @@ const SelectShippingType: FC<Props> = ({
             name="shipping-method"
             id="envio"
             label={`<span class="text-sm font-medium">Retiro en sucursal</span>`}
-            defaultChecked={shippingMethod === "ENVIO"}
-            onChange={() => handleSetShippingMethod("ENVIO")}
+            defaultChecked={shippingMethod === "RETIRO"}
+            onChange={() => handleSetShippingMethod("RETIRO")}
           />
 
           {/* ============ */}

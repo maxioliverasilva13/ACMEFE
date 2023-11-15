@@ -49,6 +49,12 @@ const PaymentMethod: FC<Props> = ({
     formState: { errors, isValid },
   } = useForm<PaymentForm>({
     resolver: yupResolver(PaymentFormValidationSchema()),
+    defaultValues: {
+      card: paymentInfo?.card, 
+      cvc: paymentInfo?.cvc,
+      expiration: paymentInfo?.expiration,
+      titular: paymentInfo?.titular,
+    },
     mode: "onChange",
   });
   
@@ -196,6 +202,7 @@ const PaymentMethod: FC<Props> = ({
                   autoComplete="off"
                   className="mt-1.5"
                   placeholder="CVC"
+                  max={3}
                   {...register(PaymentFormFields.cvc)}
                   error={errors[PaymentFormFields.cvc]?.message}
                 />

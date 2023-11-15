@@ -20,12 +20,15 @@ export const apiRoutes = {
     `/api/Producto/productos-empresa?empresaId=${empresaId}`,
   productoById: (prodId: any) =>
     `/api/Producto/${prodId ? prodId : "[prodId]"}`,
+  productosRelacionados: () =>
+    `/api/Producto/relacionados`,
   deleteProductoById: (prodId: any) =>
     `/api/Producto/${prodId ? prodId : "[prodId]"}`,
   listarTiposIva: () => "/api/TipoIva",
   userById: (userId: string) => `/api/User/${userId}`,
   listarPickups: () => "/api/PickUp",
-  pickupsByEmpresa: (empresaId: number) => `/api/Pickup/listarByEmpresa?empresaId=${empresaId}`,
+  pickupsByEmpresa: (empresaId: number) =>
+    `/api/Pickup/listarByEmpresa?empresaId=${empresaId}`,
 
   tipoIVAById: (id: number) => `/api/TipoIva/${id}`,
   listOrCreateDepartamento: () => "/api/Departamento",
@@ -44,6 +47,7 @@ export const apiRoutes = {
   modificarDireccion: () => "/api/User/modificarDireccion",
   agregarProductoCarrito: () => "/api/Carrito",
   borrarLinea: () => "/api/Carrito/borrarLinea",
-  obtenerCarrito: (empresaId: any) => `/api/Carrito/obtenerCarrito?EmpresaId=${empresaId}`,
-
+efectuarCompra: () => "/api/Carrito/comprar",
+  obtenerCarrito: (empresaId: any) =>
+    `/api/Carrito/obtenerCarrito?EmpresaId=${empresaId}`,
 };

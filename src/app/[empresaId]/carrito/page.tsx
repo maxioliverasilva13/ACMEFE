@@ -1,9 +1,6 @@
 "use client";
 
-import { NoSymbolIcon, CheckIcon } from "@heroicons/react/24/outline";
-import NcInputNumber from "@/components/NcInputNumber";
 import Prices from "@/components/Prices";
-import { Product, PRODUCTS } from "@/data/data";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,10 +13,16 @@ import { appRoutes } from "@/utils/appRoutes";
 import useGlobal from "@/hooks/useGlobal";
 import { useBorrarLineaMutation } from "@/store/service/CarritoService";
 import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { useObtenerProductosRelacionadosMutation } from "@/store/service/ProductoService";
+import SectionSliderProductCard from "@/components/SectionSliderProductCard";
+import Page404 from "@/app/not-found";
 
 const CartPage = () => {
   const { productos } = useCarrito();
   const { currentEmpresa } = useEmpresa();
+  const [productosRel, setProductosRel] = useState<any[]>([]);
+  const [handleGetRelacionados] = useObtenerProductosRelacionadosMutation();
 
   const { handleSetLoading } = useGlobal();
   const [handleDeleteLinea] = useBorrarLineaMutation();
@@ -40,6 +43,25 @@ const CartPage = () => {
       handleSetLoading(false);
     }
   };
+
+  const handleLoadRelacionados = async () => {
+    try {
+      handleSetLoading(true);
+      const prodsIds = productos?.map((item) => item?.producto?.id);
+      const resp = (await handleGetRelacionados(prodsIds)) as any;
+      setProductosRel(resp?.data);
+    } catch (error) {
+      toast.error("Error al obtener los productos relacionados");
+    } finally {
+      handleSetLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (productos?.length > 0) {
+      handleLoadRelacionados();
+    }
+  }, [productos]);
 
   let subtotal = 0;
 
@@ -135,6 +157,11 @@ const CartPage = () => {
     );
   };
 
+  if(productos?.length === 0) {
+    return <Page404 message="El carrito esta vacio, intenta agregar algun producto" />
+  }
+
+
   return (
     <div className="nc-CartPage">
       <main className="container py-16 lg:pb-28 lg:pt-20 ">
@@ -158,44 +185,60 @@ const CartPage = () => {
         <hr className="border-slate-200 dark:border-slate-700 my-10 xl:my-12" />
 
         <div className="flex flex-col lg:flex-row">
-          <div className="w-full lg:w-[60%] xl:w-[55%] divide-y divide-slate-200 dark:divide-slate-700 ">
+          <div className="w-full lg:w-[60%] xl:w-[55%] divide-y divide-slate-300 dark:divide-slate-700 ">
             {productos.map(renderProduct)}
             {productos?.length === 0 && (
-            <span>Al parecer aun no has agregado ningun producto</span>
-          )}
+              <span>Al parecer aun no has agregado ningun producto</span>
+            )}
           </div>
-          
-          <div className="border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:mx-16 2xl:mx-20 flex-shrink-0"></div>
-          {productos?.length > 0 && <div className="flex-1">
-            <div className="sticky top-28">
-              <h3 className="text-lg font-semibold ">Resumen de la orden</h3>
-              <div className="mt-7 text-sm text-slate-500 dark:text-slate-400 divide-y divide-slate-200/70 dark:divide-slate-700/80">
-                <div className="flex justify-between pb-4">
-                  <span>Subtotal</span>
-                  <span className="font-semibold text-slate-900 dark:text-slate-200">
-                    ${subtotal}
-                  </span>
+
+          <div className="border-t lg:border-t-0 lg:border-l border-slate-300 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:mx-16 2xl:mx-20 flex-shrink-0"></div>
+          {productos?.length > 0 && (
+            <div className="flex-1">
+              <div className="sticky top-28">
+                <h3 className="text-lg font-semibold ">Resumen de la orden</h3>
+                <div className="mt-7 text-sm text-slate-500 dark:text-slate-400 divide-y divide-slate-200/70 dark:divide-slate-700/80">
+                  <div className="flex justify-between pb-4">
+                    <span>Subtotal</span>
+                    <span className="font-semibold text-slate-900 dark:text-slate-200">
+                      ${subtotal}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-4">
+                    <span>Envio estimado</span>
+                    <span className="font-semibold text-slate-900 dark:text-slate-200">
+                      ${currentEmpresa?.costoEnvio}
+                    </span>
+                  </div>
+                  <div className="flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4">
+                    <span>Total de la orden</span>
+                    <span>{orderTotal}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between py-4">
-                  <span>Envio estimado</span>
-                  <span className="font-semibold text-slate-900 dark:text-slate-200">
-                    ${currentEmpresa?.costoEnvio}
-                  </span>
-                </div>
-                <div className="flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4">
-                  <span>Total de la orden</span>
-                  <span>{orderTotal}</span>
-                </div>
+                <ButtonPrimary
+                  href={appRoutes.checkoutPath(currentEmpresa?.id) as any}
+                  className="mt-8 w-full"
+                >
+                  Checkout
+                </ButtonPrimary>
+                <div className="mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center"></div>
               </div>
-              <ButtonPrimary
-                href={appRoutes.checkoutPath(currentEmpresa?.id) as any}
-                className="mt-8 w-full"
-              >
-                Checkout
-              </ButtonPrimary>
-              <div className="mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center"></div>
             </div>
-          </div>}
+          )}
+        </div>
+
+        <div className="w-full h-auto flex flex-col gap-4 md:mt-20 mt-10">
+          {productosRel?.length === 0 && (
+            <span>No se encontraron productos relacionados</span>
+          )}
+          {/* SECTION */}
+          {productosRel?.length > 0 && (
+            <SectionSliderProductCard
+              heading="Productos Relacionados"
+              data={productosRel}
+              subHeading=""
+            />
+          )}
         </div>
       </main>
     </div>

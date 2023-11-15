@@ -185,7 +185,7 @@ export default function CartDropdown() {
                       <span>
                         <span>Subtotal</span>
                         <span className="block text-sm text-slate-500 dark:text-slate-400 font-normal">
-                          Los impuestos y envio se calculan en checkout
+                          Los impuestos/iva y envio se calculan en checkout
                         </span>
                       </span>
                       <span className="">{subtotal}</span>

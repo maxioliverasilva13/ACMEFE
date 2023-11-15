@@ -19,6 +19,18 @@ export const CarritoService = createApi({
       },
       invalidatesTags: ["Carrito"],
     }),
+    efectuarCompra: builder.mutation({
+      query: (data) => ({
+        url: apiRoutes.efectuarCompra(),
+        method: "POST",
+        body: data,
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+      invalidatesTags: ["Carrito"],
+    }),
     obtenerCarrito: builder.query({
       query: (data) => apiRoutes.obtenerCarrito(data?.empresaId),
       transformResponse(value) {
@@ -47,4 +59,5 @@ export const {
   useLazyObtenerCarritoQuery,
   useBorrarLineaMutation,
   useObtenerCarritoQuery,
+  useEfectuarCompraMutation,
 } = CarritoService;

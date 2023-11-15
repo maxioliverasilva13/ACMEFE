@@ -313,7 +313,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
             {/* HEADING */}
             <div className="relative">
               <div className="aspect-w-16 aspect-h-16 relative">
-                <img
+                <Image
                   fill
                   sizes="(max-width: 640px) 100vw, 33vw"
                   src={imagenes ? imagenes[0]?.url : DEFAULT_USER_IMAGE}
@@ -332,7 +332,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
                     key={index}
                     className="aspect-w-11 xl:aspect-w-10 2xl:aspect-w-11 aspect-h-16 relative"
                   >
-                    <img
+                    <Image
                       sizes="(max-width: 640px) 100vw, 33vw"
                       fill
                       src={item?.url}
@@ -379,6 +379,11 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
                 />
               );
             })}
+            {product?.productosRelacionados?.length === 0 && (
+              <span className="font-medium text-base text-gray-900">
+                Este producto aun no tiene ninguna calificacion
+              </span>
+            )}
           </div>
           {/* SECTION */}
           <div className="pb-20 xl:pb-28 lg:pt-14">

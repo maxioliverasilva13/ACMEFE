@@ -9,7 +9,8 @@ const useCarrito = () => {
     selectedSucursalId,
     selectedAddressId,
     paymentMethod,
-    paymentInfo
+    paymentInfo,
+    errors,
   } = useSelector((state: RootState) => state.CarritoSlice);
 
   const {
@@ -19,6 +20,7 @@ const useCarrito = () => {
     handleSetSelectedAddressId,
     handleSetPaymentMethod,
     handleSetPaymentInfo,
+    handleSetErrors,
   } = useCarritoActions();
 
   return {
@@ -34,6 +36,8 @@ const useCarrito = () => {
     handleSetPaymentMethod,
     handleSetPaymentInfo,
     paymentInfo,
+    handleSetErrors,
+    errors,
   };
 };
 
