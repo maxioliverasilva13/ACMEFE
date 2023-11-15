@@ -10,6 +10,8 @@ import { ProductoService } from "./service/ProductoService";
 import { DepartamentoService } from "./service/DepartamentoService";
 import { CiudadService } from "./service/CiudadService";
 import { ReclamoService } from "./service/ReclamoService";
+import { CompraService } from "./service/CompraService";
+
 
 const store = configureStore({
   reducer: {
@@ -22,11 +24,12 @@ const store = configureStore({
     [ProductoService.reducerPath]: ProductoService.reducer,
     [DepartamentoService.reducerPath]: DepartamentoService.reducer,
     [CiudadService.reducerPath]: CiudadService.reducer,
-    [ReclamoService.reducerPath] : ReclamoService.reducer
+    [ReclamoService.reducerPath] : ReclamoService.reducer,
+    [CompraService.reducerPath] : CompraService.reducer
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(UserService.middleware, CategoriaService.middleware, ProductoService.middleware, TipoIvaService.middleware, DepartamentoService.middleware, CiudadService.middleware,PikcupService.middleware,ReclamoService.middleware,EmpresaService.middleware),
+    getDefaultMiddleware().concat(UserService.middleware, CategoriaService.middleware, ProductoService.middleware, TipoIvaService.middleware, DepartamentoService.middleware, CiudadService.middleware,PikcupService.middleware,ReclamoService.middleware,EmpresaService.middleware, CompraService.middleware),
 });
 
 setupListeners(store.dispatch);

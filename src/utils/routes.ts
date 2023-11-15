@@ -18,6 +18,8 @@ export const empresaRoutes = [
   appRoutes.empresaReclamos(),
   appRoutes.empresaPorductDetails(),
   appRoutes.empresaEditarProducto(),
+  appRoutes.empresaVentas(),
+  appRoutes.empresaVentaDetalle()
 ];
 
 export const adminRoutes = [

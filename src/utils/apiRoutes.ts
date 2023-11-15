@@ -27,6 +27,8 @@ export const apiRoutes = {
     ciudadById: (id: number) => `/api/Ciudad/${id}`,
     crearPickup : ()=> "api/PickUp",
     deletePickups: () => `/api/PickUp/deletesById`,
-    listarReclamos : () => "api/Reclamo"
+    listarReclamos : () => "api/Reclamo",
+    listVentasByEmpresa :() => `/api/Empresa/ventas`,
+    obtenerDetalleCompra : (id:any)=>  `/api/Compra/${id}`
 
 }

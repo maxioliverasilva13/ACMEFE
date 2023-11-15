@@ -55,6 +55,17 @@ export const EmpresaService = createApi({
     }),
 
     
+    listVentasByEmpresa : builder.query({
+      query: () => {
+        return apiRoutes.listVentasByEmpresa()
+      },
+      transformResponse(value) {
+        const response = value; 
+        return response;
+      },
+    }),
+
+    
 
 
     
@@ -64,7 +75,8 @@ export const EmpresaService = createApi({
 export const {
   useGetByIdQuery,
   useListEmpresasQuery,
+  useListVentasByEmpresaQuery,
   useCreateEmpresaMutation,
-  useDeleteEmpresasMutation
+  useDeleteEmpresasMutation,
  
 } =  EmpresaService;
