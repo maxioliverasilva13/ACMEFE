@@ -18,6 +18,8 @@ export const empresaRoutes = [
   appRoutes.empresaReclamos(),
   appRoutes.empresaPorductDetails(),
   appRoutes.empresaEditarProducto(),
+  appRoutes.empresaVentas(),
+  appRoutes.empresaVentaDetalle(),
   appRoutes.empresaLookAndFeel(),
 ];
 
@@ -42,4 +44,5 @@ export const userRoutes = [
  appRoutes.carrito(),
  appRoutes.checkout(),
  appRoutes.userAccount(),
+ appRoutes.ordenesDetail()
 ];

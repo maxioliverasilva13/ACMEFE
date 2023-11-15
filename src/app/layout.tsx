@@ -37,7 +37,7 @@ export default function RootLayout({
         <Provider store={store}>
           <SessionWrapper>
             <Toaster />
-            <DashboardWrapper>{children}</DashboardWrapper>
+            <DashboardWrapper>{children}</DashboardWrapper> 
           </SessionWrapper>
         </Provider>
       </body>

@@ -26,8 +26,11 @@ export const appRoutes = {
     empresaEditarProducto: () => "/empresa/editar-producto",
     empresaCategorias: () => "/empresa/categorias",
     empresaReclamos: () => "/empresa/reclamos",
+    empresaVentas: () => "/empresa/ventas",
     empresaPorductDetails: () => "/empresa/product-detail",
     empresaPorductDetailsWithId: (id:any) => `/empresa/product-detail/${id}`,
+    empresaVentaDetalle : () => `/empresa/venta-detalle`,  
+    empresaVentaDetalleWithId : (id:any) => `/empresa/venta-detalle/${id}`,  
     empresaLookAndFeel: () => "/empresa/look-and-feel",
 
     // Persona comun routes
@@ -43,5 +46,7 @@ export const appRoutes = {
     checkout: () => `/checkout`,
     checkoutPath: (empresaId: any) => `/${empresaId}/checkout`,
     productoDetailsFullPath: (productId: any, empresaId: any) => `productos/${productId}/detalles`,
+    ordenesDetail : () =>  `ordenes`,
+    ordenesDetailWithId : (compraId:any) =>  `ordenes/${compraId}` 
 
 }

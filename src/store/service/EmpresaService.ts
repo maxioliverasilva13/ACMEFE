@@ -63,13 +63,31 @@ export const EmpresaService = createApi({
         return response as any;
       },
     }),
+
+    
+    listVentasByEmpresa : builder.query({
+      query: () => {
+        return apiRoutes.listVentasByEmpresa()
+      },
+      transformResponse(value) {
+        const response = value; 
+        return response;
+      },
+    }),
+
+    
+
+
+    
   }),
 });
 
 export const {
   useLazyGetEmpresaByIdQuery,
   useListEmpresasQuery,
+  useListVentasByEmpresaQuery,
   useCreateEmpresaMutation,
   useDeleteEmpresasMutation,
-  useEditLookAndFeelMutation,
-} = EmpresaService;
+  useEditLookAndFeelMutation
+ 
+} =  EmpresaService;

@@ -1,4 +1,4 @@
-import { BuildingOffice2Icon, Cog6ToothIcon, ExclamationTriangleIcon, MapIcon, MapPinIcon, ReceiptPercentIcon, ShoppingBagIcon, TagIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { BuildingOffice2Icon, Cog6ToothIcon, ExclamationTriangleIcon, MapIcon, MapPinIcon, ReceiptPercentIcon, ShoppingBagIcon, TagIcon, UserGroupIcon,PresentationChartBarIcon } from "@heroicons/react/24/outline";
 import { appRoutes } from "./appRoutes";
 import { HomeIcon } from "@heroicons/react/24/outline";
 
@@ -70,7 +70,15 @@ export const EmpresaDashboardItems = [
     },
 
     {
-        title: "Categorías",
+        title: "Ventas",
+        href: appRoutes.empresaVentas(),
+        icon: <PresentationChartBarIcon color="white" strokeWidth={2} width={25} />,
+    },
+
+
+
+    {
+        title: "Categorias",
         href: appRoutes.empresaCategorias(),
         validPath: [appRoutes.empresaCategorias()],
         icon: <TagIcon color="white" strokeWidth={2} width={25} />,

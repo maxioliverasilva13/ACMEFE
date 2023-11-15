@@ -48,7 +48,10 @@ export const apiRoutes = {
   modificarDireccion: () => "/api/User/modificarDireccion",
   agregarProductoCarrito: () => "/api/Carrito",
   borrarLinea: () => "/api/Carrito/borrarLinea",
-efectuarCompra: () => "/api/Carrito/comprar",
-  obtenerCarrito: (empresaId: any) =>
-    `/api/Carrito/obtenerCarrito?EmpresaId=${empresaId}`,
+  obtenerCarrito: (empresaId: any) => `/api/Carrito/obtenerCarrito?EmpresaId=${empresaId}`,
+  listVentasByEmpresa: () =>  `/api/Empresa/ventas`,
+  obtenerDetalleCompra : (id:number) =>  `/api/Compra/${id}`,
+  getMisCompras: ()=>   `/api/Compra/listMyCompras`,
+  efectuarCompra: () => "/api/Carrito/comprar",
+  
 };
