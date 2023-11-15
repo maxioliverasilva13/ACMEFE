@@ -17,7 +17,7 @@ export const AccountOrder = () => {
 
 
   const  viewOrderDetail = (id:number)=>{
-     push("/ordenes/"+id)
+     push("/ordenes/"+id  as any)
   }
 
   const renderProductItem = (linea: any, index: number) => {

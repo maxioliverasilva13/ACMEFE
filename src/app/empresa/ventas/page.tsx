@@ -5,7 +5,7 @@ import { useListVentasByEmpresaQuery } from "@/store/service/EmpresaService";
 import dayjs from "dayjs";
 import useGlobal from "@/hooks/useGlobal";
 import { useEffect } from "react";
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 
 

@@ -42,7 +42,7 @@ const SessionWrapper = ({ children, params }: Props) => {
   let empresaStyles = {};
   if (userRoute) {
     empresaStyles = {
-      backgroundColor: currentEmpresa.lookAndFeel.colorFondo,
+      backgroundColor: currentEmpresa?.lookAndFeel?.colorFondo,
     };
   }
 
