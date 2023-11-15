@@ -8,37 +8,31 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import TabFilters from "@/components/TabFilters";
 import { Transition } from "@/app/headlessui";
+import useEmpresa from "@/hooks/useEmpresa";
+import { ProductoList } from "@/types/productoList";
 
 export interface HeaderFilterSectionProps {
   className?: string;
+  filtersProducts: ProductoList[];
+  setFiltersProductos: any;
+  setHasFilters?: any;
 }
 
 const HeaderFilterSection: FC<HeaderFilterSectionProps> = ({
   className = "mb-12",
+  filtersProducts,
+  setHasFilters,
+  setFiltersProductos,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [tabActive, setTabActive] = useState("All items");
 
   return (
     <div className={`flex flex-col relative ${className}`}>
-      <Heading>{`What's trending now`}</Heading>
+      <Heading
+        desc={`Filtra productos por precio/categorias y mucho mas`}
+      >{`Encuentra lo que necesitas`}</Heading>
       <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-6 lg:space-y-0 lg:space-x-2 ">
-        <Nav
-          className="sm:space-x-2"
-          containerClassName="relative flex w-full overflow-x-auto text-sm md:text-base hiddenScrollbar"
-        >
-          {["All items", "Women", "Mans", "Kids", "jewels"].map(
-            (item, index) => (
-              <NavItem
-                key={index}
-                isActive={tabActive === item}
-                onClick={() => setTabActive(item)}
-              >
-                {item}
-              </NavItem>
-            )
-          )}
-        </Nav>
         <span className="block flex-shrink-0">
           <ButtonPrimary
             className="w-full !pr-16"
@@ -93,7 +87,7 @@ const HeaderFilterSection: FC<HeaderFilterSectionProps> = ({
         leaveTo="opacity-0"
       >
         <div className="w-full border-b border-neutral-200 dark:border-neutral-700 my-8"></div>
-        <TabFilters />
+        <TabFilters setHasFilters={setHasFilters} filtersProducts={filtersProducts} setFiltersProductos={setFiltersProductos} />
       </Transition>
     </div>
   );

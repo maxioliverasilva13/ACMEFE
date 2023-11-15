@@ -54,6 +54,13 @@ const Dropdown = ({ items, onChange, placeholder, error, onlyOneSelectable = fal
           >
             Todos
           </button>}
+          {onlyOneSelectable && <button
+              type="button"
+              onClick={() => setSelectedValue(undefined)}
+              className="text-gray-800  px-4 cursor-pointer font-semibold text-left w-full h-auto py-2 rounded-lg bg-transparent hover:bg-gray-200"
+            >
+              Ninguno
+            </button>}
           {items?.map((item, index) => {
             return (
               <button

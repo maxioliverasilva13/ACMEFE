@@ -31,3 +31,12 @@ export const formatDepartamentosToDropdown = (departamentos: Departamento[]) => 
     };
   });
 };
+
+export const formatCiudadesToDropdown = (ciudades: Ciudad[]) => {
+  return ciudades?.map((ciudad) => {
+    return {
+      label: ciudad.nombre,
+      value: ciudad.id,
+    };
+  });
+};

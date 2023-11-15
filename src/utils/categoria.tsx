@@ -1,5 +1,5 @@
 import Text from "@/components/Table/components/Text";
-import { Categoria } from "@/types/categoria";
+import { Categoria, CategoriaList } from "@/types/categoria";
 import { ColumnItem } from "@/types/table";
 import { Usuario } from "@/types/usuario";
 import defaultImage from "@/images/noimage.jpg";
@@ -21,12 +21,6 @@ export const columnsCategorias: ColumnItem[] = [
     icon: <HashtagIcon width={20} color="#A3AED0" />,
   },
   {
-    title: "Imagen",
-    key: "imagen",
-    icon: <PhotoIcon width={20} color="#A3AED0" />,
-  },
-
-  {
     title: "Nombre",
     key: "nombre",
     icon: <TagIcon width={20} color="#A3AED0" />,
@@ -38,23 +32,23 @@ export const columnsCategorias: ColumnItem[] = [
   },
 ];
 
-export const formatCategoriasToTable = (categorias: Categoria[]) => {
+export const DEFAULT_CATEGORIA_DESTACADA_IMAGE = "https://www.competethemes.com/wp-content/uploads/2015/11/one-category-front-page.png";
+
+export const formatCategoriasToTable = (categorias: CategoriaList[]) => {
   return categorias?.map((categoria) => {
     return {
-      id: categoria?.id,
-      imagen: (
-        <div className="w-[60px] relative h-[60px] min-w-[60px] rounded-full overflow-hidden">
-          <Image
-            alt="Categoria Avatar"
-            src={categoria?.imagen ?? defaultImage?.src}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-full "
-          />
-        </div>
-      ),
-      nombre: <Text message={categoria?.nombre} />,
-      productos: <Text message={categoria?.productos} />,
+      id: categoria?.categoriaId,
+      nombre: <Text message={categoria?.categoriaNombre} />,
+      productos: <Text message={categoria?.cantidadProductos} />,
+    };
+  });
+};
+
+export const formatCategoriasToDropdown = (categorias: CategoriaList[]) => {
+  return categorias?.map((cat) => {
+    return {
+      label: cat.categoriaNombre,
+      value: cat.categoriaId,
     };
   });
 };

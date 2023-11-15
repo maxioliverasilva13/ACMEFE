@@ -6,6 +6,7 @@ import Heading from "@/components/Heading/Heading";
 import Glide from "@glidejs/glide/dist/glide.esm";
 import ProductCard from "./ProductCard";
 import { Product, PRODUCTS } from "@/data/data";
+import { ProductoList } from "@/types/productoList";
 
 export interface SectionSliderProductCardProps {
   className?: string;
@@ -14,7 +15,7 @@ export interface SectionSliderProductCardProps {
   headingFontClassName?: string;
   headingClassName?: string;
   subHeading?: string;
-  data?: Product[];
+  data?: ProductoList[];
 }
 
 const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
@@ -24,12 +25,13 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
   headingClassName,
   heading,
   subHeading = "REY backpacks & bags",
-  data = PRODUCTS.filter((_, i) => i < 8 && i > 2),
+  data = PRODUCTS.filter((_, i) => i < 8 && i > 2) as any[],
 }) => {
+  let sliderItem: any = null;
   const sliderRef = useRef(null);
 
   //
-  const [isShow, setIsShow] = useState(false);
+  const [isShow, setIsShow] = useState(true);
 
   useEffect(() => {
     const OPTIONS: Partial<Glide.Options> = {
@@ -63,11 +65,20 @@ const SectionSliderProductCard: FC<SectionSliderProductCardProps> = ({
 
     let slider = new Glide(sliderRef.current, OPTIONS);
     slider.mount();
+    sliderItem = slider;
     setIsShow(true);
+    // return () => {
+    //   slider.destroy();
+    // };
+  }, [sliderRef.current, sliderRef]);
+
+  useEffect(() => {
     return () => {
-      slider.destroy();
+      if (sliderItem) {
+        sliderItem.destroy();
+      }
     };
-  }, [sliderRef]);
+  }, []);
 
   return (
     <div className={`nc-SectionSliderProductCard ${className}`}>

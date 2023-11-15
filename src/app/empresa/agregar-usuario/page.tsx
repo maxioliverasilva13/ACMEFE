@@ -24,33 +24,40 @@ import { appRoutes } from "@/utils/appRoutes";
 import { Departamento } from "@/types/departamento";
 import Dropdown from "@/components/Dropdown/Dropdown";
 import { ItemDropdown } from "@/types/dropdown";
-
-const departamentos: Departamento[] = [
-  {
-    id: 1,
-    nombre: "San José",
-    ciudades: [
-      { id: 1, nombre: "San José de Mayo" },
-      { id: 2, nombre: "Libertad" },
-    ],
-  },
-  {
-    id: 2,
-    nombre: "Montevideo",
-    ciudades: [{ id: 3, nombre: "Montevideo" }],
-  },
-  {
-    id: 3,
-    nombre: "Flores",
-    ciudades: [],
-  },
-];
+import { useLazyListarDepartamentosQuery } from "@/store/service/DepartamentoService";
+import {
+  formatCiudadesToDropdown,
+  formatCiudadesToTable,
+  formatDepartamentosToDropdown,
+} from "@/utils/ciudades";
+import { useLazyListarCiudadesQuery } from "@/store/service/CiudadService";
 
 const AgregarUsuario = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedDepartamento, setSelectedDepartamento] = useState<
+  const [selectedDepartamentoId, setSelectedDepartamentoId] = useState<
     Departamento | undefined
   >(undefined);
+  const [getCiudades, { data: dataCiudades }] = useLazyListarCiudadesQuery();
+  const [
+    getDepartamentos,
+    { data: dataDepartamentos },
+  ] = useLazyListarDepartamentosQuery();
+  const { handleSetLoading, userInfo} = useGlobal();
+  const handleLoadData = async () => {
+    handleSetLoading(true);
+    await getCiudades({});
+    await getDepartamentos({});
+    handleSetLoading(false);
+  };
+  const departamentos = dataDepartamentos ?? [];
+  const ciudades = dataCiudades ?? [];
+  useEffect(() => {
+    handleLoadData();
+  }, []);
+
+  useEffect(() => {
+    setValue(CrearUsuarioFormFields.ciudadId, 0);
+  }, [selectedDepartamentoId]);
 
   const createUserForm = useForm<CrearUsuarioForm>({
     resolver: yupResolver(CrearUsuarioValidationSchema()),
@@ -66,7 +73,6 @@ const AgregarUsuario = () => {
   } = createUserForm;
   const { push } = useRouter();
 
-  const { handleSetLoading } = useGlobal();
   const handleNext = async (data: CrearUsuarioForm) => {
     try {
       let userImage = DEFAULT_USER_IMAGE;
@@ -79,7 +85,7 @@ const AgregarUsuario = () => {
         email: data?.email,
         celular: data?.celular,
         imagen: userImage,
-        empresaId: 1, // HARDCODED POR EL MOMENTO
+        empresaId: userInfo?.empresaId,
         direccion: {
           calle: data?.calle,
           nroPuerta: data?.nroPuerta,
@@ -201,14 +207,10 @@ const AgregarUsuario = () => {
             <Label>Departamento</Label>
             <Dropdown
               placeholder="Seleccionar departamento"
-              items={departamentos.map(
-                (depto) =>
-                  ({ label: depto.nombre, value: depto?.id } as ItemDropdown)
-              )}
-              onChange={(val: any) =>
-                setSelectedDepartamento(
-                  departamentos.find((dpto) => dpto?.id === val)
-                )
+              items={formatDepartamentosToDropdown(departamentos)}
+              onChange={(val: any) =>{
+                setSelectedDepartamentoId(val);
+              }
               }
               onlyOneSelectable
             />
@@ -217,16 +219,11 @@ const AgregarUsuario = () => {
             <Label>Ciudad</Label>
             <Dropdown
               placeholder={
-                selectedDepartamento
+                selectedDepartamentoId
                   ? "Seleccione una ciudad"
                   : "Primero seleccione un departamento."
               }
-              items={
-                selectedDepartamento?.ciudades?.map((ciudad) => ({
-                  label: ciudad.nombre,
-                  value: ciudad?.id,
-                })) || []
-              }
+              items={formatCiudadesToDropdown(ciudades?.filter((ciudad) => ciudad?.departamentoId === selectedDepartamentoId))}
               onChange={(value: any) =>
                 setValue(CrearUsuarioFormFields.ciudadId, value)
               }

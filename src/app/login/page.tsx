@@ -13,8 +13,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import useGlobal from "@/hooks/useGlobal";
 import { useLoginMutation } from "@/store/service/UserService";
-import {toast} from "react-toastify";
-import SocialMediasLogin from "@/components/SocialMediasLogin/SocialMediasLogin";
+import toast from "react-hot-toast";import SocialMediasLogin from "@/components/SocialMediasLogin/SocialMediasLogin";
 
 const PageLogin = () => {
   const {

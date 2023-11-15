@@ -31,9 +31,22 @@ export const appRoutes = {
     empresaPorductDetailsWithId: (id:any) => `/empresa/product-detail/${id}`,
     empresaVentaDetalle : () => `/empresa/venta-detalle`,  
     empresaVentaDetalleWithId : (id:any) => `/empresa/venta-detalle/${id}`,  
+    empresaLookAndFeel: () => "/empresa/look-and-feel",
+
     // Persona comun routes
     productDetail: () => "/product-detail",
     
     //user routes
-    userInicio: () => "/inicio"
+    userInicio: () => "/inicio",
+    tiendaHome: (empresaId: any) => `${empresaId}/inicio`,
+    productoDetails: () => `/detalles`,
+    carrito: () => `/carrito`,
+    userAccount: () => `/account`,
+    carritoPath: (empresaId: any) => `/${empresaId}/carrito`,
+    checkout: () => `/checkout`,
+    checkoutPath: (empresaId: any) => `/${empresaId}/checkout`,
+    productoDetailsFullPath: (productId: any, empresaId: any) => `productos/${productId}/detalles`,
+    ordenesDetail : () =>  `ordenes`,
+    ordenesDetailWithId : (compraId:any) =>  `ordenes/${compraId}` 
+
 }

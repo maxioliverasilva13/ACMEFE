@@ -28,8 +28,7 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-
+import toast from "react-hot-toast";
 const EditarProducto = () => {
   const {
     register,
@@ -66,14 +65,12 @@ const EditarProducto = () => {
       setValue(CrearProductoFormFields.descripcion, selectedProduct.descripcion);
       setValue(CrearProductoFormFields.documentoPdf, selectedProduct.documentoPdf);
       setValue(CrearProductoFormFields.nombre, selectedProduct.nombre);
-      setValue(CrearProductoFormFields.titulo, selectedProduct.nombre);
       setValue(CrearProductoFormFields.tipoIva, selectedProduct.tipoIva?.id);
       setValue(CrearProductoFormFields.precio, selectedProduct.precio);
       setValue(CrearProductoFormFields.linkAcata, selectedProduct.linkFicha);
       setSelectedCategorias(selectedProduct?.categorias?.map((item) => item?.id))
       if (selectedProduct?.productosRelacionados?.length > 0) {
         setSelectedProductosRelacionados(selectedProduct?.productosRelacionados?.map((item) => item?.id))
-        console.log("aca", selectedProduct?.productosRelacionados?.map((item) => item?.id))
       }
       setCurrentImagenes(selectedProduct?.imagenes);
     }

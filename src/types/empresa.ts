@@ -1,3 +1,5 @@
+import { LookAndFeel } from "./lookAndFeel";
+
 export type Empresa = {
   id?: any;
   nombre: string;
@@ -7,4 +9,5 @@ export type Empresa = {
   imagen: string;
   costoEnvio: number;
   wallet: string;
+  lookAndFeel: LookAndFeel;
 };

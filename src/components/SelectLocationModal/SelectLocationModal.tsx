@@ -5,8 +5,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import mapboxgl, { Marker } from "mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import { useEffect, useRef, useState } from "react";
-import {toast} from "react-toastify";
-
+import toast from "react-hot-toast";
 let defaultMarker: any = null;
 
 interface Props {

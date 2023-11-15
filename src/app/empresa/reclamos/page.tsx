@@ -53,9 +53,8 @@ const Reclamo = () => {
   
   useEffect(() => {
     if (reclamos) {
-      console.log(reclamos);
       const reclamosToUse = selectedFilterActivo
-        ? reclamos?.filter((itm) => itm?.estado === selectedFilterActivo)
+        ? reclamos?.filter((itm: any) => itm?.estado === selectedFilterActivo)
         : reclamos;
       const divididosPorFecha = dividirReclamosPorFecha(reclamosToUse) ?? [];
       setReclamosToMap(divididosPorFecha ?? []);

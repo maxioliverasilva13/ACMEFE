@@ -16,10 +16,11 @@ import {
 } from "@/utils/routes";
 import Page404 from "@/app/not-found";
 import { handleClearToken } from "@/utils/token";
+import useEmpresa from "@/hooks/useEmpresa";
 
 interface Props {
   children: any;
-  params: any;
+  params?: any;
 }
 
 const SessionWrapper = ({ children, params }: Props) => {
@@ -32,6 +33,20 @@ const SessionWrapper = ({ children, params }: Props) => {
   const [invalidPath, setInvalidPath] = useState(false);
   const router = useRouter();
   const slugs = useParams();
+
+  const { currentEmpresa } = useEmpresa();
+  const isInAdminRoute = adminRoutes.includes(pathname);
+  const isInEmpresaRoute = empresaRoutes.includes(pathname);
+  const userRoute = currentEmpresa && !isInAdminRoute && !isInEmpresaRoute;
+
+  let empresaStyles = {};
+  if (userRoute) {
+    empresaStyles = {
+      backgroundColor: currentEmpresa.lookAndFeel.colorFondo,
+    };
+  }
+
+
 
   const [handleGetUserInfo, { isLoading }] = useLazyCurrentUserQuery();
 
@@ -124,7 +139,7 @@ const SessionWrapper = ({ children, params }: Props) => {
   }
 
   return (
-    <div className="w-full h-auto">
+    <div style={empresaStyles} className="bg-white min-h-screen w-full h-auto">
       <ToastContainer
         position="top-right"
         autoClose={5000}

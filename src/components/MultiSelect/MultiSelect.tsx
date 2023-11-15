@@ -54,6 +54,7 @@ const MultiSelect = ({ items, onChange, placeholder, defaultValue }: Props) => {
     <div className="w-full h-auto relative flex flex-col items-start justify-start gap-4">
       <div className="w-full h-auto relative">
         <ButtonDropdown
+          type="button"
           isOpen={expanded}
           onClick={() => setExpanded(!expanded)}
         >
@@ -62,6 +63,7 @@ const MultiSelect = ({ items, onChange, placeholder, defaultValue }: Props) => {
         {expanded && (
           <div className="w-full appears z-[1111111] max-h-[400px] overflow-auto bg-white flex flex-col items-center border border-gray-300 jsutify-start h-auto shadow-md p-4 rounded-lg top-full absolute right-0">
             <button
+              type="button"
               onClick={() => setSelectedValue([])}
               className="text-gray-800  px-4 cursor-pointer font-semibold text-left w-full h-auto py-2 rounded-lg bg-transparent hover:bg-gray-200"
             >
@@ -70,6 +72,7 @@ const MultiSelect = ({ items, onChange, placeholder, defaultValue }: Props) => {
             {items?.map((item) => {
               return (
                 <button
+                  type="button"
                   key={item?.value}
                   onClick={() => handleAddValue(item)}
                   className="text-gray-800 px-4  text-left cursor-pointer font-medium w-full h-auto py-2 rounded-lg bg-transparent hover:bg-gray-200"

@@ -32,6 +32,14 @@ export const ProductoService = createApi({
         return response as ProductoList[];
       },
     }),
+    listarProductosByEmpresa: builder.query({
+      providesTags: ["Productos"],
+      query: (empresaId: number) => apiRoutes.listarProductosByEmpresa(empresaId),
+      transformResponse(value) {
+        const response = value;
+        return response as ProductoList[];
+      },
+    }),
     obtenerProductoById: builder.query({
       providesTags: ["ProductoInfo"],
       query: (prodId: number) => apiRoutes.productoById(prodId),
@@ -41,7 +49,7 @@ export const ProductoService = createApi({
       },
     }),
     disableProductoById: builder.mutation({
-      invalidatesTags: ["ProductoInfo"],
+      invalidatesTags: ["ProductoInfo", "Productos"],
       query: (prodId: number) => ({
         url: apiRoutes.deleteProductoById(prodId),
         method: "DELETE",
@@ -75,4 +83,5 @@ export const {
   useObtenerProductoByIdQuery,
   useDisableProductoByIdMutation,
   useEditProductoMutation,
+  useListarProductosByEmpresaQuery,
 } = ProductoService;

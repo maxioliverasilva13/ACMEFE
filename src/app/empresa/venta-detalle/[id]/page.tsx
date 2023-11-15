@@ -142,7 +142,7 @@ const renderOrderInfo = (orderInfo:any)=>{
                 <h2 className="text-xl sm:text-xl font-semibold">Productos</h2> 
 
                 {
-                    lineas.map((linea:ProductoList,index:number)=>{
+                    lineas.map((linea:any,index:number)=>{
                         return (
                              renderProductItem(linea,index)
                         )

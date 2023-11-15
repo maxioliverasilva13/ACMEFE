@@ -22,8 +22,6 @@ const Productos = () => {
 
   const productos = data;
 
-  console.log("productos", productos)
-
   return (
     <div className="w-full h-auto flex flex-grow p-5 flex-col items-start justify-start gap-5">
       <div className="w-full h-auto flex flex-row items-center justify-between">

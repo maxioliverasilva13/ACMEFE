@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import NcImage from "@/shared/NcImage/NcImage";
-import HIW1img from "@/images/aboutUs.png";
-import HIW2img from "@/images/aboutUs.png";
-import HIW3img from "@/images/aboutUs.png";
-import HIW4img from "@/images/aboutUs.png";
+import HIW1img from "@/images/HIW1img.png";
+import HIW2img from "@/images/HIW2img.png";
+import HIW3img from "@/images/HIW3img.png";
+import HIW4img from "@/images/HIW4img.png";
 import VectorImg from "@/images/VectorHIW.svg";
 import Badge from "@/shared/Badge/Badge";
 import Image from "next/image";
@@ -18,29 +18,29 @@ const DEMO_DATA = [
     id: 1,
     img: HIW1img,
     imgDark: HIW1img,
-    title: "Filter & Discover",
-    desc: "Smart filtering and suggestions make it easy to find",
+    title: "Busca y filtra",
+    desc: "Filtra los productos entre todas las sugerencias que realizamos",
   },
   {
     id: 2,
     img: HIW2img,
     imgDark: HIW2img,
-    title: "Add to bag",
-    desc: "Easily select the correct items and add them to the cart",
+    title: "Agrega al carrito",
+    desc: "Selecciona el producto que deseas comprar y agregalo al carrito",
   },
   {
     id: 3,
     img: HIW3img,
     imgDark: HIW3img,
-    title: "Fast shipping",
-    desc: "The carrier will confirm and ship quickly to you",
+    title: "Envio Rapido",
+    desc: "Trabajamos para entregar nuestros productos en el tiempo estimado, puedes ver el tiempo estimado al finalizar tu compra",
   },
   {
     id: 4,
     img: HIW4img,
     imgDark: HIW4img,
-    title: "Enjoy the product",
-    desc: "Have fun and enjoy your 5-star quality products",
+    title: "Disfritua del producto",
+    desc: "Disfruta del producto y calificalo en un rank de 5 estrellas",
   },
 ];
 
@@ -68,9 +68,9 @@ const SectionHowItWork: FC<SectionHowItWorkProps> = ({
               sizes="150px"
               alt="HIW"
             />
-            <div className="text-center mt-auto space-y-5">
+            <div className="text-center mt-0 space-y-5">
               <Badge
-                name={`Step ${index + 1}`}
+                name={`Paso ${index + 1}`}
                 color={
                   !index
                     ? "red"

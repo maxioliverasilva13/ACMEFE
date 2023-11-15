@@ -1,10 +1,13 @@
 "use client";
 
+import useGlobal from "@/hooks/useGlobal";
 import { Route } from "@/routers/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { FC } from "react";
+import SiteHeader from "../SiteHeader";
+import MainNav2 from "@/components/Header/MainNav2";
 
 export interface CommonLayoutProps {
   children?: React.ReactNode;
@@ -15,41 +18,38 @@ const pages: {
   link: Route;
 }[] = [
   {
-    name: "Account info",
+    name: "Info de la cuenta",
     link: "/account",
   },
   {
-    name: "Save lists",
-    link: "/account-savelists",
+    name: "Direcciones",
+    link: "/account-direcciones",
   },
   {
-    name: " My order",
+    name: "Mis Órdenes",
     link: "/account-order",
   },
   {
     name: "Change password",
     link: "/account-password",
   },
-  {
-    name: "Change Billing",
-    link: "/account-billing",
-  },
 ];
 
 const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
   const pathname = usePathname();
-
+  const { userInfo } = useGlobal();
   return (
     <div className="nc-AccountCommonLayout container">
+      <MainNav2 />
       <div className="mt-14 sm:mt-20">
         <div className="max-w-4xl mx-auto">
           <div className="max-w-2xl">
-            <h2 className="text-3xl xl:text-4xl font-semibold">Account</h2>
+            <h2 className="text-3xl xl:text-4xl font-semibold">Cuenta</h2>
             <span className="block mt-4 text-neutral-500 dark:text-neutral-400 text-base sm:text-lg">
               <span className="text-slate-900 dark:text-slate-200 font-semibold">
-                Enrico Cole,
+                {userInfo?.nombre},
               </span>{" "}
-              ciesco@gmail.com · San Jose - Uruguay
+              {userInfo?.email}
             </span>
           </div>
           <hr className="mt-10 border-slate-200 dark:border-slate-700"></hr>
@@ -74,7 +74,7 @@ const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
           <hr className="border-slate-200 dark:border-slate-700"></hr>
         </div>
       </div>
-      <div className="max-w-4xl mx-auto pt-14 sm:pt-26 pb-24 lg:pb-32">
+      <div className="max-w-4xl mx-auto pt-6 sm:pt-26 pb-24 lg:pb-32">
         {children}
       </div>
     </div>

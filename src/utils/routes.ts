@@ -19,7 +19,8 @@ export const empresaRoutes = [
   appRoutes.empresaPorductDetails(),
   appRoutes.empresaEditarProducto(),
   appRoutes.empresaVentas(),
-  appRoutes.empresaVentaDetalle()
+  appRoutes.empresaVentaDetalle(),
+  appRoutes.empresaLookAndFeel(),
 ];
 
 export const adminRoutes = [
@@ -37,4 +38,11 @@ export const adminRoutes = [
 
 export const userRoutes = [
  appRoutes.userInicio(),
+ appRoutes.tiendaHome(""),
+ "home-2",
+ appRoutes.productoDetails(),
+ appRoutes.carrito(),
+ appRoutes.checkout(),
+ appRoutes.userAccount(),
+ appRoutes.ordenesDetail()
 ];

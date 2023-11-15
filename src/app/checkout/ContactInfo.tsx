@@ -112,7 +112,7 @@ const ContactInfo: FC<Props> = ({ isActive, onCloseActive, onOpenActive }) => {
               className="sm:!px-7 shadow-none"
               onClick={() => onCloseActive()}
             >
-              Save and next to Shipping
+              Guardar y contiunar al envio
             </ButtonPrimary>
             <ButtonSecondary
               className="mt-3 sm:mt-0 sm:ml-3"

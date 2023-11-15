@@ -15,12 +15,21 @@ export const CompraService = createApi({
             const response = value;
             return response;
         },
+    }),
+    getMisCompras:  builder.query({
+        query: () => {
+            return apiRoutes.getMisCompras()
+        },
+        transformResponse(value) {
+            const response = value;
+            return response;
+        },
     })
   })
 });
 
 export const {
   useGetByIdQuery,
-  
- 
+  useGetMisComprasQuery
+
 } =  CompraService;

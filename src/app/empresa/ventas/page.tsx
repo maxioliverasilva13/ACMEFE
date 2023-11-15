@@ -10,7 +10,7 @@ import { useRouter } from 'next/router'
 
 
 export const EmpresaVentas = () => {
-  //const { push } = useRouter();
+  const { push } = useRouter();
 
   const  viewVentaDetail = (id:number)=>{
     push("/empresa/venta-detalle/"+id)

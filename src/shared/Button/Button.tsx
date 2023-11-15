@@ -19,6 +19,7 @@ export interface ButtonProps {
   onClick?: () => void;
   children?: React.ReactNode;
   icon?: any;
+  style?: any;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -33,6 +34,7 @@ const Button: FC<ButtonProps> = ({
   type,
   loading,
   icon,
+  style,
   onClick = () => {},
 }) => {
   const CLASSES =
@@ -66,7 +68,7 @@ const Button: FC<ButtonProps> = ({
 
   if (!!href) {
     return (
-      <Link href={href} className={`${CLASSES} `} onClick={onClick}>
+      <Link href={href} className={`${CLASSES} `} onClick={onClick} style={style}>
         {children || `This is Link`}
       </Link>
     );
@@ -78,6 +80,7 @@ const Button: FC<ButtonProps> = ({
       className={`${CLASSES}`}
       onClick={onClick}
       type={type}
+      style={style}
     >
       {icon && icon}
       {loading && _renderLoading()}
