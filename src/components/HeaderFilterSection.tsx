@@ -16,6 +16,7 @@ export interface HeaderFilterSectionProps {
   filtersProducts: ProductoList[];
   setFiltersProductos: any;
   setHasFilters?: any;
+  title?: string;
 }
 
 const HeaderFilterSection: FC<HeaderFilterSectionProps> = ({
@@ -23,6 +24,7 @@ const HeaderFilterSection: FC<HeaderFilterSectionProps> = ({
   filtersProducts,
   setHasFilters,
   setFiltersProductos,
+  title,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [tabActive, setTabActive] = useState("All items");
@@ -87,8 +89,13 @@ const HeaderFilterSection: FC<HeaderFilterSectionProps> = ({
         leaveTo="opacity-0"
       >
         <div className="w-full border-b border-neutral-200 dark:border-neutral-700 my-8"></div>
-        <TabFilters setHasFilters={setHasFilters} filtersProducts={filtersProducts} setFiltersProductos={setFiltersProductos} />
+        <TabFilters
+          setHasFilters={setHasFilters}
+          filtersProducts={filtersProducts}
+          setFiltersProductos={setFiltersProductos}
+        />
       </Transition>
+     
     </div>
   );
 };

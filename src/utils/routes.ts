@@ -44,5 +44,6 @@ export const userRoutes = [
  appRoutes.carrito(),
  appRoutes.checkout(),
  appRoutes.userAccount(),
- appRoutes.ordenesDetail()
+ appRoutes.ordenesDetail(),
+ "search-results"
 ];

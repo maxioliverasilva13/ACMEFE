@@ -34,7 +34,17 @@ export const ProductoService = createApi({
     }),
     listarProductosByEmpresa: builder.query({
       providesTags: ["Productos"],
-      query: (empresaId: number) => apiRoutes.listarProductosByEmpresa(empresaId),
+      query: (empresaId: number) =>
+        apiRoutes.listarProductosByEmpresa(empresaId),
+      transformResponse(value) {
+        const response = value;
+        return response as ProductoList[];
+      },
+    }),
+    buscarProductos: builder.query({
+      providesTags: ["Productos"],
+      query: ({ empresaId, query }: { empresaId: number; query: string }) =>
+        apiRoutes.buscarProductosByEmpresa(empresaId, query),
       transformResponse(value) {
         const response = value;
         return response as ProductoList[];
@@ -112,4 +122,5 @@ export const {
   useListarProductosByEmpresaQuery,
   useObtenerProductosRelacionadosMutation,
   useCalificarProductoMutation,
+  useBuscarProductosQuery
 } = ProductoService;

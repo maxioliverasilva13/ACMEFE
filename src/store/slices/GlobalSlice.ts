@@ -11,11 +11,13 @@ const initialState: {
   token: string | undefined,
   loading: boolean,
   selectedProduct?: ProductoList,
+  query?: string,
 } = {
   userInfo: null,
   token: handleGetToken() ?? "",
   loading: false,
   selectedProduct: undefined,
+  query: "",
 };
 
 export const GlobalSlice = createSlice({
@@ -33,6 +35,9 @@ export const GlobalSlice = createSlice({
     },
     setProductoToEdit(state, {payload}) {
       state.selectedProduct = payload;
+    },
+    setQuery(state, {payload}) {
+      state.query = payload;
     },
   },
 });
@@ -57,11 +62,16 @@ export const useGlobalActions = () => {
     dispatch(GlobalSlice.actions.setProductoToEdit(prod));
   };
 
+  const handleSetQuery = (query: string) => {
+    dispatch(GlobalSlice.actions.setQuery(query));
+  };
+
   return {
     handleSetUserInfo,
     handleSetToken,
     handleSetLoading,
-    handleSetProductoToEdit
+    handleSetProductoToEdit,
+    handleSetQuery,
   };
 };
 

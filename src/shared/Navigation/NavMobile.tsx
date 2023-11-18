@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import ButtonClose from "@/shared/ButtonClose/ButtonClose";
 import Logo from "@/shared/Logo/Logo";
 import { Disclosure } from "@/app/headlessui";
@@ -11,6 +11,10 @@ import SocialsList from "@/shared/SocialsList/SocialsList";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import SwitchDarkMode from "@/shared/SwitchDarkMode/SwitchDarkMode";
 import Link from "next/link";
+import useEmpresa from "@/hooks/useEmpresa";
+import { useRouter } from "next/navigation";
+import { appRoutes } from "@/utils/appRoutes";
+import useGlobal from "@/hooks/useGlobal";
 
 export interface NavMobileProps {
   data?: NavItemType[];
@@ -21,6 +25,11 @@ const NavMobile: React.FC<NavMobileProps> = ({
   data = NAVIGATION_DEMO_2,
   onClickClose,
 }) => {
+  const { currentEmpresa } = useEmpresa();
+  const router = useRouter();
+  const [qry, setQry] = useState("");
+  const { query, handleSetQuery } = useGlobal();
+
   const _renderMenuChild = (
     item: NavItemType,
     itemClass = " pl-3 text-neutral-900 dark:text-neutral-200 font-medium "
@@ -145,15 +154,24 @@ const NavMobile: React.FC<NavMobileProps> = ({
   const renderSearchForm = () => {
     return (
       <form
-        action=""
-        method="POST"
         className="flex-1 text-slate-900 dark:text-slate-200"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSetQuery(qry)
+          router.push(appRoutes.searchResults(currentEmpresa?.id) as any);
+          
+          if (onClickClose) {
+            onClickClose();
+          }
+        }}
       >
         <div className="bg-slate-50 dark:bg-slate-800 flex items-center space-x-1 py-2 px-4 rounded-xl h-full">
           {renderMagnifyingGlassIcon()}
           <input
             type="search"
-            placeholder="Type and press enter"
+            placeholder={`Busca en ${currentEmpresa?.nombre} y presiona enter`}
+            value={qry}
+            onChange={(e) => setQry(e?.target?.value)}
             className="border-none bg-transparent focus:outline-none focus:ring-0 w-full text-sm "
           />
         </div>
@@ -168,8 +186,8 @@ const NavMobile: React.FC<NavMobileProps> = ({
         <Logo />
         <div className="flex flex-col mt-5 text-slate-600 dark:text-slate-300 text-sm">
           <span>
-            Discover the most outstanding articles on all topics of life. Write
-            your stories and share them
+            Descubre los artículos más destacados sobre todos los temas de la
+            vida.
           </span>
 
           <div className="flex justify-between items-center mt-4">
@@ -184,14 +202,6 @@ const NavMobile: React.FC<NavMobileProps> = ({
         </span>
 
         <div className="mt-5">{renderSearchForm()}</div>
-      </div>
-      <ul className="flex flex-col py-6 px-2 space-y-1">
-        {data.map(_renderItem)}
-      </ul>
-      <div className="flex items-center justify-between py-6 px-5 space-x-2">
-        <ButtonPrimary href={"/"} className="!px-10">
-          Buy this template
-        </ButtonPrimary>
       </div>
     </div>
   );

@@ -3,7 +3,6 @@ export const appRoutes = {
     forgotPassword: () => "/forgot-pass",
     register: () => "/signup",
     resetPassword: () => "/reset-password",
-
     // Admin routes
     adminInicio: () => "/admin",
     adminEmpresas: () => "/admin/empresas",
@@ -45,6 +44,7 @@ export const appRoutes = {
     carritoPath: (empresaId: any) => `/${empresaId}/carrito`,
     checkout: () => `/checkout`,
     checkoutPath: (empresaId: any) => `/${empresaId}/checkout`,
+    searchResults: (empresaId: any) => `/${empresaId}/search-results`,
     productoDetailsFullPath: (productId: any, empresaId: any) => `productos/${productId}/detalles`,
     ordenesDetail : () =>  `ordenes`,
     ordenesDetailWithId : (compraId:any) =>  `ordenes/${compraId}` 

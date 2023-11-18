@@ -734,7 +734,7 @@ const TabFilters = ({
   return (
     <div className="flex lg:space-x-4">
       {/* FOR DESKTOP */}
-      <div className="hidden lg:flex flex-1 space-x-4">
+      <div className="hidden lg:flex flex-1 gap-4 space-x-4">
         {renderTabsPriceRage()}
         {renderTabsCategories()}
         <div className="!ml-auto">{renderTabsSortOrder()}</div>

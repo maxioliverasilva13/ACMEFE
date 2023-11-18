@@ -18,6 +18,8 @@ export const apiRoutes = {
   listarMisProductosEmpresa: () => "/api/Producto/mis-productos",
   listarProductosByEmpresa: (empresaId: number) =>
     `/api/Producto/productos-empresa?empresaId=${empresaId}`,
+  buscarProductosByEmpresa: (empresaId: number, query: string) =>
+    `/api/Producto/buscar-productos?empresaId=${empresaId}&query=${query}`,
   productoById: (prodId: any) =>
     `/api/Producto/${prodId ? prodId : "[prodId]"}`,
   productosRelacionados: () =>
