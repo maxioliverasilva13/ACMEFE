@@ -8,7 +8,7 @@ import { ProductoList } from "@/types/productoList";
 export const ProductoService = createApi({
   reducerPath: "ProductoService",
   baseQuery: baseQuery,
-  tagTypes: ["Productos", "ProductoInfo", "ProductosRel"],
+  tagTypes: ["Productos", "ProductoInfo", "ProductosRel", "ProductosQuery"],
   endpoints: (builder) => ({
     crearProducto: builder.mutation({
       query: (data) => {
@@ -18,7 +18,7 @@ export const ProductoService = createApi({
           url: apiRoutes.crearProducto(),
         };
       },
-      invalidatesTags: ["Productos"],
+      invalidatesTags: ["Productos", "ProductosQuery"],
       transformResponse(value) {
         const response = value;
         return response as CategoriaList[];
@@ -42,7 +42,7 @@ export const ProductoService = createApi({
       },
     }),
     buscarProductos: builder.query({
-      providesTags: ["Productos"],
+      providesTags: ["ProductosQuery"],
       query: ({ empresaId, query }: { empresaId: number; query: string }) =>
         apiRoutes.buscarProductosByEmpresa(empresaId, query),
       transformResponse(value) {
@@ -73,7 +73,7 @@ export const ProductoService = createApi({
       },
     }),
     disableProductoById: builder.mutation({
-      invalidatesTags: ["ProductoInfo", "Productos"],
+      invalidatesTags: ["ProductoInfo", "Productos", "ProductosQuery"],
       query: (prodId: number) => ({
         url: apiRoutes.deleteProductoById(prodId),
         method: "DELETE",
@@ -92,14 +92,14 @@ export const ProductoService = createApi({
           url: apiRoutes.updateProducto(),
         };
       },
-      invalidatesTags: ["Productos", "ProductoInfo"],
+      invalidatesTags: ["Productos", "ProductoInfo", "ProductosQuery"],
       transformResponse(value) {
         const response = value;
         return response as any;
       },
     }),
     calificarProducto: builder.mutation({
-      invalidatesTags: ["ProductoInfo"],
+      invalidatesTags: ["ProductoInfo", "ProductosQuery"],
       query: (data) => ({
         url: apiRoutes.calificarProducto(),
         method: "POST",

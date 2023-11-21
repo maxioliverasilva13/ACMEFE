@@ -6,7 +6,7 @@ export type CrearDireccionForm = {
   calleEntre1: string;
   calleEntre2: string;
   ciudadId: number;
-  activo: boolean;
+  activo?: boolean;
 };
 
 export enum CrearDireccionFormFields {
@@ -25,5 +25,5 @@ export const CrearDireccionValidationSchema = () =>
     calleEntre1: Yup.string().trim().required("La calle entre 1 es requerida"),
     calleEntre2: Yup.string().trim().required("La calle entre 2 es requerida"),
     ciudadId: Yup.number().min(1).required("La ciudad es requerida para su dirección"),
-    activo: Yup.boolean().required("El estado de la dirección es requerido"),
+    activo: Yup.boolean(),
   });
