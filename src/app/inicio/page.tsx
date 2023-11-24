@@ -70,7 +70,7 @@ const Inicio = () => {
 
       <div className="w-full relative h-auto py-[250px] md:gap-10 gap-5 bg-gray-50 flex flex-row items-center justify-center md:px-10">
         <div className="w-full md:max-w-[400px] flex-grow h-auto flex flex-col items-start justify-center gap-4">
-          <h1 className="max-w-full whitespace-break-spaces text-left font-semibold text-gray-700 text-[30px]">
+          <h1 className="max-w-full whitespace-break-spaces text-left font-semibold text-gray-700 text-[40px]">
             <motion.div animate={controls} initial={{ opacity: 0, x: 0 }}>
               {text}
             </motion.div>
@@ -94,7 +94,7 @@ const Inicio = () => {
           </ButtonPrimary>
         </div>
         <div className="flex w-auto h-auto">
-          <div className="w-[250px] z-[2] relative h-[250px] rounded-full shadow-md">
+          <div className="w-[400px] z-[2] relative h-[400px] rounded-full shadow-md">
             <Image
               className="rounded-full"
               alt="Welcome Two Image"
@@ -103,7 +103,7 @@ const Inicio = () => {
               objectFit="cover"
             />
             <div className="absolute top-[55%] left-[55%]">
-              <div className="w-[150px] z-[3] relative h-[150px] rounded-full overflow-hidden shadow-md">
+              <div className="w-[200px] z-[3] relative h-[200px] rounded-full overflow-hidden shadow-md">
                 <Image
                   alt="Welcome Image"
                   src={WelcomeSvg}
