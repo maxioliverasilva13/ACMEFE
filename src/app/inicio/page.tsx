@@ -183,48 +183,51 @@ const Inicio = () => {
 
         {/* Empresa list */}
         <div className="w-full h-auto flex flex-row items-start justify-start gap-4">
-        {data &&
-          data?.map((empresa) => {
-            return (
-              <Link
-                href={appRoutes.tiendaHome(empresa?.id) as Route}
-                key={empresa?.id}
-              >
-                <div className="flex w-full flex-row items-center justify-start gap-5 flex-wrap">
-                  {/* Empresa items */}
-                  <div className="w-[230px] transform hover:scale-105 transition-all group relative h-auto flex flex-col items-center justify-start p-5 rounded-2xl shadow-sm shadow-gray-400 bg-white">
-                    <div className="w-full transition-all group-hover:blur-sm h-auto flex flex-col items-center justify-start">
-                      <div className="w-full h-[120px] rounded-lg overflow-hidden relative">
-                        <Image
-                          className=""
-                          alt="Welcome Two Image"
-                          src={empresa?.imagen ?? NoImage}
-                          layout="fill"
-                          objectFit="cover"
-                        />
+          {data &&
+            data?.map((empresa) => {
+              return (
+                <Link
+                  href={appRoutes.tiendaHome(empresa?.id) as Route}
+                  key={empresa?.id}
+                >
+                  <div className="flex w-full flex-row items-center justify-start gap-5 flex-wrap">
+                    {/* Empresa items */}
+                    <div className="w-[230px] transform hover:scale-105 transition-all group relative h-auto flex flex-col items-center justify-start p-5 rounded-2xl shadow-sm shadow-gray-400 bg-white">
+                      <div className="w-full transition-all group-hover:blur-sm h-auto flex flex-col items-center justify-start">
+                        <div className="w-full h-[120px] rounded-lg overflow-hidden relative">
+                          <Image
+                            className=""
+                            alt="Welcome Two Image"
+                            src={empresa?.imagen ?? NoImage}
+                            layout="fill"
+                            objectFit="cover"
+                          />
+                        </div>
+                        <div className="w-full mt-4 h-auto flex flex-row items-center justify-start">
+                          <FiveStartIconForRate
+                            withHover={false}
+                            defaultPoint={3}
+                          />
+                          <span className="text-sm text-gray-600">{"(5)"}</span>
+                        </div>
+                        <span className="text-lg w-full text-left font-medium text-gray-700">
+                          {empresa?.nombre}
+                        </span>
                       </div>
-                      <div className="w-full mt-4 h-auto flex flex-row items-center justify-start">
-                        <FiveStartIconForRate
-                          withHover={false}
-                          defaultPoint={3}
-                        />
-                        <span className="text-sm text-gray-600">{"(5)"}</span>
-                      </div>
-                      <span className="text-lg w-full text-left font-medium text-gray-700">
-                        {empresa?.nombre}
-                      </span>
-                    </div>
 
-                    <div className="w-full absolute h-full items-center justify-center hidden group-hover:flex">
-                      <ButtonPrimary className="appears">
-                        Ver tienda
-                      </ButtonPrimary>
+                      <div className="w-full absolute h-full items-center justify-center hidden group-hover:flex">
+                        <ButtonPrimary className="appears">
+                          Ver tienda
+                        </ButtonPrimary>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
+          {data?.length === 0 && (
+            <span className="text-white font-medium">Ooops..!, no encontramos ninguna empresa</span>
+          )}
         </div>
       </div>
     </div>

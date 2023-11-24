@@ -160,7 +160,7 @@ const PaymentMethod: FC<Props> = ({
               active ? "block" : "hidden"
             }`}
           >
-            <div className="max-w-lg w-full">
+            <div className="max-w-full w-full">
               <Label className="text-sm">Numero de tarjeta</Label>
               <Input
                 // onChange={(e) => handleChangeField("Numero", e?.target?.value)}
@@ -171,7 +171,7 @@ const PaymentMethod: FC<Props> = ({
                 error={errors[PaymentFormFields.card]?.message}
               />
             </div>
-            <div className="max-w-lg w-full">
+            <div className="max-w-full w-full">
               <Label className="text-sm">Nombre del titular</Label>
               <Input
                 autoComplete="off"
