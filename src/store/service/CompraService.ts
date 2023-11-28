@@ -24,12 +24,24 @@ export const CompraService = createApi({
             const response = value;
             return response;
         },
-    })
+    }),
+
+    actualizarCompraEstado: builder.mutation({
+      query: (id) => ({
+        url: apiRoutes.actualizarEstadoCompra(id),
+        method: "POST",
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+    }),
   })
 });
 
 export const {
   useGetByIdQuery,
-  useGetMisComprasQuery
+  useGetMisComprasQuery,
+  useActualizarCompraEstadoMutation
 
 } =  CompraService;

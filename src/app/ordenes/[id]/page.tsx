@@ -5,9 +5,59 @@ import Prices from "@/components/Prices";
 import { useGetByIdQuery } from "@/store/service/CompraService";
 import { ProductoList } from "@/types/productoList";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useGlobal from "@/hooks/useGlobal";
- 
+import { useRouter } from "next/navigation"; 
+import ButtonPrimary from "@/shared/Button/ButtonPrimary";
+
+
+
+const formatDate = (dateStr:string)=>{
+  return dayjs(dateStr).format("DD/MM/YYYY hh:mm a")
+}
+
+
+const timeLine = (historialEstados:any) =>{
+  return (
+      <div className="p-4 bg-slate-50 flex-1">
+        <div className="container">
+          <div className="flex flex-col md:grid grid-cols-12 text-gray-50">
+
+            {
+              historialEstados.map((Estado:any) =>{
+                const { estado , fecha ,completado, estadoId} = Estado;
+               return  (
+                  <div className="flex md:contents" key={estadoId}>
+                    <div className="col-start-2 col-end-4 mr-10 md:mx-auto relative">
+                      <div className="h-full w-6 flex items-center justify-center">
+                        <div className={`h-full w-1 banner ${completado ? "bg-green-500" : "bg-gray-300"} pointer-events-none`}></div>
+                      </div>
+                      <div className={`w-6 h-6 absolute top-1/2 -mt-3 rounded-full ${completado ? "bg-green-500" : "bg-gray-300"} shadow text-center`}>
+                        <i className="fas fa-check-circle text-white"></i>
+                      </div>
+                    </div>
+                    <div className={`${completado ? "bg-green-500" : "bg-gray-300"} col-start-4 col-end-12 p-4 rounded-xl my-4 mr-auto shadow-md w-full`}>
+                      <h3 className="font-semibold text-lg mb-1">{estado}</h3>
+                      <p className="leading-tight text-justify w-full">
+                          {fecha ? formatDate(fecha) : ''}
+                      </p>
+                    </div>
+                </div>
+                
+                )
+                
+              })
+            }
+
+            
+
+            
+
+          </div>
+        </div>
+      </div>
+  )
+}
 
 const renderProductItem = (linea: any, index: number) => {
     const { cantidad , precioUnitario ,subTotal} = linea;
@@ -75,11 +125,6 @@ const renderBtnImprimirFactura = () => {
   };
 
 const renderOrderInfo = (orderInfo:any)=>{
-
-    const formatDate = (dateStr:string)=>{
-        return dayjs(dateStr).format("DD/MM/YYYY hh:mm a")
-    }
-
     const  { id, fecha, comprador,costoTotal, cantidadDeProductos, metodoPago, metodoEnvio,lineas,estado} = orderInfo;
     return(
         <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0 p-5">
@@ -113,17 +158,21 @@ const renderOrderInfo = (orderInfo:any)=>{
 
               </div>
 
-              <div className="flex flex-col bg-slate-50 p-5 shadow-lg">
-                <h2 className="text-xl sm:text-xl font-semibold">Productos</h2> 
+              <div className="w-full flex justify-between bg-white">
+                  <div className="flex flex-col flex-1 bg-slate-50 p-5 px-10 shadow-lg bg-white">
+                    <h2 className="text-xl sm:text-xl font-semibold">Productos</h2> 
 
-                {
-                    lineas.map((linea:any,index:number)=>{
-                        return (
-                             renderProductItem(linea,index)
-                        )
-                    })
-                }
+                    {
+                        lineas.map((linea:any,index:number)=>{
+                            return (
+                                renderProductItem(linea,index)
+                            )
+                        })
+                    }
+                  </div>
+                  {timeLine(orderInfo.historialEstados)}
               </div>
+             
         
         </div>
         
@@ -132,8 +181,9 @@ const renderOrderInfo = (orderInfo:any)=>{
 }
 
 const ClienteOrdenDetalle = () => {
-        const { data, isLoading} = useGetByIdQuery(1);
+        const { data,  error, isLoading} = useGetByIdQuery(1);
         const orderInfo:any = data;
+        const { push } = useRouter()
         const { handleSetLoading} = useGlobal();
 
         useEffect(()=>{
@@ -143,15 +193,27 @@ const ClienteOrdenDetalle = () => {
         useEffect(()=>{
             if(!isLoading){
                 handleSetLoading(false);
-            }
+            } 
         },[isLoading])
-        return  (
-            <div className="w-full p-5">
-                <h2 className="text-2xl sm:text-3xl font-semibold">Informacion de la venta</h2> 
-                 { orderInfo ? renderOrderInfo(orderInfo) : null}
-            </div>
-            
 
+
+        useEffect(()=>{
+            if(error && error.originalStatus == 404){
+                push("/not-found");
+            }
+        }, [error]);
+        return  (
+
+          <div className="w-full p-5">
+            {orderInfo ? (
+              <>
+                <h2 className="text-2xl sm:text-3xl font-semibold">Informacion de la venta</h2>
+                {renderOrderInfo(orderInfo)}
+              </>
+            ) : null}
+          </div>
+            
+      
         )
 }
 
