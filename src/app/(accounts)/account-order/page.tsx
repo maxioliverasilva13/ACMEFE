@@ -63,12 +63,12 @@ export const AccountOrder = () => {
             </p>
 
             <div className="flex">
-              <button
+              {/* <button
                 type="button"
                 className="font-medium text-indigo-600 dark:text-primary-500 "
               >
                 Ver Calificaciones
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

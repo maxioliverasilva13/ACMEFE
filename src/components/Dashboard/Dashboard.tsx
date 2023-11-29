@@ -16,7 +16,7 @@ import AvatarDropdown from "../Header/AvatarDropdown";
 import useGlobal from "@/hooks/useGlobal";
 
 const Dashboard = () => {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
   const [expandedUserAccount, setExpandedUserAccount] = useState(false);
   const pathname = usePathname();
   const isAdmin = pathname?.includes("/admin");

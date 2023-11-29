@@ -38,7 +38,6 @@ import { Route } from "next";
 import ProductCard from "@/components/ProductCard";
 import { useAgregarProductoACarritoMutation } from "@/store/service/CarritoService";
 import { toast as toastify } from "react-toastify";
-import ModalCalificar from "./ModalCalificar";
 
 const LIST_IMAGES_DEMO = [detail1JPG, detail2JPG, detail3JPG];
 
@@ -63,8 +62,6 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
   const [qualitySelected, setQualitySelected] = useState(1);
   /* const [isOpenModalViewAllReviews, setIsOpenModalViewAllReviews] =
     useState(false); */
-  const [isOpenCalificarModal, setIsOpenCalificarModal] =
-    useState(false);
 
   //
   const notifyAddTocart = async () => {
@@ -294,12 +291,6 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
               );
             })}
           </div>
-          <ButtonSecondary
-            onClick={() => setIsOpenCalificarModal(true)}
-            className="mt-10 border border-slate-300 dark:border-slate-700 "
-          >
-            Calificar Producto
-          </ButtonSecondary>
 
           {/* <ButtonSecondary
             onClick={() => setIsOpenModalViewAllReviews(true)}
@@ -389,7 +380,7 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
             })}
             {product?.productosRelacionados?.length === 0 && (
               <span className="font-medium text-base text-gray-900">
-                Este producto aun no tiene ninguna calificacion
+                Este producto aún no tiene productos relacionados
               </span>
             )}
           </div>
@@ -433,13 +424,6 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
         show={isOpenModalViewAllReviews}
         onCloseModalViewAllReviews={() => setIsOpenModalViewAllReviews(false)}
       /> */}
-
-      {/* MODAL CALIFICAR */}
-      <ModalCalificar
-        show={isOpenCalificarModal}
-        onCloseModalCalificar={() => setIsOpenCalificarModal(false)}
-        productId={product.id}
-      />
     </div>
   );
 };
