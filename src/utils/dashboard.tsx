@@ -72,6 +72,7 @@ export const EmpresaDashboardItems = [
     {
         title: "Ventas",
         href: appRoutes.empresaVentas(),
+        validPath: [appRoutes.empresaVentas()],
         icon: <PresentationChartBarIcon color="white" strokeWidth={2} width={25} />,
     },
 

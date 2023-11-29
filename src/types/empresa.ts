@@ -8,6 +8,7 @@ export type Empresa = {
   correo: string;
   imagen: string;
   costoEnvio: number;
+  diasEmail?: number;
   wallet: string;
   lookAndFeel: LookAndFeel;
 };

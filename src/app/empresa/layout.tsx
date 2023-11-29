@@ -15,12 +15,16 @@ export default function EmpresaLayout({
   children: React.ReactNode;
   params: any;
 }) {
-    const { userInfo } = useGlobal()
+    const { userInfo, handleSetLoading } = useGlobal()
   const [isValidEmpresa, setIsValidEmpresa] = useState(true);
   const [loadingEmpresa, setLoadingEmpresa] = useState(true);
   const [getEmpresa] = useLazyGetEmpresaByIdQuery();
   const empresaId = userInfo?.empresaId;
   const { handleSetEmpresa } = useEmpresa();
+
+  useEffect(() => {
+    handleSetLoading(loadingEmpresa)
+  }, [loadingEmpresa])
 
   const handleLoadEmpresa = async () => {
     try {
@@ -46,10 +50,6 @@ export default function EmpresaLayout({
       setIsValidEmpresa(false);
     }
   }, [empresaId]);
-
-  if (loadingEmpresa) {
-    return <Spinner />;
-  }
 
   if (!isValidEmpresa) {
     return <Page404 />;

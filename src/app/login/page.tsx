@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Input from "@/shared/Input/Input";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Link from "next/link";
@@ -13,7 +13,9 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import useGlobal from "@/hooks/useGlobal";
 import { useLoginMutation } from "@/store/service/UserService";
-import toast from "react-hot-toast";import SocialMediasLogin from "@/components/SocialMediasLogin/SocialMediasLogin";
+import toast from "react-hot-toast";
+import SocialMediasLogin from "@/components/SocialMediasLogin/SocialMediasLogin";
+import Spinner from "@/components/Spinner/Spinner";
 
 const PageLogin = () => {
   const {
@@ -24,7 +26,8 @@ const PageLogin = () => {
     resolver: yupResolver(LoginFormValidationSchema()),
   });
   const [handleLogin] = useLoginMutation();
-  const { handleSetLoading, handleSetToken } = useGlobal();
+  const { handleSetLoading, handleSetToken, loading } = useGlobal();
+  const [myLoading, setLoading] = useState(false);
 
   const handleNext = async (data: LoginForm) => {
     try {
@@ -36,13 +39,16 @@ const PageLogin = () => {
       const resp = (await handleLogin(dataToSend)) as any;
       if (!resp?.data?.token) {
         toast.error("Credenciales invalidas o cuenta inactiva");
+        handleSetLoading(false);
+        setLoading(false);
       } else {
         const token = resp?.data?.token;
         handleSetToken(token);
+        setLoading(true);
       }
-
       handleSetLoading(false);
     } catch (error) {
+      setLoading(false);
       toast.error("Credenciales invalidas o cuenta inactiva");
       handleSetLoading(false);
     }
@@ -50,6 +56,7 @@ const PageLogin = () => {
 
   return (
     <div className={`nc-PageLogin`} data-nc-id="PageLogin">
+      {myLoading && !loading && <Spinner />}
       <div className="container mb-24 lg:mb-32">
         <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
           Login

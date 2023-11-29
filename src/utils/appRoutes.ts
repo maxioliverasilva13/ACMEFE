@@ -47,6 +47,6 @@ export const appRoutes = {
     searchResults: (empresaId: any) => `/${empresaId}/search-results`,
     productoDetailsFullPath: (productId: any, empresaId: any) => `productos/${productId}/detalles`,
     ordenesDetail : () =>  `ordenes`,
-    ordenesDetailWithId : (compraId:any) =>  `ordenes/${compraId}` 
+    ordenesDetailWithId : (compraId:any) =>  `/ordenes/${compraId}` 
 
 }

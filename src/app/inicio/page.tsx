@@ -70,7 +70,7 @@ const Inicio = () => {
 
       <div className="w-full relative h-auto py-[250px] md:gap-10 gap-5 bg-gray-50 flex flex-row items-center justify-center md:px-10">
         <div className="w-full md:max-w-[400px] flex-grow h-auto flex flex-col items-start justify-center gap-4">
-          <h1 className="max-w-full whitespace-break-spaces text-left font-semibold text-gray-700 text-[30px]">
+          <h1 className="max-w-full whitespace-break-spaces text-left font-semibold text-gray-700 text-[40px]">
             <motion.div animate={controls} initial={{ opacity: 0, x: 0 }}>
               {text}
             </motion.div>
@@ -94,7 +94,7 @@ const Inicio = () => {
           </ButtonPrimary>
         </div>
         <div className="flex w-auto h-auto">
-          <div className="w-[250px] z-[2] relative h-[250px] rounded-full shadow-md">
+          <div className="w-[400px] z-[2] relative h-[400px] rounded-full shadow-md">
             <Image
               className="rounded-full"
               alt="Welcome Two Image"
@@ -103,7 +103,7 @@ const Inicio = () => {
               objectFit="cover"
             />
             <div className="absolute top-[55%] left-[55%]">
-              <div className="w-[150px] z-[3] relative h-[150px] rounded-full overflow-hidden shadow-md">
+              <div className="w-[200px] z-[3] relative h-[200px] rounded-full overflow-hidden shadow-md">
                 <Image
                   alt="Welcome Image"
                   src={WelcomeSvg}
@@ -183,48 +183,51 @@ const Inicio = () => {
 
         {/* Empresa list */}
         <div className="w-full h-auto flex flex-row items-start justify-start gap-4">
-        {data &&
-          data?.map((empresa) => {
-            return (
-              <Link
-                href={appRoutes.tiendaHome(empresa?.id) as Route}
-                key={empresa?.id}
-              >
-                <div className="flex w-full flex-row items-center justify-start gap-5 flex-wrap">
-                  {/* Empresa items */}
-                  <div className="w-[230px] transform hover:scale-105 transition-all group relative h-auto flex flex-col items-center justify-start p-5 rounded-2xl shadow-sm shadow-gray-400 bg-white">
-                    <div className="w-full transition-all group-hover:blur-sm h-auto flex flex-col items-center justify-start">
-                      <div className="w-full h-[120px] rounded-lg overflow-hidden relative">
-                        <Image
-                          className=""
-                          alt="Welcome Two Image"
-                          src={empresa?.imagen ?? NoImage}
-                          layout="fill"
-                          objectFit="cover"
-                        />
+          {data &&
+            data?.map((empresa) => {
+              return (
+                <Link
+                  href={appRoutes.tiendaHome(empresa?.id) as Route}
+                  key={empresa?.id}
+                >
+                  <div className="flex w-full flex-row items-center justify-start gap-5 flex-wrap">
+                    {/* Empresa items */}
+                    <div className="w-[230px] transform hover:scale-105 transition-all group relative h-auto flex flex-col items-center justify-start p-5 rounded-2xl shadow-sm shadow-gray-400 bg-white">
+                      <div className="w-full transition-all group-hover:blur-sm h-auto flex flex-col items-center justify-start">
+                        <div className="w-full h-[120px] rounded-lg overflow-hidden relative">
+                          <Image
+                            className=""
+                            alt="Welcome Two Image"
+                            src={empresa?.imagen ?? NoImage}
+                            layout="fill"
+                            objectFit="cover"
+                          />
+                        </div>
+                        <div className="w-full mt-4 h-auto flex flex-row items-center justify-start">
+                          <FiveStartIconForRate
+                            withHover={false}
+                            defaultPoint={3}
+                          />
+                          <span className="text-sm text-gray-600">{"(5)"}</span>
+                        </div>
+                        <span className="text-lg w-full text-left font-medium text-gray-700">
+                          {empresa?.nombre}
+                        </span>
                       </div>
-                      <div className="w-full mt-4 h-auto flex flex-row items-center justify-start">
-                        <FiveStartIconForRate
-                          withHover={false}
-                          defaultPoint={3}
-                        />
-                        <span className="text-sm text-gray-600">{"(5)"}</span>
-                      </div>
-                      <span className="text-lg w-full text-left font-medium text-gray-700">
-                        {empresa?.nombre}
-                      </span>
-                    </div>
 
-                    <div className="w-full absolute h-full items-center justify-center hidden group-hover:flex">
-                      <ButtonPrimary className="appears">
-                        Ver tienda
-                      </ButtonPrimary>
+                      <div className="w-full absolute h-full items-center justify-center hidden group-hover:flex">
+                        <ButtonPrimary className="appears">
+                          Ver tienda
+                        </ButtonPrimary>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
+          {data?.length === 0 && (
+            <span className="text-white font-medium">Ooops..!, no encontramos ninguna empresa</span>
+          )}
         </div>
       </div>
     </div>

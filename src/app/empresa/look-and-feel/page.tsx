@@ -10,10 +10,7 @@ import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import { LookAndFeel } from "@/types/lookAndFeel";
 import Input from "@/shared/Input/Input";
 import Modal from "@/components/Modal";
-import {
-  CategoriaDestacada,
-  CategoriaList,
-} from "@/types/categoria";
+import { CategoriaDestacada, CategoriaList } from "@/types/categoria";
 import { useListarCategoriasDeEmpresaQuery } from "@/store/service/CategoriaService";
 import useGlobal from "@/hooks/useGlobal";
 import Dropdown from "@/components/Dropdown/Dropdown";
@@ -30,10 +27,8 @@ const ModificarLookAndFeel = () => {
   const { handleUpload } = useUploadImage();
   const [editLookAndFeel] = useEditLookAndFeelMutation();
 
-  const {
-    data: categorias,
-    isLoading: isLoadingCategorias,
-  } = useListarCategoriasDeEmpresaQuery(currentEmpresa?.id);
+  const { data: categorias, isLoading: isLoadingCategorias } =
+    useListarCategoriasDeEmpresaQuery(currentEmpresa?.id);
 
   const categoriaDestacada = currentEmpresa?.lookAndFeel?.categoriaDestacada;
   const [openSelectModal, setOpenSelectModal] = useState<boolean>(false);
@@ -41,10 +36,9 @@ const ModificarLookAndFeel = () => {
   const [nombreSitioValue, setNombreSitioValue] = useState<string>(
     currentEmpresa?.lookAndFeel?.nombreSitio || ""
   );
-  const [
-    nombreCategoriaDestacadaValue,
-    setNombreCategoriaDestacadaValue,
-  ] = useState<string>(categoriaDestacada?.nombre || "");
+  const [nombreCategoriaDestacadaValue, setNombreCategoriaDestacadaValue] =
+    useState<string>(categoriaDestacada?.nombre || "");
+  const [plazoDias, setPlazoDias] = useState<number>(currentEmpresa?.diasEmail ?? 0);
   const [empresaFile, setEmpresaFile] = useState<File>();
   const [selectedCategoryFile, setSelectedCategoryFile] = useState<File>();
   const [selectedCategoria, setSelectedCategoria] = useState<
@@ -81,7 +75,7 @@ const ModificarLookAndFeel = () => {
   }, [isModifying]);
 
   useEffect(() => {
-    console.log(selectedCategoria)
+    console.log(selectedCategoria);
   }, [selectedCategoria]);
 
   useEffect(() => {
@@ -182,6 +176,7 @@ const ModificarLookAndFeel = () => {
         }
 
         const dataToSend = {
+          plazoDias: plazoDias,
           colorPrincipal: selectedColors.main,
           colorSecundario: selectedColors.secondary,
           colorFondo: selectedColors.background,
@@ -329,6 +324,37 @@ const ModificarLookAndFeel = () => {
               ? "Habilitar Modificación"
               : "Deshabilitar Modificación"}
           </ButtonPrimary>
+        </div>
+      </div>
+
+      <div className="w-full h-auto flex items-center justify-between">
+        <h1 className="font-semibold text-texto text-[30px] ">
+          Plazo de dias para enviar email de recordatorio
+        </h1>
+      </div>
+
+      <div className="flex w-full flex-col flex-wrap items-start justify-center xl:justify-start gap-4 px-10 py-8 bg-white rounded-2xl shadow-xl select-none">
+        <span>
+          Se enviara un correo cada la cantidad de dias especificada para
+          recordarle al usuario que tiene productos en el carrito{" "}
+        </span>
+
+        <div className="flex flex-col gap-2">
+          <Label>Plazo de dias</Label>
+          <Input
+            value={plazoDias}
+            onChange={(e) => setPlazoDias(Number(e.target.value))}
+            placeholder="Ingrese un plazo de dias"
+            size={5}
+            maxLength={5}
+            max={5}
+            type="number"
+          />
+          {errores && (
+            <Label className="text-xs text-red-600 font-semibold">
+              El nombre de la sección para la categoría es requerido.
+            </Label>
+          )}
         </div>
       </div>
 
