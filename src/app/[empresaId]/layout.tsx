@@ -9,6 +9,7 @@ import { useLazyGetEmpresaByIdQuery } from "@/store/service/EmpresaService";
 import { Empresa } from "@/types/empresa";
 import useEmpresa from "@/hooks/useEmpresa";
 import CarritoWrapper from "@/components/CarritoWrapper/CarritoWrapper";
+import useGlobal from "@/hooks/useGlobal";
 
 export const LayoutEmpresaId = ({ children }: any) => {
   const params = useParams();
@@ -17,6 +18,11 @@ export const LayoutEmpresaId = ({ children }: any) => {
   const empresaId = params?.empresaId;
   const { handleSetEmpresa } = useEmpresa();
   const [getEmpresa] = useLazyGetEmpresaByIdQuery();
+  const { handleSetLoading } = useGlobal();
+
+  useEffect(() => {
+    handleSetLoading(loadingEmpresa)
+  }, [loadingEmpresa])
 
   const handleLoadEmpresa = async () => {
     try {
@@ -42,10 +48,6 @@ export const LayoutEmpresaId = ({ children }: any) => {
       setIsValidEmpresa(false);
     }
   }, [empresaId]);
-
-  if (loadingEmpresa) {
-    return <Spinner />;
-  }
 
   if (!isValidEmpresa) {
     return <Page404 />;
