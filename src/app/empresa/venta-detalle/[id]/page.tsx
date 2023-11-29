@@ -8,6 +8,7 @@ import { ProductoList } from "@/types/productoList";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import useGlobal from "@/hooks/useGlobal";
+import BadgeEstado from "@/components/BadgeEstado/BadgeEstado";
 
 
 const renderProductItem = (linea: any, index: number) => {
@@ -113,7 +114,8 @@ const renderOrderInfo = (orderInfo:any)=>{
               <div>
                 <div className="flex items-center gap-2">
                     <p className="text-lg font-semibold">  { formatDate(fecha) }</p>
-                    <span className="text-primary-500 ml-2">{ estado }</span>
+
+                    <BadgeEstado estado={orderInfo.estado} estadoId={orderInfo.estadoId} compraId={orderInfo.id}></BadgeEstado>
 
                 </div>
                         

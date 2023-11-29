@@ -55,5 +55,5 @@ export const apiRoutes = {
   obtenerDetalleCompra : (id:number) =>  `/api/Compra/${id}`,
   getMisCompras: ()=>   `/api/Compra/listMyCompras`,
   efectuarCompra: () => "/api/Carrito/comprar",
-  
+  actualizarEstadoCompra: (id:number)=>  `/api/Compra/${id}/cambiarEstado`,
 };

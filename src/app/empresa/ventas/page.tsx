@@ -5,7 +5,12 @@ import { useListVentasByEmpresaQuery } from "@/store/service/EmpresaService";
 import dayjs from "dayjs";
 import useGlobal from "@/hooks/useGlobal";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+
+import { useRouter } from 'next/navigation';
+import BadgeEstado from "@/components/BadgeEstado/BadgeEstado";
+import Badge from "@/shared/Badge/Badge";
+
+
 
 export const EmpresaVentas = () => {
   const { push } = useRouter();
@@ -43,11 +48,10 @@ export const EmpresaVentas = () => {
             >
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="text-lg font-semibold">
-                    {" "}
-                    {formatDate(venta.fecha)}
-                  </p>
-                  <span className="text-primary-500 ml-2">{venta.estado}</span>
+
+                    <p className="text-lg font-semibold">  { formatDate(venta.fecha)}</p>
+                    <BadgeEstado estado={venta.estado} estadoId={venta.estadoId} compraId={venta.id}></BadgeEstado>
+
                 </div>
 
                 <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">

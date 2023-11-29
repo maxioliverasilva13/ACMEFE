@@ -121,17 +121,16 @@ export const AccountOrder = () => {
 
   return (
     <div className="space-y-10 sm:space-y-12">
-      {/* HEADING */}
-      <h2 className="text-2xl sm:text-3xl font-semibold">Historial de Compras</h2>
-      {
-        compras ?
-          compras.map((compra:any,index:number) =>{
-            return (
-                renderOrder(compra,index)
-            )
-          }) : null
-      }
-    </div>
+    <h2 className="text-2xl sm:text-3xl font-semibold">Historial de Compras</h2>
+  
+    {compras && compras.length > 0 ? (
+      compras.map((compra: any, index: number) => (
+        renderOrder(compra, index)
+      ))
+    ) : (
+      <p className="text-gray-500">No tienes ninguna compra en tu historial</p>
+    )}
+  </div>
   );
 };
 
