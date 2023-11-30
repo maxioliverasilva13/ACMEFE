@@ -6,6 +6,7 @@ import Modal from "@/components/Modal";
 import useGlobal from "@/hooks/useGlobal";
 import { useActualizarCompraEstadoMutation } from "@/store/service/CompraService";
 import { toast } from "react-toastify";
+import { separarMayusculas } from "@/utils/stirng";
 
 
   
@@ -78,9 +79,9 @@ const BadgeEstado = ({
             onConfirm={() => onConfirm()}
         />
     
-        <span className="text-primary-500 ml-2">{ estadoNombre  } </span>
+        <span className="text-primary-500">{separarMayusculas(estado)}</span>
         {nextState() && (
-            <button className="ml-2 bg-blue-500 text-white px-2 py-1 rounded" onClick={()=>setShowModal(true)}> Pasar al siguiente estado {nextStateName()}</button>
+            <button className="bg-blue-500 text-white px-2 py-1 rounded" onClick={()=>setShowModal(true)}> Pasar al siguiente estado {nextStateName()}</button>
         )}
 
     </div>

@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { useEffect } from "react";
 import useGlobal from "@/hooks/useGlobal";
 import BadgeEstado from "@/components/BadgeEstado/BadgeEstado";
+import { separarMayusculas } from "@/utils/stirng";
 
 
 const renderProductItem = (linea: any, index: number) => {
@@ -112,7 +113,7 @@ const renderOrderInfo = (orderInfo:any)=>{
               <div className="flex justify-between flex-col sm:flex-row gap-4 sm:items-center p-4 sm:p-8 bg-slate-50 dark:bg-slate-500/5">
 
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-start gap-2">
                     <p className="text-lg font-semibold">  { formatDate(fecha) }</p>
 
                     <BadgeEstado estado={orderInfo.estado} estadoId={orderInfo.estadoId} compraId={orderInfo.id}></BadgeEstado>
@@ -120,12 +121,12 @@ const renderOrderInfo = (orderInfo:any)=>{
                 </div>
                         
               <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-                 Metodo de Entrega: { metodoEnvio }
+                 Metodo de Entrega: { separarMayusculas(metodoEnvio) }
               </p>
     
               
               <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-                Metodo de Pago:  {metodoPago}
+                Metodo de Pago:  {separarMayusculas(metodoPago)}
               </p> 
               <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
                 Cantidad de Productos: {cantidadDeProductos}

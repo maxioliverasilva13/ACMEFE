@@ -14,6 +14,12 @@ import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Text from "@/components/Table/components/Text";
 import { useRouter } from "next/navigation";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
+import Button from "@/shared/Button/Button";
+import RealizarReclamoModal from "./RealizarReclamoModal";
+import { EstadReclamo, Reclamo } from "@/types/reclamo";
+import { DEFAULT_USER_IMAGE } from "@/utils/usuarios";
+import clsx from "clsx";
+import moment from "moment";
 
 const formatDate = (dateStr: string) => {
   return dayjs(dateStr).format("DD/MM/YYYY hh:mm a");
@@ -74,6 +80,7 @@ const renderProductItem = (
   const producto = linea.productoLista;
   const { nombre, imagenes, descripcion } = producto;
   const imagen = imagenes ? imagenes[0].url : "";
+
   return (
     <div key={index} className="flex py-4 sm:py-7 last:pb-0 first:pt-0 ">
       <div className="relative h-24 w-16 sm:w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
@@ -147,11 +154,18 @@ const renderBtnImprimirFactura = () => {
   );
 };
 
-const renderOrderInfo = (
-  orderInfo: any,
-  setModalOpen: Function,
-  setProdId: Function
-) => {
+interface PropsOrder {
+  orderInfo: any;
+  setModalOpen: any;
+  setProdId: any;
+}
+
+const RenderOrderInfo = ({
+  orderInfo,
+  setModalOpen,
+  setProdId,
+}: PropsOrder) => {
+  const [openReclamoModal, setOpenReclamoModal] = useState(false);
   const {
     id,
     fecha,
@@ -163,21 +177,22 @@ const renderOrderInfo = (
     lineas,
     estado,
   } = orderInfo;
+
   return (
     <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0 p-5">
       <div className="flex justify-between flex-col sm:flex-row gap-4 sm:items-center p-4 sm:p-8 bg-slate-50 dark:bg-slate-500/5">
         <div>
           <div className="flex items-center gap-2">
             <p className="text-lg font-semibold"> {formatDate(fecha)}</p>
-            <span className="text-primary-500 ml-2">{estado}</span>
+            <span className="text-primary-500 ml-2">{separarMayusculas(estado)}</span>
           </div>
 
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-            Metodo de Entrega: {metodoEnvio}
+            Metodo de Entrega: {separarMayusculas(metodoEnvio)}
           </p>
 
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-            Metodo de Pago: {metodoPago}
+            Metodo de Pago: {separarMayusculas(metodoPago)}
           </p>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
             Cantidad de Productos: {cantidadDeProductos}
@@ -188,7 +203,12 @@ const renderOrderInfo = (
           </p>
         </div>
 
-        {renderBtnImprimirFactura()}
+        <div className="w-auto h-auto flex flex-col gap-2">
+          {renderBtnImprimirFactura()}
+          <ButtonPrimary onClick={() => setOpenReclamoModal(true)}>
+            Realizar reclamo
+          </ButtonPrimary>
+        </div>
       </div>
 
       <div className="w-full flex justify-between bg-white">
@@ -207,6 +227,13 @@ const renderOrderInfo = (
         </div>
       </div>
       {timeLine(orderInfo.historialEstados)}
+      {openReclamoModal && (
+        <RealizarReclamoModal
+          compraId={id}
+          show={openReclamoModal}
+          onClose={() => setOpenReclamoModal(false)}
+        />
+      )}
     </div>
   );
 };
@@ -219,6 +246,7 @@ const ClienteOrdenDetalle = () => {
   const { data, error, isLoading } = useGetByIdQuery(Number(ordenId) ?? 0);
   const orderInfo: any = data;
   const { handleSetLoading } = useGlobal();
+  const { push } = useRouter();
 
   useEffect(() => {
     handleSetLoading(true);
@@ -231,24 +259,66 @@ const ClienteOrdenDetalle = () => {
   }, [isLoading]);
 
   useEffect(() => {
-    if (error && error.originalStatus == 404) {
-      push("/not-found");
+    if (error && error?.originalStatus == 404) {
+      push("/not-found" as never);
     }
   }, [error]);
+
+  const reclamos = data?.reclamosUsuario as Reclamo[];
+
   return (
-    <div className="w-full p-5">
+    <div className="w-full p-5 flex flex-col gap-5">
       <h2 className="text-2xl sm:text-3xl font-semibold">
         Informacion de la venta
       </h2>
-      {orderInfo
-        ? renderOrderInfo(orderInfo, setIsOpenCalificarModal, setProductId)
-        : null}
+      {orderInfo ? (
+        <RenderOrderInfo
+          orderInfo={orderInfo}
+          setModalOpen={setIsOpenCalificarModal}
+          setProdId={setProductId}
+        />
+      ) : null}
       {/* MODAL CALIFICAR */}
       <ModalCalificar
         show={isOpenCalificarModal}
         onCloseModalCalificar={() => setIsOpenCalificarModal(false)}
         productId={productId}
       />
+       <h2 className="text-2xl sm:text-3xl font-semibold">
+        Reclamos
+      </h2>
+
+      <div className="flex flex-col items-center justify-start gap-3 flex-wrap">
+      {reclamos?.map((item) => {
+          return <div key={item?.id} className="w-full relative h-auto flex flex-col md:flex-row md:items-center items-start justify-start gap-2 px-6 py-4 shadow-sm">
+          <div className="flex flex-row items-center justify-start gap-2">
+            <div className="w-[90px] min-w-[90px] h-[90px] relative rounded-full overflow-hidden">
+              <Image 
+                alt="User image"
+                src={item.usuario.imagen ?? DEFAULT_USER_IMAGE}
+                layout="fill"
+                objectFit="cover"
+              />
+              </div>
+            <div className="flex flex-col w-full items-start justify-start gap-2">
+            <span className="text-medium text-lg">{item.usuario?.nombre}</span>
+            <span><b>Descripcion del reclamo: </b>{item?.description}</span>
+            </div>
+          </div>
+          <div className="flex flex-row gap-4 items-center justify-center md:absolute top-5 right-5">
+            {/* Badge */}
+            <span className={clsx("px-2 py-1 text-sm text-white font-medium shadow-sm rounded-lg", item.estado === EstadReclamo.activo ? "bg-yellow-300" : "bg-green-300")}>
+              {item.estado}
+            </span>
+            <span>
+              {moment(item.fecha).format("MM/DD/YYYY")}
+            </span>
+            </div>
+
+        
+        </div>            
+      })}
+      </div>
     </div>
   );
 };

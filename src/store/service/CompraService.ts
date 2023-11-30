@@ -13,7 +13,7 @@ export const CompraService = createApi({
         },
         transformResponse(value) {
             const response = value;
-            return response;
+            return response as any;
         },
     }),
     getMisCompras:  builder.query({
