@@ -43,6 +43,7 @@ export const apiRoutes = {
   crearPickup: () => "api/PickUp",
   deletePickups: () => `/api/PickUp/deletesById`,
   listarReclamos: () => "api/Reclamo",
+  cerrarReclamo: () => "api/Reclamo/cerrar-reclamo",
   listarEstadisticasSort: () => "/api/Estadisticas/sort",
   listarEstadisticasAdmin: () => "/api/Estadisticas/admin",
   listarEstadisticasEmpresa: () => "/api/Estadisticas/empresa",

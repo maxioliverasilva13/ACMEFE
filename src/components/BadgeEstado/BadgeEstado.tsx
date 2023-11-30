@@ -6,6 +6,7 @@ import Modal from "@/components/Modal";
 import useGlobal from "@/hooks/useGlobal";
 import { useActualizarCompraEstadoMutation } from "@/store/service/CompraService";
 import toast from "react-hot-toast";
+import { separarMayusculas } from "@/utils/stirng";
 
 const BadgeEstado = ({ compraId = 0, estado = "", estadoId = 0 }) => {
   const [compraID, setCompraID] = useState(compraId);
@@ -56,22 +57,21 @@ const BadgeEstado = ({ compraId = 0, estado = "", estadoId = 0 }) => {
   return (
     <div>
       <Modal
-        textOk="Si, pasar al siguiente Estado"
+        textOk="Sí, pasar al siguiente estado."
         textCancel="Cancelar"
-        title="Estas seguro que deseas pasar la venta al siguiente estado?"
-        description="Esta opcion no  tiene retorno, al pasar la venta al siguiente estado ,ya no podras volver atras"
+        title="¿Estás seguro que deseas pasar la venta al siguiente estado?"
+        description="Esta acción no tiene retorno, al pasar la venta al siguiente estado, ya no podrás volver atrás."
         onCloseModalDelete={() => setShowModal(false)}
         show={showModal}
         onConfirm={() => onConfirm()}
       />
 
-      <span className="text-primary-500 ml-2">{estadoNombre} </span>
+      <span className="text-primary-500">{separarMayusculas(estado)}</span>
       {nextState() && (
         <button
-          className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
+          className="bg-blue-500 text-white px-2 py-1 rounded"
           onClick={() => setShowModal(true)}
         >
-          {" "}
           Pasar al siguiente estado {nextStateName()}
         </button>
       )}

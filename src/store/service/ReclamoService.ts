@@ -15,10 +15,36 @@ export const ReclamoService = createApi({
         const response = value;
         return response as Reclamo[]
       },
+    }),
+    crearReclamo: builder.mutation({
+      invalidatesTags: ["ReclamoInfo"],
+      query: (data) => ({
+        url: apiRoutes.listarReclamos(),
+        method: "POST",
+        body: data,
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+    }),
+    cerrarReclamo: builder.mutation({
+      invalidatesTags: ["ReclamoInfo"],
+      query: (data) => ({
+        url: `${apiRoutes.cerrarReclamo()}/${data?.reclamoId}`,
+        method: "PUT",
+        body: {},
+      }),
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
     })
   }),
 });
 
 export const {
-  useListarReclamosQuery
+  useListarReclamosQuery,
+  useCrearReclamoMutation,
+  useCerrarReclamoMutation,
 } = ReclamoService

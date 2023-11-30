@@ -12,6 +12,7 @@ export type Reclamo = {
     description: string;
     fecha: string;
     usuario: SortUser,
+    estado: EstadReclamo,
     compra: SortCompra
 }
 

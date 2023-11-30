@@ -11,6 +11,7 @@ import useGlobal from "@/hooks/useGlobal";
 import BadgeEstado from "@/components/BadgeEstado/BadgeEstado";
 import { useParams } from "next/navigation";
 import { PRODUCT_NO_IMAGE } from "@/utils/usuarios";
+import { separarMayusculas } from "@/utils/stirng";
 
 const renderProductItem = (linea: any, index: number) => {
   const { cantidad, precioUnitario, subTotal } = linea;
@@ -118,7 +119,7 @@ const renderOrderInfo = (orderInfo: any) => {
     <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0">
       <div className="flex justify-between flex-col sm:flex-row gap-4 sm:items-center p-4 sm:p-8 bg-slate-50 dark:bg-slate-500/5">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-start gap-2">
             <p className="text-lg font-semibold"> {formatDate(fecha)}</p>
 
             <BadgeEstado
@@ -129,11 +130,11 @@ const renderOrderInfo = (orderInfo: any) => {
           </div>
 
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-            Metodo de Entrega: {metodoEnvio}
+            Metodo de Entrega: {separarMayusculas(metodoEnvio)}
           </p>
 
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-            Metodo de Pago: {metodoPago}
+            Metodo de Pago: {separarMayusculas(metodoPago)}
           </p>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
             Cantidad de Productos: {cantidadDeProductos}
