@@ -17,7 +17,7 @@ const SectionHero3: FC<SectionHero3Props> = ({ className = "" }) => {
       <div className="relative pt-8 lg:pt-0 lg:absolute z-10 inset-x-0 top-[10%] sm:top-[20%]  container">
         <div className="flex flex-col items-start max-w-lg xl:max-w-2xl space-y-5 xl:space-y-8 ">
           <span className="sm:text-lg md:text-xl font-semibold text-neutral-900">
-            Elije entre miles de productos 🔥
+            Elige entre miles de productos 🔥
           </span>
           <h2 className="font-bold text-black text-3xl sm:text-4xl md:text-5xl xl:text-6xl 2xl:text-7xl !leading-[115%] ">
             Explora nuestra tienda para conocer todos nuestros productos
