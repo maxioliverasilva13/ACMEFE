@@ -272,7 +272,7 @@ const PaymentMethod: FC<Props> = ({
                 />
               </svg>
             </div>
-            <p className="font-medium">Google / Apple Wallet</p>
+            <p className="font-medium">Ethereum Metamask</p>
           </label>
           <div className={`mt-6 mb-4 space-y-6 ${active ? "block" : "hidden"}`}>
             <div className="text-sm prose dark:prose-invert">
@@ -357,7 +357,7 @@ const PaymentMethod: FC<Props> = ({
               </svg>
             </h3>
             <div className="font-semibold mt-1 text-sm">
-              <span className="">Tarjetas / Etherium Wallet</span>
+              <span className="">Tarjetas / Ethereum Wallet</span>
               <span className="ml-3">xxx-xxx-xx55</span>
             </div>
           </div>
