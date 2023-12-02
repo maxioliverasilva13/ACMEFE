@@ -102,13 +102,6 @@ const PickUpPage = () => {
     }
   };
 
-
-
-  const handleNext = (data: CrearPickupForm) => {
-    // add backend
-    console.log("data is", data);
-  };
-
   const handleNewPickup = (newPickup:Pickup)=>{
       setOpenAddModal(false);
       setPickups([...pickups,newPickup]);

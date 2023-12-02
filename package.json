@@ -26,6 +26,7 @@
     "@types/react-toastify": "^4.1.0",
     "@uiw/react-color": "^1.4.3",
     "apexcharts": "^3.43.0",
+    "axios": "^1.6.2",
     "chart.js": "^4.4.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "clsx": "^2.0.0",

@@ -121,11 +121,7 @@ const Dashboard = () => {
           </div>
           {expanded && (
             <Link
-              href={{
-                pathname: isAdmin
-                  ? appRoutes.adminProfile()
-                  : appRoutes.empresaProfile(),
-              }}
+              href={"#"}
               className={clsx(
                 "flex-grow flex w-full flex-col justify-center items-center gap-0"
               )}

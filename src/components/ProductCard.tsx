@@ -47,8 +47,6 @@ const ProductCard: FC<ProductCardProps> = ({
     imagenes,
     activo,
   } = data;
-  console.log("newPath is", appRoutes.productoDetailsFullPath(id, currentEmpresa?.id))
-
   const {} = useGlobal();
 
   const [showModalQuickView, setShowModalQuickView] = useState(false);

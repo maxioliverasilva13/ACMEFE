@@ -55,7 +55,7 @@ const BadgeEstado = ({ compraId = 0, estado = "", estadoId = 0 }) => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <Modal
         textOk="Sí, pasar al siguiente estado."
         textCancel="Cancelar"
