@@ -37,7 +37,6 @@ const ModalCalificar: FC<ModalCalificarProps> = ({
       rate: puntuacion,
     };
     const resp = (await calificarProducto(dataToSend)) as any;
-    console.log(resp);
     if (!resp.error) {
       toast.success("Calificación guardada correctamente.");
     } else {

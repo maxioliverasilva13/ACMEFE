@@ -47,7 +47,7 @@ export const EmpresaVentas = () => {
               className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 sm:p-8 bg-slate-50 dark:bg-slate-500/5"
             >
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-start gap-2">
 
                     <p className="text-lg font-semibold">  { formatDate(venta.fecha)}</p>
                     <BadgeEstado estado={venta.estado} estadoId={venta.estadoId} compraId={venta.id}></BadgeEstado>

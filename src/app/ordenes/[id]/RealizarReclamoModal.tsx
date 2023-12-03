@@ -14,12 +14,14 @@ export interface RealizarReclamoModalProps {
   compraId: number;
   show: boolean;
   onClose: () => void;
+  onFinish: any;
 }
 
 const RealizarReclamoModal: FC<RealizarReclamoModalProps> = ({
   show,
   onClose,
   compraId,
+  onFinish,
 }) => {
   const { handleSetLoading } = useGlobal();
   const [crearReclamo] = useCrearReclamoMutation();
@@ -40,6 +42,7 @@ const RealizarReclamoModal: FC<RealizarReclamoModalProps> = ({
       const resp = (await crearReclamo(dataToSend)) as any;
       if (resp?.data?.ok) {
         toast.success("Reclamo realizado correctamente");
+        onFinish();
         onClose();
       } else {
         toast.error(resp.error.data.message);

@@ -75,10 +75,6 @@ const ModificarLookAndFeel = () => {
   }, [isModifying]);
 
   useEffect(() => {
-    console.log(selectedCategoria);
-  }, [selectedCategoria]);
-
-  useEffect(() => {
     if (!isLoadingCategorias) {
       setSelectedCategoria(
         categoriaDestacada
@@ -137,7 +133,6 @@ const ModificarLookAndFeel = () => {
 
   const errors = (): boolean => {
     if (selectedCategoria && nombreCategoriaDestacadaValue.trim() === "") {
-      console.log("Error, el nombre de la sección no puede estar vacío.");
       setErrores(true);
       return true;
     }

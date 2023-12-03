@@ -17,9 +17,11 @@ import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Button from "@/shared/Button/Button";
 import RealizarReclamoModal from "./RealizarReclamoModal";
 import { EstadReclamo, Reclamo } from "@/types/reclamo";
-import { DEFAULT_USER_IMAGE } from "@/utils/usuarios";
+import { DEFAULT_USER_IMAGE, PRODUCT_NO_IMAGE } from "@/utils/usuarios";
 import clsx from "clsx";
 import moment from "moment";
+import axios from "axios";
+import useEmpresa from "@/hooks/useEmpresa";
 
 const formatDate = (dateStr: string) => {
   return dayjs(dateStr).format("DD/MM/YYYY hh:mm a");
@@ -142,7 +144,7 @@ const renderProductItem = (
   );
 };
 
-const renderBtnImprimirFactura = () => {
+const renderBtnImprimirFactura = (handleDownloadFactura: Function) => {
   return (
     <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
       <svg
@@ -152,7 +154,7 @@ const renderBtnImprimirFactura = () => {
       >
         <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
       </svg>
-      <span>Descargar Factura</span>
+      <span onClick={() => handleDownloadFactura()}>Descargar Factura</span>
     </button>
   );
 };
@@ -161,12 +163,14 @@ interface PropsOrder {
   orderInfo: any;
   setModalOpen: any;
   setProdId: any;
+  refetch: any;
 }
 
 const RenderOrderInfo = ({
   orderInfo,
   setModalOpen,
   setProdId,
+  refetch,
 }: PropsOrder) => {
   const [openReclamoModal, setOpenReclamoModal] = useState(false);
   const {
@@ -177,9 +181,62 @@ const RenderOrderInfo = ({
     cantidadDeProductos,
     metodoPago,
     metodoEnvio,
+    empresa,
     lineas,
     estado,
+    codigoSeguimiento,
   } = orderInfo;
+  const { handleSetLoading } = useGlobal();
+
+  const handleDownloadFactura = async () => {
+    try {
+      handleSetLoading(true);
+      const data = await axios.post(
+        "http://localhost:5003/api/Facturacion",
+        {
+          nroFactura: id,
+          logo: empresa?.imagen,
+          nombreEmpresa: empresa?.nombre,
+          direccionEmpresa: empresa?.direccion ?? "No tiene",
+          telefonoEmpresa: empresa?.telefono ?? "No tiene",
+          correoEmpresa: empresa?.correo,
+          fecha: fecha ? moment(fecha).format("DD/MM/YYYY") : "No tiene",
+          nombreCliente: comprador?.nombre,
+          direccionCliente: "Direccion",
+          celularCliente: comprador?.celular ?? "No tiene",
+          total: costoTotal,
+          lineas: lineas?.map((item: any) => {
+            return {
+              fotoProducto: item?.productoLista?.imagenes
+                ? item?.productoLista?.imagenes[0]?.url
+                : PRODUCT_NO_IMAGE,
+              nombreProducto: item?.productoLista?.nombre,
+              precioUnitario: item?.productoLista?.precio,
+              cantidad: item?.cantidad,
+              subTotal: item?.cantidad * item?.productoLista?.precio ?? 0,
+            };
+          }),
+        },
+        { responseType: "blob" }
+      );
+
+      const file = data?.data;
+      if (file) {
+        const url = window.URL.createObjectURL(new Blob([file]));
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.setAttribute('download', `factura-${id}.pdf`);
+        document.body.appendChild(enlace);
+        enlace.click();
+        // Limpia la URL creada y restablece el estado
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      handleSetLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0 p-5">
@@ -204,9 +261,13 @@ const RenderOrderInfo = ({
             Costo Total:{" "}
             <span className="text-green-500 ml-2">{costoTotal}$</span>
           </p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
+            Codigo de seguimiento:{" "}
+            <span className="text-green-500 ml-2">{codigoSeguimiento}</span>
+          </p>
         </div>
         <div className="w-auto h-auto flex flex-col gap-2">
-          {renderBtnImprimirFactura()}
+          {renderBtnImprimirFactura(handleDownloadFactura)}
           <ButtonPrimary onClick={() => setOpenReclamoModal(true)}>
             Realizar reclamo
           </ButtonPrimary>
@@ -222,7 +283,7 @@ const RenderOrderInfo = ({
               index,
               setModalOpen,
               setProdId,
-              estado
+              estado,
             );
           })}
         </div>
@@ -232,6 +293,7 @@ const RenderOrderInfo = ({
         <RealizarReclamoModal
           compraId={id}
           show={openReclamoModal}
+          onFinish={() => refetch()}
           onClose={() => setOpenReclamoModal(false)}
         />
       )}
@@ -244,7 +306,7 @@ const ClienteOrdenDetalle = () => {
   const [productId, setProductId] = useState<number>(0);
   const params = useParams();
   const ordenId = params?.id;
-  const { data, error, isLoading } = useGetByIdQuery(Number(ordenId) ?? 0);
+  const { data, error, isLoading, refetch } = useGetByIdQuery(Number(ordenId) ?? 0);
   const orderInfo: any = data;
   const { handleSetLoading } = useGlobal();
   const { push } = useRouter();
@@ -277,6 +339,7 @@ const ClienteOrdenDetalle = () => {
           orderInfo={orderInfo}
           setModalOpen={setIsOpenCalificarModal}
           setProdId={setProductId}
+          refetch={refetch}
         />
       ) : null}
       {/* MODAL CALIFICAR */}

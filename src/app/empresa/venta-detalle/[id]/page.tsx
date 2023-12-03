@@ -114,6 +114,7 @@ const renderOrderInfo = (orderInfo: any) => {
     metodoEnvio,
     lineas,
     estado,
+    codigoSeguimiento,
   } = orderInfo;
   return (
     <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0">
@@ -142,6 +143,10 @@ const renderOrderInfo = (orderInfo: any) => {
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
             Costo Total:{" "}
             <span className="text-green-500 ml-2">{costoTotal}$</span>
+          </p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
+            Codigo de seguimiento:{" "}
+            <span className="text-green-500 ml-2">{codigoSeguimiento}</span>
           </p>
         </div>
 
