@@ -80,7 +80,7 @@ const AdminHome = () => {
           content={estadisticas?.usuariosActivos || 0}
         />
         <StatCard
-          title={"Productos Vendidos"}
+          title={"Ventas Concretadas"}
           content={estadisticas?.productosVendidos || 0}
         />
       </div>
@@ -94,11 +94,11 @@ const AdminHome = () => {
               options={pieOptions}
             />
           ) : (
-            <Text message="No se cuenta con ventas activas realizadas." />
+            <Text message="Este mes no cuenta con ventas activas." />
           )}
         </div>
         <div className="flex flex-col items-center gap-5 w-full max-w-2xl">
-          <Text className="underline" message="Evolución Anual de Ventas" />
+          <Text className="underline" message="Evolución Mensual de Ventas" />
           <Line
             datasetIdKey="id"
             data={ventasMensuales}

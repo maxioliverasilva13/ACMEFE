@@ -27,7 +27,8 @@ const formatDate = (dateStr: string) => {
 
 const timeLine = (historialEstados: any) => {
   return (
-    <div className="p-4 bg-slate-50 flex-1">
+    <div className="p-4 bg-slate-50 flex flex-col gap-5 items-center">
+      <span className="text-lg">Transiciones de Estado del Pedido</span>
       <div className="container">
         <div className="flex flex-col md:grid grid-cols-12 text-gray-50">
           {historialEstados.map((Estado: any) => {
@@ -55,7 +56,7 @@ const timeLine = (historialEstados: any) => {
                     completado ? "bg-green-500" : "bg-gray-300"
                   } col-start-4 col-end-12 p-4 rounded-xl my-4 mr-auto shadow-md w-full`}
                 >
-                  <h3 className="font-semibold text-lg mb-1">{estado}</h3>
+                  <h3 className="font-semibold text-lg mb-1">{separarMayusculas(estado)}</h3>
                   <p className="leading-tight text-justify w-full">
                     {fecha ? formatDate(fecha) : ""}
                   </p>
@@ -95,9 +96,11 @@ const renderProductItem = (
 
       <div className="ml-4 flex flex-1 flex-col">
         <div>
-          <div className="flex justify-between ">
+          <div className="flex flex-col sm:flex-row justify-between ">
             <div>
-              <h3 className="text-base font-medium line-clamp-1">{nombre}</h3>
+              <h3 className="text-base font-medium line-clamp-1" title={nombre}>
+                {nombre}
+              </h3>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 {descripcion}
               </p>
@@ -179,20 +182,20 @@ const RenderOrderInfo = ({
   } = orderInfo;
 
   return (
-    <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0 p-5">
+    <div className="flex flex-col border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0 p-5">
       <div className="flex justify-between flex-col sm:flex-row gap-4 sm:items-center p-4 sm:p-8 bg-slate-50 dark:bg-slate-500/5">
         <div>
           <div className="flex items-center gap-2">
             <p className="text-lg font-semibold"> {formatDate(fecha)}</p>
-            <span className="text-primary-500 ml-2">{separarMayusculas(estado)}</span>
+            <span className="text-primary-500 ml-2">
+              {separarMayusculas(estado)}
+            </span>
           </div>
-
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-            Metodo de Entrega: {separarMayusculas(metodoEnvio)}
+            Método de Entrega: {separarMayusculas(metodoEnvio)}
           </p>
-
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-            Metodo de Pago: {separarMayusculas(metodoPago)}
+            Método de Pago: {separarMayusculas(metodoPago)}
           </p>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
             Cantidad de Productos: {cantidadDeProductos}
@@ -202,7 +205,6 @@ const RenderOrderInfo = ({
             <span className="text-green-500 ml-2">{costoTotal}$</span>
           </p>
         </div>
-
         <div className="w-auto h-auto flex flex-col gap-2">
           {renderBtnImprimirFactura()}
           <ButtonPrimary onClick={() => setOpenReclamoModal(true)}>
@@ -211,10 +213,9 @@ const RenderOrderInfo = ({
         </div>
       </div>
 
-      <div className="w-full flex justify-between bg-white">
-        <div className="flex flex-col bg-slate-50 p-5 shadow-lg">
+      <div className="flex w-full justify-between bg-white">
+        <div className="flex w-full flex-col bg-slate-50 p-5 shadow-lg">
           <h2 className="text-xl sm:text-xl font-semibold">Productos</h2>
-
           {lineas.map((linea: any, index: number) => {
             return renderProductItem(
               linea,
@@ -284,40 +285,51 @@ const ClienteOrdenDetalle = () => {
         onCloseModalCalificar={() => setIsOpenCalificarModal(false)}
         productId={productId}
       />
-       <h2 className="text-2xl sm:text-3xl font-semibold">
-        Reclamos
-      </h2>
+      <h2 className="text-2xl sm:text-3xl font-semibold">Reclamos</h2>
 
       <div className="flex flex-col items-center justify-start gap-3 flex-wrap">
-      {reclamos?.map((item) => {
-          return <div key={item?.id} className="w-full relative h-auto flex flex-col md:flex-row md:items-center items-start justify-start gap-2 px-6 py-4 shadow-sm">
-          <div className="flex flex-row items-center justify-start gap-2">
-            <div className="w-[90px] min-w-[90px] h-[90px] relative rounded-full overflow-hidden">
-              <Image 
-                alt="User image"
-                src={item.usuario.imagen ?? DEFAULT_USER_IMAGE}
-                layout="fill"
-                objectFit="cover"
-              />
+        {reclamos?.map((item) => {
+          return (
+            <div
+              key={item?.id}
+              className="w-full relative h-auto flex flex-col md:flex-row md:items-center items-start justify-start gap-2 px-6 py-4 shadow-sm"
+            >
+              <div className="flex flex-row items-center justify-start gap-2">
+                <div className="w-[90px] min-w-[90px] h-[90px] relative rounded-full overflow-hidden">
+                  <Image
+                    alt="User image"
+                    src={item.usuario.imagen ?? DEFAULT_USER_IMAGE}
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </div>
+                <div className="flex flex-col w-full items-start justify-start gap-2">
+                  <span className="text-medium text-lg">
+                    {item.usuario?.nombre}
+                  </span>
+                  <span>
+                    <b>Descripcion del reclamo: </b>
+                    {item?.description}
+                  </span>
+                </div>
               </div>
-            <div className="flex flex-col w-full items-start justify-start gap-2">
-            <span className="text-medium text-lg">{item.usuario?.nombre}</span>
-            <span><b>Descripcion del reclamo: </b>{item?.description}</span>
+              <div className="flex flex-row gap-4 items-center justify-center md:absolute top-5 right-5">
+                {/* Badge */}
+                <span
+                  className={clsx(
+                    "px-2 py-1 text-sm text-white font-medium shadow-sm rounded-lg",
+                    item.estado === EstadReclamo.activo
+                      ? "bg-yellow-300"
+                      : "bg-green-300"
+                  )}
+                >
+                  {item.estado}
+                </span>
+                <span>{moment(item.fecha).format("MM/DD/YYYY")}</span>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-row gap-4 items-center justify-center md:absolute top-5 right-5">
-            {/* Badge */}
-            <span className={clsx("px-2 py-1 text-sm text-white font-medium shadow-sm rounded-lg", item.estado === EstadReclamo.activo ? "bg-yellow-300" : "bg-green-300")}>
-              {item.estado}
-            </span>
-            <span>
-              {moment(item.fecha).format("MM/DD/YYYY")}
-            </span>
-            </div>
-
-        
-        </div>            
-      })}
+          );
+        })}
       </div>
     </div>
   );

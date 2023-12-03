@@ -15,7 +15,16 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
-import { StatCard, formatVentasMensuales, lineOptions } from "@/utils/estadisticas";
+import {
+  StatCard,
+  formatMetodosEnvio,
+  formatMetodosPago,
+  formatToSheet,
+  formatVentasMensuales,
+  formatVentasSemanal,
+  lineOptions,
+  pieOptions,
+} from "@/utils/estadisticas";
 import clsx from "clsx";
 ChartJS.register(
   ArcElement,
@@ -26,25 +35,65 @@ ChartJS.register(
   PointElement,
   LineElement
 );
+import React from "react";
+import ExportExcel from "@/utils/excelExport";
+import useEmpresa from "@/hooks/useEmpresa";
 
 const VendedorHome = () => {
   const { handleSetLoading } = useGlobal();
-  const {
-    data: empresaStats,
-    isLoading: isLoadingEmpresaStats,
-  } = useListarEstadisticasEmpresaQuery({});
+  const { currentEmpresa } = useEmpresa();
+  const { data: empresaStats, isLoading: isLoadingEmpresaStats } =
+    useListarEstadisticasEmpresaQuery({});
 
   useEffect(() => {
     handleSetLoading(isLoadingEmpresaStats);
   }, [isLoadingEmpresaStats]);
 
-  const chartData: any =
+  const mensualData: any =
     !isLoadingEmpresaStats && empresaStats
       ? formatVentasMensuales(empresaStats)
       : { datasets: [] };
+  const semanalData: any =
+    !isLoadingEmpresaStats && empresaStats
+      ? formatVentasSemanal(empresaStats)
+      : { datasets: [] };
+
+  const metodosPagoPreferidosData: any =
+    !isLoadingEmpresaStats && empresaStats
+      ? formatMetodosPago(empresaStats)
+      : { datasets: [] };
+
+  const metodosEnvioPreferidosData: any =
+    !isLoadingEmpresaStats && empresaStats
+      ? formatMetodosEnvio(empresaStats)
+      : { datasets: [] };
+
+  const metodosPagoHasData =
+    !isLoadingEmpresaStats &&
+    empresaStats?.metodosPagoPreferidos &&
+    Object.values(empresaStats.metodosPagoPreferidos).some(
+      (cantidad) => cantidad > 0
+    );
+
+  const metodosEnvioHasData =
+    !isLoadingEmpresaStats &&
+    empresaStats?.metodosPagoPreferidos &&
+    Object.values(empresaStats.metodosEnvioPreferidos).some(
+      (cantidad) => cantidad > 0
+    );
 
   return (
-    <div className="flex flex-col gap-10 py-8 w-full h-full">
+    <div className="relative flex flex-col gap-10 py-8 w-full h-full">
+      <div className="absolute top-2 right-0">
+        <ExportExcel
+          excelData={formatToSheet(empresaStats)}
+          archivoNombre={`Reporte de Estadísticas de la Empresa ${
+            currentEmpresa?.nombre || ""
+          }`}
+          data={empresaStats}
+        />
+      </div>
+
       {/* Stat Cards Container */}
       <div className="flex flex-wrap gap-3 justify-around w-full">
         <StatCard
@@ -60,7 +109,7 @@ const VendedorHome = () => {
           content={empresaStats?.productosVendidosEsteMes || 0}
         />
       </div>
-      <div className="flex flex-wrap justify-center items-start gap-12 w-full">
+      <div className="flex flex-wrap justify-center items-start gap-12 w-full pb-5">
         <div className="flex flex-col items-center gap-2 w-full max-w-lg">
           <Text className="underline" message="Top 5 Productos más vendidos" />
           {empresaStats?.productosMasVendidos?.length ? (
@@ -89,8 +138,36 @@ const VendedorHome = () => {
           )}
         </div>
         <div className="flex flex-col items-center gap-5 w-full max-w-2xl">
-          <Text className="underline" message="Evolución Anual de Ventas" />
-          <Line datasetIdKey="id" data={chartData} options={lineOptions} />
+          <Text className="underline" message="Evolución Mensual de Ventas" />
+          <Line datasetIdKey="id" data={mensualData} options={lineOptions} />
+        </div>
+        <div className="flex flex-col items-center gap-2 w-full max-w-sm">
+          <Text className="underline" message="Método de Pago preferidos" />
+          {metodosPagoHasData ? (
+            <Pie
+              datasetIdKey="id"
+              data={metodosPagoPreferidosData}
+              options={pieOptions}
+            />
+          ) : (
+            <Text message="La empresa no cuenta con ventas activas." />
+          )}
+        </div>
+        <div className="flex flex-col items-center gap-2 w-full max-w-sm">
+          <Text className="underline" message="Método de Envío preferidos" />
+          {metodosEnvioHasData ? (
+            <Pie
+              datasetIdKey="id"
+              data={metodosEnvioPreferidosData}
+              options={pieOptions}
+            />
+          ) : (
+            <Text message="La empresa no cuenta con ventas activas." />
+          )}
+        </div>
+        <div className="flex flex-col items-center gap-5 w-full max-w-2xl">
+          <Text className="underline" message="Evolución Semanal de Ventas" />
+          <Line datasetIdKey="id" data={semanalData} options={lineOptions} />
         </div>
       </div>
     </div>
