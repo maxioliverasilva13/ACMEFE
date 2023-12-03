@@ -28,7 +28,7 @@ const Logo: React.FC<LogoProps> = ({
       href={appRoutes.userInicio() as Route}
       className={`ttnc-logo flex flex-row items-center justify-start gap-4 text-slate-600 ${className}`}
     >
-      {currentEmpresa?.imagen && <div className="w-[45px] h-[45px] rounded-full overflow-hidden relative shadow-sm">
+      {currentEmpresa?.imagen && <div className="min-w-[45px] w-[45px] h-[45px] rounded-full overflow-hidden relative shadow-sm">
         <Image
           src={currentEmpresa?.imagen ?? NotFoundImage}
           alt="Empresa Logo"
