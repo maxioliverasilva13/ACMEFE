@@ -1,6 +1,7 @@
 export enum EstadoCompraEnum {
     EN_PREPARACION = 1,
-    EN_CAMINO = 2,
-    LISTO_PARA_ENTREGAR = 3,
-    ENTREGADO = 4
+    PREPARADO = 2,
+    ENVIADO = 3,
+    LISTO_PARA_RETIRAR = 4,
+    ENTREGADO = 5
 }

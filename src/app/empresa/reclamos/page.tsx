@@ -136,7 +136,7 @@ const Reclamo = () => {
                     className="w-full relative bg-white h-auto flex flex-col items-center justify-start gap-4 shadow-md px-5 py-4 rounded-2xl"
                     key={`reclamo-${index}`}
                   >
-                    <div className="flex w-full flex-row items-center justify-between">
+                    <div className="flex xl:flex-row gap-5 flex-col w-full items-center justify-between">
                       <div className="w-auto h-auto flex flex-row items-center justify-center gap-2">
                         <div className="w-[90px] min-w-[90px] rounded-full overflow-hidden h-[90px] relative">
                           <Image
@@ -164,7 +164,7 @@ const Reclamo = () => {
                         </div>
                       </div>{" "}
                       {
-                        <div className="w-full h-full gap-3 flex-grow flex items-center justify-end">
+                        <div className="w-full h-full gap-3 flex-grow flex items-center justify-center xl:justify-end">
                           {item?.estado !== EstadReclamo.cerrado && (
                             <button
                               onClick={() => handleCerrarReclamo(item?.id)}
@@ -245,7 +245,7 @@ const Reclamo = () => {
                     </div>
 
                     <span className="w-full flex-grow h-auto text-left text-gray-400">
-                      <b>Descripcion del reclamo</b>: {item?.description}
+                      <b className="text-black">Descripción del reclamo</b>: {item?.description}
                     </span>
                   </div>
                 );

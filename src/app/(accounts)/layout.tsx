@@ -29,10 +29,6 @@ const pages: {
     name: "Mis Órdenes",
     link: "/account-order",
   },
-  {
-    name: "Change password",
-    link: "/account-password",
-  },
 ];
 
 const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {

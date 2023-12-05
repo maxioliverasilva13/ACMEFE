@@ -36,7 +36,7 @@ export default function CartDropdown() {
     try {
       const resp = (await handleDeleteLinea(lineaId)) as any;
       if (resp?.data?.ok) {
-        toast.success("Error al eliminar producto del carrito");
+        toast.success("¡Producto eliminado del carrito!");
       } else {
         throw new Error("Error al borrar linea");
       }

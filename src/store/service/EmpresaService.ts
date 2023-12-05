@@ -63,22 +63,15 @@ export const EmpresaService = createApi({
         return response as any;
       },
     }),
-
-    
-    listVentasByEmpresa : builder.query({
+    listVentasByEmpresa: builder.query({
       query: () => {
         return apiRoutes.listVentasByEmpresa()
       },
       transformResponse(value) {
-        const response = value; 
+        const response = value;
         return response;
       },
     }),
-
-    
-
-
-    
   }),
 });
 
@@ -89,5 +82,4 @@ export const {
   useCreateEmpresaMutation,
   useDeleteEmpresasMutation,
   useEditLookAndFeelMutation
- 
-} =  EmpresaService;
+} = EmpresaService;
