@@ -8,20 +8,23 @@ import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import { useCalificarProductoMutation } from "@/store/service/ProductoService";
 import useGlobal from "@/hooks/useGlobal";
 import toast from "react-hot-toast";
+import { useCrearReclamoMutation } from "@/store/service/ReclamoService";
 
-export interface ModalCalificarProps {
-  productId: number;
+export interface RealizarReclamoModalProps {
+  compraId: number;
   show: boolean;
-  onCloseModalCalificar: () => void;
+  onClose: () => void;
+  onFinish: any;
 }
 
-const ModalCalificar: FC<ModalCalificarProps> = ({
+const RealizarReclamoModal: FC<RealizarReclamoModalProps> = ({
   show,
-  onCloseModalCalificar,
-  productId,
+  onClose,
+  compraId,
+  onFinish,
 }) => {
   const { handleSetLoading } = useGlobal();
-  const [calificarProducto] = useCalificarProductoMutation();
+  const [crearReclamo] = useCrearReclamoMutation();
   const [puntuacion, setPuntuacion] = useState<number>(0);
   const [comentario, setComentario] = useState<string>("");
 
@@ -30,26 +33,33 @@ const ModalCalificar: FC<ModalCalificarProps> = ({
   };
 
   const handleSave = async () => {
-    handleSetLoading(true);
-    const dataToSend = {
-      productoId: productId,
-      comentario: comentario,
-      rate: puntuacion,
-    };
-    const resp = (await calificarProducto(dataToSend)) as any;
-    if (!resp.error) {
-      toast.success("Calificación guardada correctamente.");
-    } else {
-      toast.error(resp.error.data.message);
+    try {
+      handleSetLoading(true);
+      const dataToSend = {
+        compraId: compraId,
+        description: comentario,
+      };
+      const resp = (await crearReclamo(dataToSend)) as any;
+      if (resp?.data?.ok) {
+        toast.success("Reclamo realizado correctamente");
+        onFinish();
+        onClose();
+      } else {
+        toast.error(resp.error.data.message);
+      }
+      handleSetLoading(false);
+    } catch (error) {
+      handleSetLoading(false);
+    } finally {
+      handleSetLoading(false);
     }
-    handleSetLoading(false);
   };
   return (
     <Transition appear show={show} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-50 overflow-y-auto"
-        onClose={onCloseModalCalificar}
+        onClose={onClose}
       >
         <div className="min-h-screen px-4 text-center">
           <Transition.Child
@@ -81,34 +91,29 @@ const ModalCalificar: FC<ModalCalificarProps> = ({
             leaveTo="opacity-0 scale-95"
           >
             <div className="inline-block py-8 h-screen w-full max-w-xl">
-              <div className="inline-flex pb-2 flex-col w-full text-left align-middle transition-all transform overflow-hidden rounded-2xl bg-white dark:bg-neutral-900 dark:border dark:border-neutral-700 dark:text-neutral-100 shadow-xl h-full">
+              <div className="inline-flex h-min pb-2 flex-col w-full text-left align-middle transition-all transform overflow-hidden rounded-2xl bg-white dark:bg-neutral-900 dark:border dark:border-neutral-700 dark:text-neutral-100 shadow-xl">
                 <div className="relative flex-shrink-0 px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 text-center">
                   <h3
                     className="text-lg font-medium leading-6 text-gray-900"
                     id="headlessui-dialog-title-70"
                   >
-                    Calificar producto
+                    Realizar reclamo de la compra
                   </h3>
                   <span className="absolute left-3 top-3">
-                    <ButtonClose onClick={onCloseModalCalificar} />
+                    <ButtonClose onClick={onClose} />
                   </span>
                 </div>
                 <div className="px-8 my-5 flex justify-center flex-wrap">
-                  <div className="mt-0.5 w-full flex flex-col justify-center items-center gap-2 text-yellow-500">
-                    <FiveStartIconForRate
-                      withHover={true}
-                      defaultPoint={puntuacion}
-                      setPuntuacion={setPuntuacion}
-                      iconClass="w-10 h-10"
-                    />
-                    <span className="text-sm text-gray-600">{puntuacion}</span>
-                  </div>
+                  <span className="w-full h-auto mb-4 text-left text-sm">
+                    El reclamo sera recivido por los vendedores de la empresa y
+                    se pondran en contacto con el usuario
+                  </span>
                   <div className="flex-grow w-full flex flex-col items-start justify-start">
                     <Label>Comentario</Label>
                     <Textarea
                       onChange={handleChangeComentario}
                       value={comentario}
-                      placeholder="Comentario de la puntuación"
+                      placeholder="Comentario"
                       className="mt-1.5 max-h-[300px]"
                     />
                   </div>
@@ -116,7 +121,7 @@ const ModalCalificar: FC<ModalCalificarProps> = ({
                     onClick={handleSave}
                     className="mt-10 border border-slate-300 dark:border-slate-700 "
                   >
-                    Guardar calificación
+                    Enviar reclamo
                   </ButtonSecondary>
                 </div>
               </div>
@@ -128,4 +133,4 @@ const ModalCalificar: FC<ModalCalificarProps> = ({
   );
 };
 
-export default ModalCalificar;
+export default RealizarReclamoModal;

@@ -9,7 +9,7 @@ interface Props {
 
 const Text = ({ message, className = "" }: Props) => {
   return (
-    <span className={clsx("max-w-full overflow-hidden truncate text-base font-medium text-texto", className)}>
+    <span title={message} className={clsx("max-w-full overflow-hidden break-words text-base font-medium text-texto", className)}>
       {message}
     </span>
   );

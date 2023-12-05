@@ -23,34 +23,42 @@ import Dropdown from "@/components/Dropdown/Dropdown";
 import { Reclamo } from "@/types/reclamo";
 import useGlobal from "@/hooks/useGlobal";
 
-import { useListarReclamosQuery } from "@/store/service/ReclamoService";
+import {
+  useCerrarReclamoMutation,
+  useListarReclamosQuery,
+} from "@/store/service/ReclamoService";
+import { DEFAULT_USER_IMAGE } from "@/utils/usuarios";
+import toast from "react-hot-toast";
+import { appRoutes } from "@/utils/appRoutes";
+import { useRouter } from "next/navigation";
 
 const Reclamo = () => {
   const [selectedFilterActivo, setSelectedFilterActivo] = useState(null);
   const [reclamosToMap, setReclamosToMap] = useState<any>();
   const [fechas, setFechas] = useState<string[]>([]);
+  const { push } = useRouter();
 
-  const { data , isLoading} = useListarReclamosQuery("ReclamoInfo");
+  const { data, isLoading } = useListarReclamosQuery("ReclamoInfo");
 
   const [reclamos, setReclamos] = useState<Reclamo[]>(data ? [...data] : []);
 
   const { handleSetLoading } = useGlobal();
+  const [cerrarReclamo] = useCerrarReclamoMutation();
 
-  useEffect(()=>{
-    if(data){
-      setReclamos(data)
+  useEffect(() => {
+    if (data) {
+      setReclamos(data);
     }
-  },[data])
+  }, [data]);
 
-  useEffect(()=>{
-      if(!isLoading){
-         handleSetLoading(false)
-         return;
-      }
-      handleSetLoading(true);
-  }, [isLoading])
+  useEffect(() => {
+    if (!isLoading) {
+      handleSetLoading(false);
+      return;
+    }
+    handleSetLoading(true);
+  }, [isLoading]);
 
-  
   useEffect(() => {
     if (reclamos) {
       const reclamosToUse = selectedFilterActivo
@@ -60,7 +68,26 @@ const Reclamo = () => {
       setReclamosToMap(divididosPorFecha ?? []);
       setFechas(Object.keys(divididosPorFecha));
     }
-  }, [selectedFilterActivo,reclamos]);
+  }, [selectedFilterActivo, reclamos]);
+
+  const handleCerrarReclamo = async (reclamoId: number) => {
+    try {
+      handleSetLoading(true);
+      const resp = (await cerrarReclamo({
+        reclamoId: reclamoId,
+      })) as any;
+      if (resp?.data?.ok) {
+        toast.success("Reclamo cerrado correctamente");
+      } else {
+        toast.error("Error al cerrar reclamo");
+      }
+    } catch (error: any) {
+      handleSetLoading(false);
+      toast.error(error?.message ?? "Error al cerrar reclamo");
+    } finally {
+      handleSetLoading(false);
+    }
+  };
 
   return (
     <div className="w-full flex-grow p-5 h-auto flex flex-col gap-10 items-start justify-start">
@@ -106,80 +133,120 @@ const Reclamo = () => {
               {reclamosOfFecha?.map((item: any, index: any) => {
                 return (
                   <div
-                    className="w-[550px] relative bg-white h-[350px] flex flex-col items-start justify-start gap-4 shadow-md px-5 py-4 rounded-2xl"
+                    className="w-full relative bg-white h-auto flex flex-col items-center justify-start gap-4 shadow-md px-5 py-4 rounded-2xl"
                     key={`reclamo-${index}`}
                   >
-                    <span
-                      className={clsx(
-                        "w-auto absolute right-4 top-4 h-auto px-4 py-2 text-white font-medium rounded-lg",
-                        item?.estado !== EstadReclamo.cerrado
-                          ? "bg-green-600"
-                          : "bg-yellow-600"
-                      )}
-                    >
-                      {item?.estado}
+                    <div className="flex w-full flex-row items-center justify-between">
+                      <div className="w-auto h-auto flex flex-row items-center justify-center gap-2">
+                        <div className="w-[90px] min-w-[90px] rounded-full overflow-hidden h-[90px] relative">
+                          <Image
+                            src={item?.usuario?.imagen ?? DEFAULT_USER_IMAGE}
+                            alt="User image"
+                            layout="fill"
+                            objectFit="cover"
+                          />
+                        </div>
+                        <div className="w-full h-auto flex flex-col items-start justify-start">
+                          <span className="flex gap-2 items-center font-semibold text-left text-texto text-lg">
+                            <UserCircleIcon width={20} color="#A3AED0" />
+                            {item?.usuario.nombre}
+                          </span>
+                          <span className="flex gap-2 items-center text-base font-medium text-textogris">
+                            <AtSymbolIcon width={20} color="#A3AED0" />{" "}
+                            {item?.usuario.email}
+                          </span>
+                          <span className="flex gap-2 items-center text-base font-medium text-textogris">
+                            <PhoneIcon width={20} color="#A3AED0" />{" "}
+                            {item?.usuario.tel === ""
+                              ? "No tiene"
+                              : item?.usuario.tel}
+                          </span>
+                        </div>
+                      </div>{" "}
+                      {
+                        <div className="w-full h-full gap-3 flex-grow flex items-center justify-end">
+                          {item?.estado !== EstadReclamo.cerrado && (
+                            <button
+                              onClick={() => handleCerrarReclamo(item?.id)}
+                              className="relative flex items-center text-white font-semibold gap-2 bg-green-700 cursor-pointer justify-center py-2 px-4 rounded-full shadow-sm"
+                            >
+                              <CheckIcon
+                                width={20}
+                                color="white"
+                                strokeWidth={2}
+                              />
+                              Cerrar
+                            </button>
+                          )}
+
+                          <span
+                            onClick={() =>
+                              push(
+                                appRoutes.empresaVentaDetalleWithId(
+                                  item?.compra?.id ?? 0
+                                ) as never
+                              )
+                            }
+                            className="text-indigo-600 cursor-pointer text-sm font-medium underline"
+                          >
+                            Ver detalles
+                          </span>
+
+                          {item?.usuario?.tel && item?.usuario?.tel !== "" && (
+                            <button className="w-[36px] min-w-[36px] h-[36px] relative  cursor-pointer flex items-center justify-center p-2 rounded-full shadow-sm">
+                              <a
+                                href={`https://wa.me/${item?.usuario?.tel}`}
+                                target="_blank"
+                              >
+                                <Image
+                                  src={whatsapp}
+                                  alt="Whatsapp Icon"
+                                  layout="fill"
+                                  objectFit="cover"
+                                />{" "}
+                              </a>
+                            </button>
+                          )}
+                          {item?.usuario?.tel && item?.usuario?.tel !== "" && (
+                            <button className="w-[36px] min-w-[36px] h-[36px] relative  cursor-pointer flex items-center justify-center p-2 rounded-full shadow-sm">
+                              <a href={`tel:${item?.usuario?.tel}`}>
+                                <Image
+                                  src={phone}
+                                  alt="Whatsapp Icon"
+                                  layout="fill"
+                                  objectFit="cover"
+                                />
+                              </a>
+                            </button>
+                          )}
+
+                          <button className="w-[36px] min-w-[36px] h-[36px] relative  cursor-pointer flex items-center justify-center p-2 rounded-full shadow-sm">
+                            <a href={`mailTo:${item?.usuario?.email}`}>
+                              <Image
+                                src={gmail}
+                                alt="Whatsapp Icon"
+                                layout="fill"
+                                objectFit="cover"
+                              />
+                            </a>
+                          </button>
+                          <span
+                            className={clsx(
+                              "ml-4 px-4 py-2 text-white font-medium rounded-lg",
+                              item?.estado !== EstadReclamo.cerrado
+                                ? "bg-green-600"
+                                : "bg-yellow-600"
+                            )}
+                          >
+                            {item?.estado}
+                          </span>
+                        </div>
+                      }
+                    </div>
+
+                    <span className="w-full flex-grow h-auto text-left text-gray-400">
+                      <b>Descripcion del reclamo</b>: {item?.description}
                     </span>
-                    <div className="w-auto h-auto flex flex-row items-center justify-center gap-2">
-                      
-                      <div className="w-full h-auto flex flex-col items-start justify-start">
-                        <span className="flex gap-2 items-center font-semibold text-left text-texto text-lg">
-                          <UserCircleIcon width={20} color="#A3AED0" />
-                          {item?.usuario.nombre}
-                        </span>
-                        <span className="flex gap-2 items-center text-base font-medium text-textogris">
-                          <AtSymbolIcon width={20} color="#A3AED0" />{" "}
-                          {item?.usuario.email}
-                        </span>
-                        <span className="flex gap-2 items-center text-base font-medium text-textogris">
-                          <PhoneIcon width={20} color="#A3AED0" />{" "}
-                          {item?.usuario.tel}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="w-full h-auto flex flex-col items-center justify-start gap-2">
-                    
-                      <span className="w-full text-center text-gray-400">
-                        {item?.description}
-                      </span>
-                    </div>
-                   
-                    {item?.estado !== EstadReclamo.cerrado && (
-                      
-                      <div className="w-full h-full gap-3 flex-grow flex items-center justify-end">
-
-                        <button className="relative flex items-center text-white font-semibold gap-2 bg-green-700 cursor-pointer justify-center py-2 px-4 rounded-full shadow-sm">
-                          <CheckIcon width={20} color="white" strokeWidth={2} />
-                          Cerrar
-                        </button>
-
-                        <button className="w-[36px] min-w-[36px] h-[36px] relative  cursor-pointer flex items-center justify-center p-2 rounded-full shadow-sm">
-                          <Image
-                            src={whatsapp}
-                            alt="Whatsapp Icon"
-                            layout="fill"
-                            objectFit="cover"
-                          />
-                        </button>
-
-                        <button className="w-[36px] min-w-[36px] h-[36px] relative  cursor-pointer flex items-center justify-center p-2 rounded-full shadow-sm">
-                          <Image
-                            src={phone}
-                            alt="Whatsapp Icon"
-                            layout="fill"
-                            objectFit="cover"
-                          />
-                        </button>
-
-                        <button className="w-[36px] min-w-[36px] h-[36px] relative  cursor-pointer flex items-center justify-center p-2 rounded-full shadow-sm">
-                          <Image
-                            src={gmail}
-                            alt="Whatsapp Icon"
-                            layout="fill"
-                            objectFit="cover"
-                          />
-                        </button>
-                      </div>
-                    )}
                   </div>
                 );
               })}
@@ -187,6 +254,9 @@ const Reclamo = () => {
           );
         })}
       </div>
+      {reclamosToMap && Object.keys(reclamosToMap)?.length == 0 && (
+        <span>No se encontraron resultados</span>
+      )}
     </div>
   );
 };
