@@ -1,5 +1,5 @@
 "use client";
-
+  
 import Label from "@/components/Label/Label";
 import NcInputNumber from "@/components/NcInputNumber";
 import Prices from "@/components/Prices";
@@ -26,6 +26,8 @@ import OneLineError from "@/components/OneLineError/OneLineError";
 import { useEfectuarCompraMutation } from "@/store/service/CarritoService";
 import Page404 from "@/app/not-found";
 import PaymentSuccessModal from "./components/PaymentSuccessModal";
+import axios from "axios";
+import web3 from "web3";
 
 const CheckoutPage = () => {
   const { handleSetLoading, userInfo } = useGlobal();
@@ -37,6 +39,14 @@ const CheckoutPage = () => {
     | "ShippingType"
   >("ShippingAddress");
   const [handleBuy] = useEfectuarCompraMutation();
+
+  const usdTOWeiEth = async(usdAmount:number)=>{
+    const exchangeRateResponse = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+    const usdToEthRate = exchangeRateResponse.data.ethereum.usd;
+    const ethAmount = usdAmount / usdToEthRate;
+    const weiAmount = web3.utils.toWei(ethAmount.toString(), 'ether');
+    return weiAmount;
+  }
 
   const {
     productos,
@@ -116,6 +126,9 @@ const CheckoutPage = () => {
         if (paymentMethod === "CARD" && !paymentInfo["titular"]) {
           erroresToSend.push("Ingrese un titular valido");
         }
+
+       
+
       }
       if (erroresToSend?.length > 0) {
         handleSetErrors(erroresToSend);
@@ -139,7 +152,33 @@ const CheckoutPage = () => {
         wallet: "1",
       };
       handleSetErrors([]);
-      const resp = (await handleBuy(dataToSend)) as any;
+      let resp;
+      if(paymentMethod == "WALLET"){
+        const windowObj: any = window;
+        if(typeof windowObj.ethereum == 'undefined'){
+          toast.error("Debes tener instalada la extension de metamask para hacer el pago con ethers");
+          return;
+        }
+        const ethereum:any = windowObj.ethereum;
+        const accounts = await ethereum.request({method: 'eth_requestAccounts'});
+        const account = accounts[0];
+        const amount = await usdTOWeiEth(total);
+        const tx = {
+          from : account,
+          to: currentEmpresa?.wallet,
+          value: "1",
+          gas: (0.001).toString()
+        }
+
+        await ethereum.request({method: 'eth_sendTransaction', params:[tx]}).then((res:any)=>{
+            console.log(res);
+        })
+         resp = (await handleBuy(dataToSend)) as any;
+  
+      }else{
+         resp = (await handleBuy(dataToSend)) as any;
+      }
+       
       if (resp?.data?.ok) {
         toast.success("Orden creada correctamente");
         if (!resp?.data?.compraId) {
@@ -147,7 +186,7 @@ const CheckoutPage = () => {
         }
         setPaymentSuccess(true);
         setCompraId(resp?.data?.compraId);
-        // show modal
+        // show modal 
       } else {
         toast.error(resp?.error?.data?.mensaje ?? "Error al comprar productos");
       }
