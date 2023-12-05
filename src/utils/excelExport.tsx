@@ -27,7 +27,7 @@ const ExportExcel = ({ archivoNombre, data }: ExcelProps) => {
       [
         "Productos Vendidos Este Mes",
         "Cantidad Productos Registrados",
-        "Usuarios Activos",
+        "Vendedores Activos",
       ],
       [
         data.productosVendidosEsteMes,

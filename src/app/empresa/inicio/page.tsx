@@ -101,7 +101,7 @@ const VendedorHome = () => {
           content={empresaStats?.productosRegistrados || 0}
         />
         <StatCard
-          title={"Usuarios Activos"}
+          title={"Vendedores Activos"}
           content={empresaStats?.usuariosActivos || 0} // TOTAL EN EL SISTEMA, de esta empresa
         />
         <StatCard

@@ -6,17 +6,15 @@ import dayjs from "dayjs";
 import useGlobal from "@/hooks/useGlobal";
 import { useEffect } from "react";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import BadgeEstado from "@/components/BadgeEstado/BadgeEstado";
 import Badge from "@/shared/Badge/Badge";
-
-
 
 export const EmpresaVentas = () => {
   const { push } = useRouter();
 
   const viewVentaDetail = (id: number) => {
-    push("/empresa/venta-detalle/" + id as any);
+    push(("/empresa/venta-detalle/" + id) as any);
   };
   const { handleSetLoading } = useGlobal();
 
@@ -48,10 +46,16 @@ export const EmpresaVentas = () => {
             >
               <div>
                 <div className="flex flex-col items-start gap-2">
-
-                    <p className="text-lg font-semibold">  { formatDate(venta.fecha)}</p>
-                    <BadgeEstado estado={venta.estado} estadoId={venta.estadoId} compraId={venta.id}></BadgeEstado>
-
+                  <p className="text-lg font-semibold">
+                    {" "}
+                    {formatDate(venta.fecha)}
+                  </p>
+                  <BadgeEstado
+                    estado={venta?.estado}
+                    estadoId={venta?.estadoId}
+                    compraId={venta?.id}
+                    metodoEnvio={venta?.metodoEnvio}
+                  ></BadgeEstado>
                 </div>
 
                 <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">

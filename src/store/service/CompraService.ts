@@ -5,25 +5,27 @@ import { apiRoutes } from "@/utils/apiRoutes";
 export const CompraService = createApi({
   reducerPath: "CompraService",
   baseQuery: baseQuery,
-  tagTypes: ["CompraInfo"],
+  tagTypes: ["CompraInfo", "Compras"],
   endpoints: (builder) => ({
-    getById : builder.query({
-        query: (id:number) => {
-            return apiRoutes.obtenerDetalleCompra(id);
-        },
-        transformResponse(value) {
-            const response = value;
-            return response as any;
-        },
+    getById: builder.query({
+      query: (id: number) => {
+        return apiRoutes.obtenerDetalleCompra(id);
+      },
+      transformResponse(value) {
+        const response = value;
+        return response as any;
+      },
+      providesTags: ["CompraInfo"]
     }),
-    getMisCompras:  builder.query({
-        query: () => {
-            return apiRoutes.getMisCompras()
-        },
-        transformResponse(value) {
-            const response = value;
-            return response;
-        },
+    getMisCompras: builder.query({
+      query: () => {
+        return apiRoutes.getMisCompras()
+      },
+      transformResponse(value) {
+        const response = value;
+        return response;
+      },
+      providesTags: ["Compras"]
     }),
 
     actualizarCompraEstado: builder.mutation({
@@ -35,6 +37,7 @@ export const CompraService = createApi({
         const response = value;
         return response as any;
       },
+      invalidatesTags: ["Compras"]
     }),
   })
 });
@@ -44,4 +47,4 @@ export const {
   useGetMisComprasQuery,
   useActualizarCompraEstadoMutation
 
-} =  CompraService;
+} = CompraService;

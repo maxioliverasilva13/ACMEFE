@@ -7,8 +7,9 @@ import useGlobal from "@/hooks/useGlobal";
 import { useActualizarCompraEstadoMutation } from "@/store/service/CompraService";
 import toast from "react-hot-toast";
 import { separarMayusculas } from "@/utils/stirng";
+import { useListVentasByEmpresaQuery } from "@/store/service/EmpresaService";
 
-const BadgeEstado = ({ compraId = 0, estado = "", estadoId = 0 }) => {
+const BadgeEstado = ({ compraId = 0, estado = "", estadoId = 0, metodoEnvio = "" }) => {
   const [compraID, setCompraID] = useState(compraId);
   const [estadoNombre, setEstadoNombre] = useState(estado);
   const [estadoID, setEstadoID] = useState(estadoId);
@@ -16,14 +17,9 @@ const BadgeEstado = ({ compraId = 0, estado = "", estadoId = 0 }) => {
   const [showModal, setShowModal] = useState(false);
   const [actualizarCompraEstado] = useActualizarCompraEstadoMutation();
   const { handleSetLoading } = useGlobal();
+  const { refetch } = useListVentasByEmpresaQuery({});
   const nextState = () => {
-    if (estadoID == EstadoCompraEnum.EN_CAMINO) {
-      return true;
-    }
-    if (estadoID == EstadoCompraEnum.EN_PREPARACION) {
-      return true;
-    }
-    if (estadoID == EstadoCompraEnum.LISTO_PARA_ENTREGAR) {
+    if (estadoID !== EstadoCompraEnum.ENTREGADO) {
       return true;
     }
     return false;
@@ -31,12 +27,18 @@ const BadgeEstado = ({ compraId = 0, estado = "", estadoId = 0 }) => {
 
   const nextStateName = () => {
     if (estadoID == EstadoCompraEnum.EN_PREPARACION) {
-      return "EN CAMINO";
+      return "PREPARADO";
     }
-    if (estadoID == EstadoCompraEnum.EN_CAMINO) {
-      return "LISTO PARA ENTREGAR";
+    if (estadoID == EstadoCompraEnum.PREPARADO) {
+      return "ENVIADO";
     }
-    if (estadoID == EstadoCompraEnum.LISTO_PARA_ENTREGAR) {
+    if (estadoID == EstadoCompraEnum.ENVIADO && (metodoEnvio !== "DireccionPropia")) {
+      return "LISTO PARA RETIRAR EN PICKUP";
+    }
+    if (estadoID == EstadoCompraEnum.ENVIADO && (metodoEnvio === "DireccionPropia")) {
+      return "ENTREGADO";
+    }
+    if (estadoID == EstadoCompraEnum.LISTO_PARA_RETIRAR) {
       return "ENTREGADO";
     }
     return "";
@@ -50,6 +52,7 @@ const BadgeEstado = ({ compraId = 0, estado = "", estadoId = 0 }) => {
       setEstadoID(id);
       setEstadoNombre(nombre);
       toast.success("Se ha cambiado el estado de la compra correctamente");
+      refetch();
       handleSetLoading(false);
     });
   };

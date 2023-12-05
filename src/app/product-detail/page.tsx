@@ -282,7 +282,6 @@ const ProductDetailPage = ({ product, isEmpresa = false }: Props) => {
                   key={item?.calificacionId}
                   data={{
                     comment: item?.descripcion,
-                    date: "December 22, 2021",
                     name: item?.usuarioNombre,
                     starPoint: item?.rate ?? 0,
                     avatar: item?.usuarioImagen,

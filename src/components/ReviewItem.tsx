@@ -6,7 +6,7 @@ import FiveStartIconForRate from "./FiveStartIconForRate";
 interface ReviewItemDataType {
   name: string;
   avatar?: string;
-  date: string;
+  // date: string;
   comment: string;
   starPoint: number;
 }
@@ -18,7 +18,6 @@ export interface ReviewItemProps {
 
 const DEMO_DATA: ReviewItemDataType = {
   name: "Cody Fisher",
-  date: "May 20, 2021",
   comment:
     "Very nice feeling sweater. I like it better than a regular hoody because it is tailored to be a slimmer fit. Perfect for going out when you want to stay comfy. The head opening is a little tight which makes it a little.",
   starPoint: 5,
@@ -46,9 +45,6 @@ const ReviewItem: FC<ReviewItemProps> = ({
         <div className="flex-1 flex justify-between">
           <div className="text-sm sm:text-base">
             <span className="block font-semibold">{data.name}</span>
-            <span className="block mt-0.5 text-slate-500 dark:text-slate-400 text-sm">
-              {data.date}
-            </span>
           </div>
 
           <div className="mt-0.5 flex items-center gap-1 text-yellow-500">

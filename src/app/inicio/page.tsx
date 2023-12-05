@@ -50,15 +50,17 @@ const Inicio = () => {
   const { handleSetLoading } = useGlobal();
 
   async function animateText() {
-    const originalText = "Bienvenido a ACME";
-    for (let i = 0; i <= originalText.length; i++) {
-      setText(originalText.slice(0, i));
-      await controls.start({ opacity: 1, x: 0 });
+    if (controls) {
+      const originalText = "Bienvenido a ACME";
+      for (let i = 0; i <= originalText.length; i++) {
+        setText(originalText.slice(0, i));
+        await controls.start({ opacity: 1, x: 0 });
+      }
     }
   }
   useEffect(() => {
     animateText();
-  }, [controls]);
+  }, []);
 
   useEffect(() => {
     handleSetLoading(isLoadingEmpresas || isLoadingEstadisticas);
@@ -226,7 +228,9 @@ const Inicio = () => {
               );
             })}
           {data?.length === 0 && (
-            <span className="text-white font-medium">Ooops..!, no encontramos ninguna empresa</span>
+            <span className="text-white font-medium">
+              Ooops..!, no encontramos ninguna empresa
+            </span>
           )}
         </div>
       </div>

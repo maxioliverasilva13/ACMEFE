@@ -27,7 +27,8 @@ const formatDate = (dateStr: string) => {
   return dayjs(dateStr).format("DD/MM/YYYY hh:mm a");
 };
 
-const timeLine = (historialEstados: any) => {
+const timeLine = (historialEstados: any, metodoEnvio: any) => {
+  console.log(metodoEnvio);
   return (
     <div className="p-4 bg-slate-50 flex flex-col gap-5 items-center">
       <span className="text-lg">Transiciones de Estado del Pedido</span>
@@ -35,6 +36,9 @@ const timeLine = (historialEstados: any) => {
         <div className="flex flex-col md:grid grid-cols-12 text-gray-50">
           {historialEstados.map((Estado: any) => {
             const { estado, fecha, completado, estadoId } = Estado;
+            if (estadoId === 4 && metodoEnvio !== "RetiroPickup") {
+              return null;
+            }
             return (
               <div className="flex md:contents" key={estadoId}>
                 <div className="col-start-2 col-end-4 mr-10 md:mx-auto relative">
@@ -58,7 +62,9 @@ const timeLine = (historialEstados: any) => {
                     completado ? "bg-green-500" : "bg-gray-300"
                   } col-start-4 col-end-12 p-4 rounded-xl my-4 mr-auto shadow-md w-full`}
                 >
-                  <h3 className="font-semibold text-lg mb-1">{separarMayusculas(estado)}</h3>
+                  <h3 className="font-semibold text-lg mb-1">
+                    {separarMayusculas(estado)}
+                  </h3>
                   <p className="leading-tight text-justify w-full">
                     {fecha ? formatDate(fecha) : ""}
                   </p>
@@ -223,9 +229,9 @@ const RenderOrderInfo = ({
       const file = data?.data;
       if (file) {
         const url = window.URL.createObjectURL(new Blob([file]));
-        const enlace = document.createElement('a');
+        const enlace = document.createElement("a");
         enlace.href = url;
-        enlace.setAttribute('download', `factura-${id}.pdf`);
+        enlace.setAttribute("download", `factura-${id}.pdf`);
         document.body.appendChild(enlace);
         enlace.click();
         // Limpia la URL creada y restablece el estado
@@ -261,10 +267,12 @@ const RenderOrderInfo = ({
             Costo Total:{" "}
             <span className="text-green-500 ml-2">{costoTotal}$</span>
           </p>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-            Codigo de seguimiento:{" "}
-            <span className="text-green-500 ml-2">{codigoSeguimiento}</span>
-          </p>
+          {codigoSeguimiento && codigoSeguimiento !== "" && (
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
+              Codigo de seguimiento:{" "}
+              <span className="text-green-500 ml-2">{codigoSeguimiento}</span>
+            </p>
+          )}
         </div>
         <div className="w-auto h-auto flex flex-col gap-2">
           {renderBtnImprimirFactura(handleDownloadFactura)}
@@ -283,12 +291,12 @@ const RenderOrderInfo = ({
               index,
               setModalOpen,
               setProdId,
-              estado,
+              estado
             );
           })}
         </div>
       </div>
-      {timeLine(orderInfo.historialEstados)}
+      {timeLine(orderInfo.historialEstados, orderInfo.metodoEnvio)}
       {openReclamoModal && (
         <RealizarReclamoModal
           compraId={id}
@@ -306,7 +314,9 @@ const ClienteOrdenDetalle = () => {
   const [productId, setProductId] = useState<number>(0);
   const params = useParams();
   const ordenId = params?.id;
-  const { data, error, isLoading, refetch } = useGetByIdQuery(Number(ordenId) ?? 0);
+  const { data, error, isLoading, refetch } = useGetByIdQuery(
+    Number(ordenId) ?? 0
+  );
   const orderInfo: any = data;
   const { handleSetLoading } = useGlobal();
   const { push } = useRouter();
@@ -371,7 +381,7 @@ const ClienteOrdenDetalle = () => {
                     {item.usuario?.nombre}
                   </span>
                   <span>
-                    <b>Descripcion del reclamo: </b>
+                    <b>Descripción del reclamo: </b>
                     {item?.description}
                   </span>
                 </div>
